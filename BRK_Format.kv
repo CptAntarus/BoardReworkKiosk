@@ -1,0 +1,108 @@
+<StartScreen>:
+    FloatLayout:
+        MDLabel:
+            text: "Scan Badge To Start:"
+            pos_hint: {"center_x": 0.5, "center_y": 0.7}
+            font_style: "H5"
+            halign: "center"
+            size_hint_y: None
+            height: self.texture_size[1]
+
+        MDTextField:
+            id: EmpID
+            mode: "rectangle"
+            hint_text: "Badge Number"
+            focus: True
+            size_hint: 0.7, None
+            height: "48dp"
+            pos_hint: {"center_x": 0.5, "center_y": 0.4}
+            on_text_validate: root.validateUsr(self.text)
+
+<InOutScreen>:
+    MDBoxLayout:
+        orientation: 'vertical'
+        padding: dp(20)
+        spacing: dp(90)
+        size_hint: 0.6, None
+        height: self.minimum_height
+        pos_hint: {"center_x": 0.5, "center_y": 0.5}
+
+        MDLabel:
+            text: "Board Rework\n(EDIT FONT LATER)"
+            halign: "center"
+            font_style: "H5"
+            size_hint_y: None
+            height: self.texture_size[1]
+
+        AnchorLayout:
+            anchor_x: 'center'
+            size_hint_y: None
+            height: dp(48)
+
+            MDBoxLayout:
+                orientation: 'horizontal'
+                spacing: dp(70)
+                size_hint: None, None
+                size: self.minimum_size
+
+                MDRaisedButton:
+                    text: "CheckIn Board"
+                    on_release: app.switchScreen("checkInBoard", "inOutScreen")
+
+                MDRaisedButton:
+                    text: "CheckOut Board"
+                    on_release: app.switchScreen("checkOutBoard", "inOutScreen")
+
+
+        # Scan MO
+        # Scan Board bar code
+        # Input Priority
+        # Submit...
+<CheckInBoard>:
+    MDFloatLayout:
+        MDTextField:
+            id: boardInMO
+            mode: "rectangle"
+            hint_text: "MO"
+            focus: True
+            size_hint: 0.7, None
+            pos_hint: {"center_x":.4,"center_y":.75}
+            on_text_validate: root.validateMO(self.text)
+
+        MDTextField:
+            id: boardInBarCode
+            mode: "rectangle"
+            hint_text: "Board Bar Code"
+            opacity: 0
+            deabled: True
+            size_hint: .7, None
+            pos_hint: {"center_x":.4,"center_y":.5}
+            on_text_validate: root.validateBarCode(self.text)
+
+        MDBoxLayout:
+            orientation: 'horizontal'
+            id: boardInPriority
+            opacity: 0
+            disabled: True
+            spacing: dp(75)
+            padding: dp(20)
+            size_hint: 0.7, None
+            pos_hint: {"center_x":.5, "center_y":.25}
+
+            MDRaisedButton:
+                text: "Priority 1"
+                on_release: root.setPriority(1)
+
+            MDRaisedButton:
+                text: "Priority 2"
+                on_release: root.setPriority(2)
+
+            MDRaisedButton:
+                text: "Priority 3"
+                on_release: root.setPriority(3)
+
+<CheckInConfirmScreen>:
+    MDFloatLayout:
+        MDLabel:
+            halign: 'center'
+            text: 'Woohoo'
