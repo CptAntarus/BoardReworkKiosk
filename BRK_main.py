@@ -2,6 +2,7 @@
 from kivymd.app import MDApp
 from kivymd.uix.textfield import textfield
 from kivymd.uix.anchorlayout import AnchorLayout
+from kivymd.uix.button import MDIconButton
 
 # Kivy Imports
 from kivy.uix.screenmanager import Screen, ScreenManager, NoTransition
@@ -29,7 +30,7 @@ class BRKGui(MDApp):
 
         self.sm.transition = NoTransition()
         self.theme_cls.theme_style = 'Dark'
-        self.sm.current = 'startScreen'
+        self.sm.current = 'startScreen' #checkInConfirm
 
         return self.sm
     

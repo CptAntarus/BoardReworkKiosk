@@ -9,4 +9,8 @@ class CheckInConfirmScreen(Screen):
         self.sm = GSM()
 
     def on_enter(self):
-        print("Confirmation Screen")
+        self.ids.checkInConfirmUNum.text = str(GlobalScreenManager.CURRENT_USER)
+        self.ids.checkInConfirmMONum.text = (GlobalScreenManager.CURRENT_MO)
+        self.ids.checkInConfirmBoardID.text = str(GlobalScreenManager.CURRENT_BID)
+        self.ids.checkInConfirmPriority.text = str(GlobalScreenManager.CURRENT_PRIORITY)
+

@@ -42,6 +42,7 @@ class Item(MDLabel):
 
 class ListingAllIconsApp(MDApp):
     def build(self):
+        self.theme_cls.theme_style = 'Dark'
         return Builder.load_string(KV_CODE)
 
 

@@ -103,6 +103,74 @@
 
 <CheckInConfirmScreen>:
     MDFloatLayout:
+        MDIconButton:
+            icon: "account"
+            size_hint: None,None
+            pos_hint: {"center_x":.1,"center_y":.8}
+
         MDLabel:
-            halign: 'center'
-            text: 'Woohoo'
+            text: 'U num:'
+            size_hint: None, None
+            pos_hint: {"center_x":.25,"center_y":.8}
+
+        MDLabel:
+            id: checkInConfirmUNum
+            text: ""
+            halign: 'left'
+            size_hint: None, None
+            #text_size: None, None
+            pos_hint: {"center_x":.55,"center_y":.8}
+###############################################################
+        MDIconButton:
+            icon: "account"
+            size_hint: None,None
+            pos_hint: {"center_x":.1,"center_y":.6}
+        
+        MDLabel:
+            text: "MO Num:"
+            size_hint: None, None
+            pos_hint: {"center_x":.25,"center_y":.6}
+
+        MDLabel:
+            id: checkInConfirmMONum
+            text: ""
+            halign: 'left'
+            size_hint: None, None
+            #text_size: None, None
+            pos_hint: {"center_x":.55,"center_y":.6}
+###############################################################
+        MDIconButton:
+            icon: "account"
+            size_hint: None,None
+            pos_hint: {"center_x":.1,"center_y":.4}
+
+        MDLabel:
+            text: "Board ID"
+            size_hint: None, None
+            pos_hint: {"center_x":.25,"center_y":.4}
+
+        MDLabel:
+            id: checkInConfirmBoardID
+            text: ""
+            halign: 'left'
+            size_hint: None, None
+            #text_size: None, None
+            pos_hint: {"center_x":.55,"center_y":.4}
+###############################################################
+        MDIconButton:
+            icon: "account"
+            size_hint: None,None
+            pos_hint: {"center_x":.1,"center_y":.2}
+
+        MDLabel:
+            text: "Priority"
+            size_hint: None, None
+            pos_hint: {"center_x":.25,"center_y":.2}
+
+        MDLabel:
+            id: checkInConfirmPriority
+            text: ""
+            halign: 'left'
+            size_hint: None, None
+            #text_size: None, None
+            pos_hint: {"center_x":.55,"center_y":.2}
