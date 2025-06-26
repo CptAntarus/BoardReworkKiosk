@@ -42,6 +42,18 @@ class BRKGui(MDApp):
     def backButton(self, prevScreen):
         self.sm.current = self.sm.PREVIOUS_SCREEN
 
+    def reset(self,dt):
+        GlobalScreenManager.CURRENT_USER = 0
+        GlobalScreenManager.CURRENT_MO = 0
+        GlobalScreenManager.CURRENT_BID = 0
+        GlobalScreenManager.CURRENT_PRIORITY = 0
+        GlobalScreenManager.HASH_KEY = 0
+        GlobalScreenManager.PREVIOUS_SCREEN = ""
+
+        self.sm.get_screen('startScreen').ids.EmpID.text = ""
+        self.sm.get_screen('checkInBoard').ids.boardInMO.text = ""
+        self.sm.get_screen('checkInBoard').ids.boardInBarCode.text = ""
+        self.sm.get_screen('checkInBoard').ids.boardInPriority.text = ""
 
 if __name__ == '__main__':
     BRKGui().run()

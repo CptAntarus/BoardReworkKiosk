@@ -11,6 +11,7 @@ class StartScreen(Screen):
         self.sm = GSM()
 
     def on_enter(self):
+        Clock.schedule_once(MDApp.get_running_app().reset,0.1)
         Clock.schedule_once(self.set_focus, 0.1)
 
     def set_focus(self, dt):

@@ -3,21 +3,21 @@ from kivy.uix.screenmanager import ScreenManager
 
 class GlobalScreenManager(ScreenManager):    
     CURRENT_USER = 0
-    CURRENT_MO = ""
+    CURRENT_MO = 0
     CURRENT_BID = 0
     CURRENT_PRIORITY = 0
+    HASH_KEY = 0
 
     PREVIOUS_SCREEN = ""
 
-    TEMPLATE_REPORTS = [
-        {"project": "Project 2", "tech": "Han Solo", "date": "05/04/2025"},
-        {"project": "Project 3", "tech": "Chewbaca", "date": "06/02/2024"},
-        {"project": "Project 1", "tech": "Luke Skywalker", "date": "12/02/2023"},
-    ]
+    # 3 rows, 4 cols, 5 slots/box
+    KIOSK_BOXES = [[[None for _ in range(3)] for _ in range(4)] for _ in range(5)]
+    #KIOSK_BOXES = [[[None for _ in range(3)] for _ in range(3)] for _ in range(3)]
 
     USERS = [
         "U155759",
-        "U312110"
+        "U312110",
+        "U313773"
     ]
 
 

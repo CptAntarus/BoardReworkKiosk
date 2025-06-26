@@ -104,12 +104,12 @@
 <CheckInConfirmScreen>:
     MDFloatLayout:
         MDIconButton:
-            icon: "account"
+            icon: "card-account-details" # account, badge-account-horizontal
             size_hint: None,None
             pos_hint: {"center_x":.1,"center_y":.8}
 
         MDLabel:
-            text: 'U num:'
+            text: 'U Number:'
             size_hint: None, None
             pos_hint: {"center_x":.25,"center_y":.8}
 
@@ -118,11 +118,11 @@
             text: ""
             halign: 'left'
             size_hint: None, None
-            #text_size: None, None
+            text_size: None, None
             pos_hint: {"center_x":.55,"center_y":.8}
 ###############################################################
         MDIconButton:
-            icon: "account"
+            icon: "flip-vertical"   # line-scan
             size_hint: None,None
             pos_hint: {"center_x":.1,"center_y":.6}
         
@@ -136,11 +136,11 @@
             text: ""
             halign: 'left'
             size_hint: None, None
-            #text_size: None, None
+            text_size: None, None
             pos_hint: {"center_x":.55,"center_y":.6}
 ###############################################################
         MDIconButton:
-            icon: "account"
+            icon: "barcode"
             size_hint: None,None
             pos_hint: {"center_x":.1,"center_y":.4}
 
@@ -151,14 +151,14 @@
 
         MDLabel:
             id: checkInConfirmBoardID
-            text: ""
+            text: "filter-variant"
             halign: 'left'
             size_hint: None, None
-            #text_size: None, None
+            text_size: None, None
             pos_hint: {"center_x":.55,"center_y":.4}
 ###############################################################
         MDIconButton:
-            icon: "account"
+            icon: "google-analytics" # progress-alert,
             size_hint: None,None
             pos_hint: {"center_x":.1,"center_y":.2}
 
@@ -172,5 +172,12 @@
             text: ""
             halign: 'left'
             size_hint: None, None
-            #text_size: None, None
+            text_size: None, None
             pos_hint: {"center_x":.55,"center_y":.2}
+###############################################################
+        MDRaisedButton:
+            text: "Confirm"
+            size_hint: .2,None
+            height: dp(48)
+            pos_hint: {"center_x":.85,"center_y":.15}
+            on_release: root.assignBox()
