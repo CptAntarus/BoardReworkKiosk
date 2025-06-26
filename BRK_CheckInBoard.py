@@ -11,6 +11,9 @@ class CheckInBoard(Screen):
         self.sm = GSM()
 
     def on_enter(self):
+        self.ids.boardInMO.text = ""
+        self.ids.boardInBarCode.text = ""
+        self.ids.boardInPriority.text = ""
         Clock.schedule_once(self.set_focus, 0.1)
 
     def set_focus(self, dt):
@@ -62,5 +65,4 @@ class CheckInBoard(Screen):
 
     def setPriority(self, priority):
         GlobalScreenManager.CURRENT_PRIORITY = priority
-        GlobalScreenManager.PREVIOUS_SCREEN = 'checkInBoard'
-        self.manager.current = 'checkInConfirm'
+        MDApp.get_running_app().switchScreen('checkInConfirm')

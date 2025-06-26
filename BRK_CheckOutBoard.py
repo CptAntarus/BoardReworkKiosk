@@ -8,4 +8,20 @@ class CheckOutBoard(Screen):
         self.sm = MDApp.get_running_app().root
 
     def on_enter(self):
-        pass
+        self.ids.BoardReworkBtn.opacity = 0
+        self.ids.BGAReworkBtn.opacity = 0
+        self.ids.NoAccessMsg.opacity = 0
+        self.ids.BoardReworkBtn.disabled = True
+        self.ids.BGAReworkBtn.disabled = True
+
+        if GlobalScreenManager.CURRENT_USER in GlobalScreenManager.REWORK_USERS:
+            self.ids.BoardReworkBtn.opacity = 1
+            self.ids.BoardReworkBtn.disabled = False
+            if GlobalScreenManager.CURRENT_USER in GlobalScreenManager.BGA_USERS:
+                self.ids.BGAReworkBtn.opacity = 1
+                self.ids.BGAReworkBtn.disabled = False
+            else:
+                # make one button
+                pass
+        else:
+            self.ids.NoAccessMsg.opacity = 1

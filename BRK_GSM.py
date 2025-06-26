@@ -8,7 +8,7 @@ class GlobalScreenManager(ScreenManager):
     CURRENT_PRIORITY = 0
     HASH_KEY = 0
 
-    PREVIOUS_SCREEN = ""
+    SCREEN_HIST = []
 
     # 3 rows, 4 cols, 5 slots/box
     KIOSK_BOXES = [[[None for _ in range(3)] for _ in range(4)] for _ in range(5)]
@@ -17,7 +17,17 @@ class GlobalScreenManager(ScreenManager):
     USERS = [
         "U155759",
         "U312110",
-        "U313773"
+        "U313773",
+        "U120099"
+    ]
+
+    REWORK_USERS = [
+        "U155759",
+        "U312110"
+    ]
+
+    BGA_USERS = [
+        "U155759"
     ]
 
 

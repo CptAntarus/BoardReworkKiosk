@@ -20,11 +20,10 @@ class StartScreen(Screen):
     def validateUsr(self, uNum):
         if uNum in GlobalScreenManager.USERS:
             print(f"Valid user: {uNum}")
-            self.sm = MDApp.get_running_app().root
-            self.sm.PREVIOUS_SCREEN = 'startScreen'
-            GlobalScreenManager.CURRENT_USER = uNum
+            GlobalScreenManager.CURRENT_USER = self.ids.EmpID.text.strip()
             print(f"uNum: {uNum}")
-            self.sm.current = 'inOutScreen'
+            MDApp.get_running_app().switchScreen('inOutScreen')
+            
         else:
             print("Invalid User")
             self.ids.EmpID.text=""

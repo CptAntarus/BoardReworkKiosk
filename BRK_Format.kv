@@ -19,47 +19,46 @@
             on_text_validate: root.validateUsr(self.text)
 
 <InOutScreen>:
-    MDBoxLayout:
-        orientation: 'vertical'
-        padding: dp(20)
-        spacing: dp(90)
-        size_hint: 0.6, None
-        height: self.minimum_height
-        pos_hint: {"center_x": 0.5, "center_y": 0.5}
+    FloatLayout:
+        MDTopAppBar:
+            title: "PAGE TITLE HERE"
+            left_action_items: [["arrow-left", lambda y: app.backButton()]]
+            pos_hint: {"top": 1}
+            elevation: 10
 
         MDLabel:
             text: "Board Rework\n(EDIT FONT LATER)"
+            pos_hint: {"center_x": 0.5, "center_y": 0.7}
             halign: "center"
             font_style: "H5"
-            size_hint_y: None
+            size_hint: 1,None
             height: self.texture_size[1]
 
-        AnchorLayout:
-            anchor_x: 'center'
-            size_hint_y: None
-            height: dp(48)
+        MDBoxLayout:
+            orientation: 'horizontal'
+            spacing: dp(185)
+            padding: dp(20)
+            pos_hint: {"center_x": 0.5, "center_y": 0.5}
+            size_hint: None, None
+            size: self.minimum_size
 
-            MDBoxLayout:
-                orientation: 'horizontal'
-                spacing: dp(70)
-                size_hint: None, None
-                size: self.minimum_size
+            MDRaisedButton:
+                text: "CheckIn Board"
+                on_release: app.switchScreen("checkInBoard")
 
-                MDRaisedButton:
-                    text: "CheckIn Board"
-                    on_release: app.switchScreen("checkInBoard", "inOutScreen")
-
-                MDRaisedButton:
-                    text: "CheckOut Board"
-                    on_release: app.switchScreen("checkOutBoard", "inOutScreen")
+            MDRaisedButton:
+                text: "CheckOut Board"
+                on_release: app.switchScreen("checkOutBoard")
 
 
-        # Scan MO
-        # Scan Board bar code
-        # Input Priority
-        # Submit...
 <CheckInBoard>:
     MDFloatLayout:
+        MDTopAppBar:
+            title: "PAGE TITLE HERE"
+            left_action_items: [["arrow-left", lambda y: app.backButton()]]
+            pos_hint: {"top": 1}
+            elevation: 10
+
         MDTextField:
             id: boardInMO
             mode: "rectangle"
@@ -74,7 +73,7 @@
             mode: "rectangle"
             hint_text: "Board Bar Code"
             opacity: 0
-            deabled: True
+            disabled: True
             size_hint: .7, None
             pos_hint: {"center_x":.4,"center_y":.5}
             on_text_validate: root.validateBarCode(self.text)
@@ -103,15 +102,22 @@
 
 <CheckInConfirmScreen>:
     MDFloatLayout:
+
+        MDTopAppBar:
+            title: "PAGE TITLE HERE"
+            left_action_items: [["arrow-left", lambda y: app.backButton()]]
+            pos_hint: {"top": 1}
+            elevation: 10
+
         MDIconButton:
             icon: "card-account-details" # account, badge-account-horizontal
             size_hint: None,None
-            pos_hint: {"center_x":.1,"center_y":.8}
+            pos_hint: {"center_x":.1,"center_y":.75}
 
         MDLabel:
             text: 'U Number:'
             size_hint: None, None
-            pos_hint: {"center_x":.25,"center_y":.8}
+            pos_hint: {"center_x":.25,"center_y":.75}
 
         MDLabel:
             id: checkInConfirmUNum
@@ -119,17 +125,17 @@
             halign: 'left'
             size_hint: None, None
             text_size: None, None
-            pos_hint: {"center_x":.55,"center_y":.8}
+            pos_hint: {"center_x":.55,"center_y":.75}
 ###############################################################
         MDIconButton:
             icon: "flip-vertical"   # line-scan
             size_hint: None,None
-            pos_hint: {"center_x":.1,"center_y":.6}
+            pos_hint: {"center_x":.1,"center_y":.55}
         
         MDLabel:
             text: "MO Num:"
             size_hint: None, None
-            pos_hint: {"center_x":.25,"center_y":.6}
+            pos_hint: {"center_x":.25,"center_y":.55}
 
         MDLabel:
             id: checkInConfirmMONum
@@ -137,17 +143,17 @@
             halign: 'left'
             size_hint: None, None
             text_size: None, None
-            pos_hint: {"center_x":.55,"center_y":.6}
+            pos_hint: {"center_x":.55,"center_y":.55}
 ###############################################################
         MDIconButton:
             icon: "barcode"
             size_hint: None,None
-            pos_hint: {"center_x":.1,"center_y":.4}
+            pos_hint: {"center_x":.1,"center_y":.35}
 
         MDLabel:
             text: "Board ID"
             size_hint: None, None
-            pos_hint: {"center_x":.25,"center_y":.4}
+            pos_hint: {"center_x":.25,"center_y":.35}
 
         MDLabel:
             id: checkInConfirmBoardID
@@ -155,17 +161,17 @@
             halign: 'left'
             size_hint: None, None
             text_size: None, None
-            pos_hint: {"center_x":.55,"center_y":.4}
+            pos_hint: {"center_x":.55,"center_y":.35}
 ###############################################################
         MDIconButton:
             icon: "google-analytics" # progress-alert,
             size_hint: None,None
-            pos_hint: {"center_x":.1,"center_y":.2}
+            pos_hint: {"center_x":.1,"center_y":.15}
 
         MDLabel:
             text: "Priority"
             size_hint: None, None
-            pos_hint: {"center_x":.25,"center_y":.2}
+            pos_hint: {"center_x":.25,"center_y":.15}
 
         MDLabel:
             id: checkInConfirmPriority
@@ -173,11 +179,42 @@
             halign: 'left'
             size_hint: None, None
             text_size: None, None
-            pos_hint: {"center_x":.55,"center_y":.2}
+            pos_hint: {"center_x":.55,"center_y":.15}
 ###############################################################
         MDRaisedButton:
             text: "Confirm"
-            size_hint: .2,None
-            height: dp(48)
-            pos_hint: {"center_x":.85,"center_y":.15}
+            size_hint: .22,.1
+            pos_hint: {"center_x":.8,"center_y":.15}
             on_release: root.assignBox()
+
+
+<CheckOutBoard>:
+    MDFloatLayout:
+        MDTopAppBar:
+            title: "PAGE TITLE HERE"
+            left_action_items: [["arrow-left", lambda y: app.backButton()]]
+            pos_hint: {"top": 1}
+            elevation: 10
+
+        MDRaisedButton:
+            id: BGAReworkBtn
+            opacity: 0
+            disabled: True
+            text: "BGA Rework"
+            pos_hint: {"center_x":.7,"center_y":.5}
+            on_release:
+
+        MDRaisedButton:
+            id: BoardReworkBtn
+            opacity: 0
+            disabled: True
+            text: "Board Rework"
+            pos_hint: {"center_x":.3,"center_y":.5}
+            on_release:
+
+        MDLabel:
+            id: NoAccessMsg
+            opacity: 0
+            text: "You are not registered for Check-Out"
+            size_hint: .5, None
+            pos_hint: {"center_x":.5,"center_y":.5}

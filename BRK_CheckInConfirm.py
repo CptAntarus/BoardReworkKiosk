@@ -51,19 +51,21 @@ class CheckInConfirmScreen(Screen):
                 u_num TEXT,
                 mo TEXT,
                 board_id TEXT,
-                priority TEXT                                  
+                priority TEXT,
+                time_stamp TEXT                                
             )
         ''')
 
         cursor.execute('''
-            INSERT INTO checkins (hash_key, u_num, mo, board_id, priority)
-            values (?,?,?,?,?)
+            INSERT INTO checkins (hash_key, u_num, mo, board_id, priority, time_stamp)
+            values (?,?,?,?,?,?)
             ''', (
                 GlobalScreenManager.HASH_KEY,
                 GlobalScreenManager.CURRENT_USER,
                 GlobalScreenManager.CURRENT_MO,
                 GlobalScreenManager.CURRENT_BID,
-                GlobalScreenManager.CURRENT_PRIORITY
+                GlobalScreenManager.CURRENT_PRIORITY,
+                now.strftime("%m/%d/%Y %H:%M:%S")
             )
         )
 

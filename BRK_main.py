@@ -30,17 +30,18 @@ class BRKGui(MDApp):
 
         self.sm.transition = NoTransition()
         self.theme_cls.theme_style = 'Dark'
-        self.sm.current = 'startScreen' #checkInConfirm
+        self.switchScreen('startScreen') #checkInConfirm
 
         return self.sm
     
 
-    def switchScreen(self, newScreen, prevScreen):
-        self.sm.PREVIOUS_SCREEN = prevScreen
+    def switchScreen(self, newScreen):
+        GlobalScreenManager.SCREEN_HIST.append(self.sm.current)
         self.sm.current = newScreen
 
-    def backButton(self, prevScreen):
-        self.sm.current = self.sm.PREVIOUS_SCREEN
+    def backButton(self, *args):
+        if GlobalScreenManager.SCREEN_HIST:
+            self.sm.current = GlobalScreenManager.SCREEN_HIST.pop()
 
     def reset(self,dt):
         GlobalScreenManager.CURRENT_USER = 0
@@ -54,6 +55,8 @@ class BRKGui(MDApp):
         self.sm.get_screen('checkInBoard').ids.boardInMO.text = ""
         self.sm.get_screen('checkInBoard').ids.boardInBarCode.text = ""
         self.sm.get_screen('checkInBoard').ids.boardInPriority.text = ""
+
+        GlobalScreenManager.SCREEN_HIST.clear()
 
 if __name__ == '__main__':
     BRKGui().run()
