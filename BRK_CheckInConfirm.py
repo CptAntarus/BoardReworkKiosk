@@ -37,11 +37,11 @@ class CheckInConfirmScreen(Screen):
                         assigned = True
                         break
 
-        print(GlobalScreenManager.KIOSK_BOXES[row][col][slot])
-        print(GlobalScreenManager.KIOSK_BOXES)
+        # print(GlobalScreenManager.KIOSK_BOXES[row][col][slot])
+        # print(GlobalScreenManager.KIOSK_BOXES)
 
         # Push to SQL
-        conn = sqlite3.connect('test.db')
+        conn = sqlite3.connect('BoardKioskDB.db')
         cursor = conn.cursor()
 
         cursor.execute('''
@@ -65,15 +65,18 @@ class CheckInConfirmScreen(Screen):
                 GlobalScreenManager.CURRENT_MO,
                 GlobalScreenManager.CURRENT_BID,
                 GlobalScreenManager.CURRENT_PRIORITY,
-                now.strftime("%m/%d/%Y %H:%M:%S")
+                now.strftime("%m-%d-%Y %H:%M:%S")
             )
         )
 
         conn.commit()
 
+        # Print Database
         for row in cursor.execute('SELECT * FROM checkins'):
             print(row)
             
         conn.close()
 
-        self.manager.current = 'startScreen'
+        # Return to Login
+        MDApp.get_running_app().reset(.1)
+        MDApp.get_running_app().switchScreen('startScreen')

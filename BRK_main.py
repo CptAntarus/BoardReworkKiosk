@@ -17,6 +17,7 @@ from BRK_InOutScreen import InOutScreen
 from BRK_CheckInBoard import CheckInBoard
 from BRK_CheckOutBoard import CheckOutBoard
 from BRK_CheckInConfirm import CheckInConfirmScreen
+from BRK_CheckOutConfirm import CheckOutConfirm
 
 
 class BRKGui(MDApp):
@@ -27,6 +28,7 @@ class BRKGui(MDApp):
         self.sm.add_widget(CheckInBoard(name='checkInBoard'))
         self.sm.add_widget(CheckOutBoard(name='checkOutBoard'))
         self.sm.add_widget(CheckInConfirmScreen(name='checkInConfirm'))
+        self.sm.add_widget(CheckOutConfirm(name='checkOutComfirm'))
 
         self.sm.transition = NoTransition()
         self.theme_cls.theme_style = 'Dark'
@@ -34,7 +36,6 @@ class BRKGui(MDApp):
 
         return self.sm
     
-
     def switchScreen(self, newScreen):
         GlobalScreenManager.SCREEN_HIST.append(self.sm.current)
         self.sm.current = newScreen
@@ -50,6 +51,7 @@ class BRKGui(MDApp):
         GlobalScreenManager.CURRENT_PRIORITY = 0
         GlobalScreenManager.HASH_KEY = 0
         GlobalScreenManager.PREVIOUS_SCREEN = ""
+        GlobalScreenManager.BOARD_CHECKOUT = 0
 
         self.sm.get_screen('startScreen').ids.EmpID.text = ""
         self.sm.get_screen('checkInBoard').ids.boardInMO.text = ""

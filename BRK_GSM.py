@@ -7,6 +7,7 @@ class GlobalScreenManager(ScreenManager):
     CURRENT_BID = 0
     CURRENT_PRIORITY = 0
     HASH_KEY = 0
+    BOARD_CHECKOUT = 0
 
     SCREEN_HIST = []
 

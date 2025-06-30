@@ -102,7 +102,6 @@
 
 <CheckInConfirmScreen>:
     MDFloatLayout:
-
         MDTopAppBar:
             title: "PAGE TITLE HERE"
             left_action_items: [["arrow-left", lambda y: app.backButton()]]
@@ -210,7 +209,7 @@
             disabled: True
             text: "Board Rework"
             pos_hint: {"center_x":.3,"center_y":.5}
-            on_release:
+            on_release: root.findBoard()
 
         MDLabel:
             id: NoAccessMsg
@@ -218,3 +217,89 @@
             text: "You are not registered for Check-Out"
             size_hint: .5, None
             pos_hint: {"center_x":.5,"center_y":.5}
+
+<CheckOutConfirm>:
+    MDFloatLayout:
+        MDTopAppBar:
+            title: "PAGE TITLE HERE"
+            left_action_items: [["arrow-left", lambda y: app.backButton()]]
+            pos_hint: {"top": 1}
+            elevation: 10
+
+        MDIconButton:
+            icon: "card-account-details" # account, badge-account-horizontal
+            size_hint: None,None
+            pos_hint: {"center_x":.1,"center_y":.75}
+
+        MDLabel:
+            text: 'U Number:'
+            size_hint: None, None
+            pos_hint: {"center_x":.25,"center_y":.75}
+
+        MDLabel:
+            id: checkOutConfirmUNum
+            text: ""
+            halign: 'left'
+            size_hint: None, None
+            text_size: None, None
+            pos_hint: {"center_x":.55,"center_y":.75}
+###############################################################
+        MDIconButton:
+            icon: "flip-vertical"   # line-scan
+            size_hint: None,None
+            pos_hint: {"center_x":.1,"center_y":.55}
+        
+        MDLabel:
+            text: "MO Num:"
+            size_hint: None, None
+            pos_hint: {"center_x":.25,"center_y":.55}
+
+        MDLabel:
+            id: checkOutConfirmMONum
+            text: ""
+            halign: 'left'
+            size_hint: None, None
+            text_size: None, None
+            pos_hint: {"center_x":.55,"center_y":.55}
+###############################################################
+        MDIconButton:
+            icon: "barcode"
+            size_hint: None,None
+            pos_hint: {"center_x":.1,"center_y":.35}
+
+        MDLabel:
+            text: "Board ID"
+            size_hint: None, None
+            pos_hint: {"center_x":.25,"center_y":.35}
+
+        MDLabel:
+            id: checkOutConfirmBoardID
+            text: "filter-variant"
+            halign: 'left'
+            size_hint: None, None
+            text_size: None, None
+            pos_hint: {"center_x":.55,"center_y":.35}
+###############################################################
+        MDIconButton:
+            icon: "google-analytics" # progress-alert,
+            size_hint: None,None
+            pos_hint: {"center_x":.1,"center_y":.15}
+
+        MDLabel:
+            text: "Priority"
+            size_hint: None, None
+            pos_hint: {"center_x":.25,"center_y":.15}
+
+        MDLabel:
+            id: checkOutConfirmPriority
+            text: ""
+            halign: 'left'
+            size_hint: None, None
+            text_size: None, None
+            pos_hint: {"center_x":.55,"center_y":.15}
+###############################################################
+        MDRaisedButton:
+            text: "Confirm"
+            size_hint: .22,.1
+            pos_hint: {"center_x":.8,"center_y":.15}
+            on_release: root.confirmCheckOut()

@@ -11,7 +11,3 @@ class InOutScreen(Screen):
 
     def on_enter(self):
         pass
-    #     Clock.schedule_once(self.setPrevScreen, 0.1)
-
-    # def setPrevScreen(self, dt):
-    #     GlobalScreenManager.PREVIOUS_SCREEN = 'startScreen'
