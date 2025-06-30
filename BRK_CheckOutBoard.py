@@ -1,6 +1,6 @@
 from kivymd.app import MDApp
 from kivy.uix.screenmanager import Screen
-from BRK_GSM import GlobalScreenManager, GSM
+from BRK_GSM import GlobalScreenManager
 import sqlite3
 
 class CheckOutBoard(Screen):
@@ -21,17 +21,12 @@ class CheckOutBoard(Screen):
             if GlobalScreenManager.CURRENT_USER in GlobalScreenManager.BGA_USERS:
                 self.ids.BGAReworkBtn.opacity = 1
                 self.ids.BGAReworkBtn.disabled = False
-            else:
-                # make one button
-                pass
         else:
             self.ids.NoAccessMsg.opacity = 1
 
 
     def findBoard(self):
-        self.ids.BoardReworkBtn.opacity = 0
-
-        conn = sqlite3.connect('BoardKioskDB.db')
+        conn = sqlite3.connect('KioskDB.db')
         cursor = conn.cursor()
 
         cursor.execute("""
@@ -43,10 +38,6 @@ class CheckOutBoard(Screen):
         GlobalScreenManager.BOARD_CHECKOUT = str(result)
 
         print("Top Priority task: (CheckOutScreen) ",result)
- 
-        # Print DataBase
-        # for row in cursor.execute('SELECT * FROM checkins'):
-        #     print(row)
 
         conn.close()
 

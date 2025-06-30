@@ -13,7 +13,8 @@ class GlobalScreenManager(ScreenManager):
 
     # 3 rows, 4 cols, 5 slots/box
     KIOSK_BOXES = [[[None for _ in range(3)] for _ in range(4)] for _ in range(5)]
-    #KIOSK_BOXES = [[[None for _ in range(3)] for _ in range(3)] for _ in range(3)]
+    # KIOSK_BOXES = [[None for _ in range(3)] for _ in range(20)]
+    # KIOSK_BOXES = [[[None for _ in range(3)] for _ in range(3)] for _ in range(3)]
 
     USERS = [
         "U155759",

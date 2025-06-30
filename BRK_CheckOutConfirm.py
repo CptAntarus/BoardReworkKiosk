@@ -1,7 +1,8 @@
 from kivymd.app import MDApp
 from kivy.uix.screenmanager import Screen
 from kivy.clock import Clock
-from BRK_GSM import GlobalScreenManager, GSM
+from datetime import datetime
+from BRK_GSM import GlobalScreenManager
 import sqlite3
 import re
 
@@ -17,40 +18,83 @@ class CheckOutConfirm(Screen):
         pattern = r"(?:'([^']*)'|(\d+))"
 
         matches = re.findall(pattern, data)
-        values = [group[0] if group[0] else group[1] for group in matches]
+        self.values = [group[0] if group[0] else group[1] for group in matches]
 
-        print(values)
+        print("SELECTED BOARD: ", self.values)
 
         self.ids.checkOutConfirmUNum.text = str(GlobalScreenManager.CURRENT_USER)
-        self.ids.checkOutConfirmMONum.text = values[3]
-        self.ids.checkOutConfirmBoardID.text = values[4]
-        self.ids.checkOutConfirmPriority.text = values[5]
-        self.hashKey = values[1]
+        self.ids.checkOutConfirmMONum.text = self.values[3]
+        self.ids.checkOutConfirmBoardID.text = self.values[4]
+        self.ids.checkOutConfirmPriority.text = self.values[5]
+        self.hashKey = self.values[1]
 
     def confirmCheckOut(self):
-        # Remove from slot-list
+        now = datetime.now()
+        # Remove from KIOSK_BOXES
 
-        # Delete from SQL
-        conn = sqlite3.connect('BoardKioskDB.db')
+#################################################################################
+#        - Copy over to ReworkDB
+#################################################################################
+        conn = sqlite3.connect('ReworkDB.db')
         cursor = conn.cursor()
 
-         # Print Database
+        cursor.execute('''
+            CREATE TABLE IF NOT EXISTS checkins (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                hash_key TEXT,
+                u_num TEXT,
+                mo TEXT,
+                board_id TEXT,
+                priority TEXT,
+                time_stamp TEXT,
+                in_out_status TEXT                                
+            )
+        ''')
+
+        cursor.execute('''
+            INSERT INTO checkins (hash_key, u_num, mo, board_id, priority, time_stamp, in_out_status)
+            values (?,?,?,?,?,?,?)
+            ''', (   
+                self.values[1],
+                self.values[2],
+                self.values[3],
+                self.values[4],
+                self.values[5],
+                now.strftime("%m-%d-%Y %H:%M:%S"),
+                "OUT"
+            )
+        )
+
+        # Print Database
+        print("ReworkDB =====================================")
         for row in cursor.execute('SELECT * FROM checkins'):
             print(row)
+
+        conn.commit()
+        conn.close()
+
+#################################################################################
+#        - Delete from KioskDB
+#################################################################################
+        conn = sqlite3.connect('KioskDB.db')
+        cursor = conn.cursor()
 
         cursor.execute("""
                        DELETE FROM checkins
                        WHERE hash_key = ?
                     """, (self.hashKey,))
-        
-        conn.commit()
+
          # Print Database
-        print("\n=======================================\n")
+        print("KioskDB =======================================")
         for row in cursor.execute('SELECT * FROM checkins'):
             print(row)
         
+        conn.commit()
         conn.close()
 
-        # Return to Login
+
+#################################################################################
+#       - Return to Login
+#################################################################################
         MDApp.get_running_app().reset(0.1)
         MDApp.get_running_app().switchScreen('startScreen')

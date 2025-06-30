@@ -23,7 +23,9 @@ class CheckInConfirmScreen(Screen):
         GlobalScreenManager.HASH_KEY = str(GlobalScreenManager.CURRENT_MO + GlobalScreenManager.CURRENT_BID + now.strftime("%H%M%S"))
         print(GlobalScreenManager.HASH_KEY)
 
-        # Assign a slot in the kiosk
+#################################################################################
+#        - Assign a slot in the kiosk (REWORK LATER)
+#################################################################################
         assigned = False
         for row in range(len(GlobalScreenManager.KIOSK_BOXES)):
             if assigned:
@@ -40,8 +42,10 @@ class CheckInConfirmScreen(Screen):
         # print(GlobalScreenManager.KIOSK_BOXES[row][col][slot])
         # print(GlobalScreenManager.KIOSK_BOXES)
 
-        # Push to SQL
-        conn = sqlite3.connect('BoardKioskDB.db')
+#################################################################################
+#        - Push to KioskDB
+#################################################################################
+        conn = sqlite3.connect('KioskDB.db')
         cursor = conn.cursor()
 
         cursor.execute('''
@@ -52,31 +56,77 @@ class CheckInConfirmScreen(Screen):
                 mo TEXT,
                 board_id TEXT,
                 priority TEXT,
-                time_stamp TEXT                                
+                time_stamp TEXT,
+                in_out_status TEXT                                
             )
         ''')
 
         cursor.execute('''
-            INSERT INTO checkins (hash_key, u_num, mo, board_id, priority, time_stamp)
-            values (?,?,?,?,?,?)
+            INSERT INTO checkins (hash_key, u_num, mo, board_id, priority, time_stamp, in_out_status)
+            values (?,?,?,?,?,?,?)
             ''', (
                 GlobalScreenManager.HASH_KEY,
                 GlobalScreenManager.CURRENT_USER,
                 GlobalScreenManager.CURRENT_MO,
                 GlobalScreenManager.CURRENT_BID,
                 GlobalScreenManager.CURRENT_PRIORITY,
-                now.strftime("%m-%d-%Y %H:%M:%S")
+                now.strftime("%m-%d-%Y %H:%M:%S"),
+                "IN"
             )
         )
 
         conn.commit()
 
         # Print Database
+        print("KIOSK_DB =====================================")
         for row in cursor.execute('SELECT * FROM checkins'):
             print(row)
             
         conn.close()
 
-        # Return to Login
+#################################################################################
+#        - Push to ReworkDB
+#################################################################################
+        conn = sqlite3.connect('ReworkDB.db')
+        cursor = conn.cursor()
+
+        cursor.execute('''
+            CREATE TABLE IF NOT EXISTS checkins (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                hash_key TEXT,
+                u_num TEXT,
+                mo TEXT,
+                board_id TEXT,
+                priority TEXT,
+                time_stamp TEXT,
+                in_out_status TEXT                                
+            )
+        ''')
+
+        cursor.execute('''
+            INSERT INTO checkins (hash_key, u_num, mo, board_id, priority, time_stamp, in_out_status)
+            values (?,?,?,?,?,?,?)
+            ''', (
+                GlobalScreenManager.HASH_KEY,
+                GlobalScreenManager.CURRENT_USER,
+                GlobalScreenManager.CURRENT_MO,
+                GlobalScreenManager.CURRENT_BID,
+                GlobalScreenManager.CURRENT_PRIORITY,
+                now.strftime("%m-%d-%Y %H:%M:%S"),
+                "IN"
+            )
+        )
+
+        # Print Database
+        print("REWORK_DB =====================================")
+        for row in cursor.execute('SELECT * FROM checkins'):
+            print(row)
+            
+        conn.commit()
+        conn.close()
+
+#################################################################################
+#        - Return to Login
+#################################################################################
         MDApp.get_running_app().reset(.1)
         MDApp.get_running_app().switchScreen('startScreen')
