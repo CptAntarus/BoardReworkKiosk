@@ -37,7 +37,7 @@
 
         MDRaisedButton:
             text: "Check-In Board"
-            size_hint: .2,.25
+            size_hint: .3,.2
             font_style: "H5"
             pos_hint: {"center_x":.25, "center_y":.4}
             on_release: app.switchScreen("checkInBoard")
@@ -45,7 +45,7 @@
         MDRaisedButton:
             text: "Check-Out Board"
             font_style: "H5"
-            size_hint: .2,.25
+            size_hint: .3,.2
             pos_hint: {"center_x":.75, "center_y":.4}
             on_release: app.switchScreen("checkOutBoard")
 
@@ -199,7 +199,9 @@
             opacity: 0
             disabled: True
             text: "BGA Rework"
-            pos_hint: {"center_x":.7,"center_y":.5}
+            size_hint: .3,.2
+            font_style: "H5"
+            pos_hint: {"center_x":.25, "center_y":.4}
             on_release:
 
         MDRaisedButton:
@@ -207,7 +209,9 @@
             opacity: 0
             disabled: True
             text: "Board Rework"
-            pos_hint: {"center_x":.3,"center_y":.5}
+            size_hint: .3,.2
+            font_style: "H5"
+            pos_hint: {"center_x":.75, "center_y":.4}
             on_release: root.findBoard()
 
         MDLabel:
