@@ -15,6 +15,9 @@ class CheckInBoard(Screen):
         self.ids.boardInBarCode.text = ""
         self.ids.boardInPriority.text = ""
         Clock.schedule_once(self.set_focus, 0.1)
+        self.ids.boardInBarCode.opacity = 0
+        self.ids.boardInPriority.opacity = 0
+
 
     def set_focus(self, dt):
         self.ids.boardInMO.focus = True

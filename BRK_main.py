@@ -32,7 +32,7 @@ class BRKGui(MDApp):
 
         self.sm.transition = NoTransition()
         self.theme_cls.theme_style = 'Dark'
-        self.switchScreen('startScreen') #checkInConfirm
+        self.switchScreen('startScreen') #inOutScreen
 
         return self.sm
     

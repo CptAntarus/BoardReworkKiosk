@@ -21,40 +21,39 @@
 <InOutScreen>:
     FloatLayout:
         MDTopAppBar:
-            title: "PAGE TITLE HERE"
+            title: "Board Rework"
+            font_style: "H1"
             left_action_items: [["arrow-left", lambda y: app.backButton()]]
             pos_hint: {"top": 1}
             elevation: 10
 
         MDLabel:
-            text: "Board Rework\n(EDIT FONT LATER)"
+            text: "Select Operation"
             pos_hint: {"center_x": 0.5, "center_y": 0.7}
             halign: "center"
-            font_style: "H5"
+            font_style: "H4"
             size_hint: 1,None
             height: self.texture_size[1]
 
-        MDBoxLayout:
-            orientation: 'horizontal'
-            spacing: dp(185)
-            padding: dp(20)
-            pos_hint: {"center_x": 0.5, "center_y": 0.5}
-            size_hint: None, None
-            size: self.minimum_size
+        MDRaisedButton:
+            text: "Check-In Board"
+            size_hint: .2,.25
+            font_style: "H5"
+            pos_hint: {"center_x":.25, "center_y":.4}
+            on_release: app.switchScreen("checkInBoard")
 
-            MDRaisedButton:
-                text: "CheckIn Board"
-                on_release: app.switchScreen("checkInBoard")
-
-            MDRaisedButton:
-                text: "CheckOut Board"
-                on_release: app.switchScreen("checkOutBoard")
+        MDRaisedButton:
+            text: "Check-Out Board"
+            font_style: "H5"
+            size_hint: .2,.25
+            pos_hint: {"center_x":.75, "center_y":.4}
+            on_release: app.switchScreen("checkOutBoard")
 
 
 <CheckInBoard>:
     MDFloatLayout:
         MDTopAppBar:
-            title: "PAGE TITLE HERE"
+            title: "Board Check-In"
             left_action_items: [["arrow-left", lambda y: app.backButton()]]
             pos_hint: {"top": 1}
             elevation: 10
@@ -103,7 +102,7 @@
 <CheckInConfirmScreen>:
     MDFloatLayout:
         MDTopAppBar:
-            title: "PAGE TITLE HERE"
+            title: "Confirm Check-In"
             left_action_items: [["arrow-left", lambda y: app.backButton()]]
             pos_hint: {"top": 1}
             elevation: 10
@@ -190,7 +189,7 @@
 <CheckOutBoard>:
     MDFloatLayout:
         MDTopAppBar:
-            title: "PAGE TITLE HERE"
+            title: "Board Check-Out"
             left_action_items: [["arrow-left", lambda y: app.backButton()]]
             pos_hint: {"top": 1}
             elevation: 10
@@ -221,7 +220,7 @@
 <CheckOutConfirm>:
     MDFloatLayout:
         MDTopAppBar:
-            title: "PAGE TITLE HERE"
+            title: "Confrim Check-Out"
             left_action_items: [["arrow-left", lambda y: app.backButton()]]
             pos_hint: {"top": 1}
             elevation: 10
