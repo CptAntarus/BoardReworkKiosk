@@ -94,6 +94,30 @@ class CheckOutConfirm(Screen):
 
 
 #################################################################################
+#       - Remove from KIOSK_BOXES
+#################################################################################
+        try:
+            numRows = len(GlobalScreenManager.KIOSK_BOXES)
+            numCols = len(GlobalScreenManager.KIOSK_BOXES[0]) if numRows > 0 else 0
+            removed = False
+
+            for i in range(numRows):
+                for j in range(numCols):
+                    if GlobalScreenManager.KIOSK_BOXES[i][j] == self.values[1]:
+                        GlobalScreenManager.KIOSK_BOXES[i][j] = None
+                        removed = True
+                        break
+                if removed:
+                    break
+
+        except Exception as e:
+            print("Error repopulating kiosk boxes:",e)
+
+        finally:
+            print("KIOSK_BOXES =======================================")
+            print(GlobalScreenManager.KIOSK_BOXES)
+            
+#################################################################################
 #       - Return to Login
 #################################################################################
         MDApp.get_running_app().reset(0.1)

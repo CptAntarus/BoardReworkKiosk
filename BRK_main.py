@@ -1,3 +1,6 @@
+import sqlite3
+import re
+
 # KivyMD Imports
 from kivymd.app import MDApp
 from kivymd.uix.textfield import textfield
@@ -30,12 +33,50 @@ class BRKGui(MDApp):
         self.sm.add_widget(CheckInConfirmScreen(name='checkInConfirm'))
         self.sm.add_widget(CheckOutConfirm(name='checkOutComfirm'))
 
+        self.populateDoorsList()
+
         self.sm.transition = NoTransition()
         self.theme_cls.theme_style = 'Dark'
         self.switchScreen('startScreen') #inOutScreen
 
         return self.sm
     
+    def populateDoorsList(self):
+        conn = sqlite3.connect("kioskDB.db")
+        cursor = conn.cursor()
+
+        try:
+            cursor.execute("SELECT * FROM checkins")
+            rows = cursor.fetchall()
+
+            numRows = len(GlobalScreenManager.KIOSK_BOXES)
+            numCols = len(GlobalScreenManager.KIOSK_BOXES[0]) if numRows > 0 else 0
+            index = 0
+
+            for row in rows:
+                if index >= numRows * numCols:
+                    print("Too many entires in DB. No slots left")
+                else:
+                    data = str(row)
+                    pattern = r"(?:'([^']*)'|(\d+))"
+                    matches = re.findall(pattern, data)
+                    values = [group[0] if group[0] else group[1] for group in matches]
+
+                    hashKey = values[1]
+
+                    i = index // numCols
+                    j = index % numCols
+
+                    GlobalScreenManager.KIOSK_BOXES[i][j] = hashKey
+                    index += 1
+
+        except Exception as e:
+            print("Error repopulating kiosk boxes:",e)
+
+        finally:
+            print(GlobalScreenManager.KIOSK_BOXES)
+            conn.close()
+
     def switchScreen(self, newScreen):
         GlobalScreenManager.SCREEN_HIST.append(self.sm.current)
         self.sm.current = newScreen

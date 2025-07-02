@@ -2,6 +2,7 @@ from kivymd.app import MDApp
 from kivy.uix.screenmanager import Screen
 from datetime import datetime
 import sqlite3
+import re
 
 from BRK_GSM import GlobalScreenManager, GSM
 
@@ -26,21 +27,42 @@ class CheckInConfirmScreen(Screen):
 #################################################################################
 #        - Assign a slot in the kiosk (REWORK LATER)
 #################################################################################
-        assigned = False
-        for row in range(len(GlobalScreenManager.KIOSK_BOXES)):
-            if assigned:
-                break
-            for col in range(len(GlobalScreenManager.KIOSK_BOXES[row])):
-                if assigned:
-                    break
-                for slot in range(len(GlobalScreenManager.KIOSK_BOXES[row][col])):
-                    if not GlobalScreenManager.KIOSK_BOXES[row][col][slot]:
-                        GlobalScreenManager.KIOSK_BOXES[row][col][slot] = GlobalScreenManager.HASH_KEY
-                        assigned = True
-                        break
+        # assigned = False
+        # for row in range(len(GlobalScreenManager.KIOSK_BOXES)):
+        #     if assigned:
+        #         break
+        #     for col in range(len(GlobalScreenManager.KIOSK_BOXES[row])):
+        #         if assigned:
+        #             break
+        #         for slot in range(len(GlobalScreenManager.KIOSK_BOXES[row][col])):
+        #             if not GlobalScreenManager.KIOSK_BOXES[row][col][slot]:
+        #                 GlobalScreenManager.KIOSK_BOXES[row][col][slot] = GlobalScreenManager.HASH_KEY
+        #                 assigned = True
+        #                 break
 
         # print(GlobalScreenManager.KIOSK_BOXES[row][col][slot])
         # print(GlobalScreenManager.KIOSK_BOXES)
+
+        try:            
+            numRows = len(GlobalScreenManager.KIOSK_BOXES)
+            numCols = len(GlobalScreenManager.KIOSK_BOXES[0]) if numRows > 0 else 0
+            assigned = False
+
+            for i in range(numRows):
+                for j in range(numCols):
+                    if GlobalScreenManager.KIOSK_BOXES[i][j] is None:
+                        GlobalScreenManager.KIOSK_BOXES[i][j] = GlobalScreenManager.HASH_KEY
+                        assigned = True
+                        break
+                if assigned:
+                    break
+
+        except Exception as e:
+            print("Error repopulating kiosk boxes:",e)
+
+        finally:
+            print("KIOSK_BOXES =======================================")
+            print(GlobalScreenManager.KIOSK_BOXES)
 
 #################################################################################
 #        - Push to KioskDB
