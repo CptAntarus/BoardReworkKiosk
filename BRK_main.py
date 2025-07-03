@@ -42,7 +42,7 @@ class BRKGui(MDApp):
         return self.sm
     
     def populateDoorsList(self):
-        conn = sqlite3.connect("kioskDB.db")
+        conn = sqlite3.connect("KioskDB.db")
         cursor = conn.cursor()
 
         try:
