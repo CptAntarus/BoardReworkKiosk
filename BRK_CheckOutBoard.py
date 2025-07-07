@@ -1,5 +1,8 @@
 from kivymd.app import MDApp
 from kivy.uix.screenmanager import Screen
+from kivy.clock import Clock
+from kivymd.uix.label import MDLabel
+
 from BRK_GSM import GlobalScreenManager
 import sqlite3
 
@@ -11,7 +14,7 @@ class CheckOutBoard(Screen):
     def on_enter(self):
         self.ids.BoardReworkBtn.opacity = 0
         self.ids.BGAReworkBtn.opacity = 0
-        self.ids.NoAccessMsg.opacity = 0
+        self.ids.errorMSG.opacity = 0
         self.ids.BoardReworkBtn.disabled = True
         self.ids.BGAReworkBtn.disabled = True
 
@@ -22,23 +25,41 @@ class CheckOutBoard(Screen):
                 self.ids.BGAReworkBtn.opacity = 1
                 self.ids.BGAReworkBtn.disabled = False
         else:
-            self.ids.NoAccessMsg.opacity = 1
+            self.ids.errorMSG.text = "You are not registered for Check-Out"
+            self.ids.errorMSG.opacity = 1
 
 
     def findBoard(self):
-        conn = sqlite3.connect('KioskDB.db')
-        cursor = conn.cursor()
+        try:
+            conn = sqlite3.connect('KioskDB.db')
+            cursor = conn.cursor()
 
-        cursor.execute("""
-                       SELECT * FROM checkins
-                       ORDER BY priority ASC, time_stamp ASC
-                       LIMIT 1
-                    """)
-        result = cursor.fetchone()
-        GlobalScreenManager.BOARD_CHECKOUT = str(result)
+            cursor.execute("""
+                        SELECT * FROM checkins
+                        ORDER BY priority ASC, time_stamp ASC
+                        LIMIT 1
+                        """)
+            result = cursor.fetchone()
+            GlobalScreenManager.BOARD_CHECKOUT = str(result)
 
-        print("Top Priority task: (CheckOutScreen) ",result)
+            print("Top Priority task: (CheckOutScreen) ",result)
 
-        conn.close()
+            conn.close()
 
-        MDApp.get_running_app().switchScreen('checkOutComfirm')
+            MDApp.get_running_app().switchScreen('checkOutComfirm')
+        except:
+            print("No Board in Kiosk")
+
+            self.ids.errorMSG.text = "No Board in Kiosk"
+            self.ids.errorMSG.opacity = 1
+
+            self.ids.BoardReworkBtn.opacity = 0
+            self.ids.BGAReworkBtn.opacity = 0
+            self.ids.BoardReworkBtn.disabled = True
+            self.ids.BGAReworkBtn.disabled = True
+
+            Clock.schedule_once(self.setExceptionText, 2)
+            Clock.schedule_once(lambda dt: MDApp.get_running_app().switchScreen('startScreen'), 2.1)
+
+    def setExceptionText(self, dt):
+        pass

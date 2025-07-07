@@ -58,16 +58,16 @@ class BRKGui(MDApp):
                     print("Too many entires in DB. No slots left")
                 else:
                     data = str(row)
-                    pattern = r"(?:'([^']*)'|(\d+))"
+                    pattern = r"(?:'([^']*)'|(\d+(?:\.\d+)?))"
                     matches = re.findall(pattern, data)
                     values = [group[0] if group[0] else group[1] for group in matches]
 
                     hashKey = values[1]
 
-                    i = index // numCols
-                    j = index % numCols
+                    print(f"values[8]: {values[8]}:::::::::values[9]: {values[9]}")
 
-                    GlobalScreenManager.KIOSK_BOXES[i][j] = hashKey
+                    # values[8 and 9] are the index of the slot the board was previously in
+                    GlobalScreenManager.KIOSK_BOXES[int(values[8])][int(values[9])] = hashKey
                     index += 1
 
         except Exception as e:

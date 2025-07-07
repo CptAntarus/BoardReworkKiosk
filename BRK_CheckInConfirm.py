@@ -52,6 +52,8 @@ class CheckInConfirmScreen(Screen):
                 for j in range(numCols):
                     if GlobalScreenManager.KIOSK_BOXES[i][j] is None:
                         GlobalScreenManager.KIOSK_BOXES[i][j] = GlobalScreenManager.HASH_KEY
+                        self.indexRow = i
+                        self.indexCol = j
                         assigned = True
                         break
                 if assigned:
@@ -79,13 +81,15 @@ class CheckInConfirmScreen(Screen):
                 board_id TEXT,
                 priority TEXT,
                 time_stamp TEXT,
-                in_out_status TEXT                                
+                in_out_status TEXT,
+                index_row,
+                index_col                                
             )
         ''')
 
         cursor.execute('''
-            INSERT INTO checkins (hash_key, u_num, mo, board_id, priority, time_stamp, in_out_status)
-            values (?,?,?,?,?,?,?)
+            INSERT INTO checkins (hash_key, u_num, mo, board_id, priority, time_stamp, in_out_status, index_row, index_col)
+            values (?,?,?,?,?,?,?,?,?)
             ''', (
                 GlobalScreenManager.HASH_KEY,
                 GlobalScreenManager.CURRENT_USER,
@@ -93,7 +97,9 @@ class CheckInConfirmScreen(Screen):
                 GlobalScreenManager.CURRENT_BID,
                 GlobalScreenManager.CURRENT_PRIORITY,
                 now.strftime("%m-%d-%Y %H:%M:%S"),
-                "IN"
+                "IN",
+                self.indexRow,
+                self.indexCol
             )
         )
 

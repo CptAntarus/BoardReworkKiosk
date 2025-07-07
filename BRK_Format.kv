@@ -215,11 +215,15 @@
             on_release: root.findBoard()
 
         MDLabel:
-            id: NoAccessMsg
+            id: errorMSG
             opacity: 0
-            text: "You are not registered for Check-Out"
+            font_style: "H5"
+            text: ""
             size_hint: .5, None
-            pos_hint: {"center_x":.5,"center_y":.5}
+            height: self.texture_size[1]
+            pos_hint: {"center_x": .5, "center_y": .5}
+            halign: "center"
+            text_size: self.width, None
 
 <CheckOutConfirm>:
     MDFloatLayout:
