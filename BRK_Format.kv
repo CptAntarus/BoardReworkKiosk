@@ -64,7 +64,7 @@
             hint_text: "MO"
             focus: True
             size_hint: 0.7, None
-            pos_hint: {"center_x":.4,"center_y":.75}
+            pos_hint: {"center_x":.4,"center_y":.8}
             on_text_validate: root.validateMO(self.text)
 
         MDTextField:
@@ -74,30 +74,50 @@
             opacity: 0
             disabled: True
             size_hint: .7, None
-            pos_hint: {"center_x":.4,"center_y":.5}
+            pos_hint: {"center_x":.4,"center_y":.6}
             on_text_validate: root.validateBarCode(self.text)
 
-        MDBoxLayout:
-            orientation: 'horizontal'
+        MDTextField:
             id: boardInPriority
+            mode: "rectangle"
+            hint_text: "Priority"
             opacity: 0
             disabled: True
-            spacing: dp(75)
-            padding: dp(20)
             size_hint: 0.7, None
-            pos_hint: {"center_x":.5, "center_y":.25}
+            pos_hint: {"center_x":.4,"center_y":.4}
+            on_text_validate: root.validatePriority(self.text)
 
-            MDRaisedButton:
-                text: "Priority 1"
-                on_release: root.setPriority(1)
+        MDTextField:
+            id: boardInRWType
+            mode: "rectangle"
+            hint_text: "Rework Type"
+            opacity: 0
+            disabled: True
+            size_hint: 0.7, None
+            pos_hint: {"center_x":.4,"center_y":.2}
+            on_text_validate: root.validateRWType(self.text)
+        
+        # MDBoxLayout:
+        #     orientation: 'horizontal'
+        #     id: boardInPriority
+        #     opacity: 0
+        #     disabled: True
+        #     spacing: dp(75)
+        #     padding: dp(20)
+        #     size_hint: 0.7, None
+        #     pos_hint: {"center_x":.5, "center_y":.25}
 
-            MDRaisedButton:
-                text: "Priority 2"
-                on_release: root.setPriority(2)
+        #     MDRaisedButton:
+        #         text: "Priority 1"
+        #         on_release: root.setPriority(1)
 
-            MDRaisedButton:
-                text: "Priority 3"
-                on_release: root.setPriority(3)
+        #     MDRaisedButton:
+        #         text: "Priority 2"
+        #         on_release: root.setPriority(2)
+
+        #     MDRaisedButton:
+        #         text: "Priority 3"
+        #         on_release: root.setPriority(3)
 
 <CheckInConfirmScreen>:
     MDFloatLayout:
@@ -110,12 +130,12 @@
         MDIconButton:
             icon: "card-account-details" # account, badge-account-horizontal
             size_hint: None,None
-            pos_hint: {"center_x":.1,"center_y":.75}
+            pos_hint: {"center_x":.1,"center_y":.8}
 
         MDLabel:
             text: 'U Number:'
             size_hint: None, None
-            pos_hint: {"center_x":.25,"center_y":.75}
+            pos_hint: {"center_x":.25,"center_y":.8}
 
         MDLabel:
             id: checkInConfirmUNum
@@ -123,17 +143,17 @@
             halign: 'left'
             size_hint: None, None
             text_size: None, None
-            pos_hint: {"center_x":.55,"center_y":.75}
+            pos_hint: {"center_x":.55,"center_y":.8}
 ###############################################################
         MDIconButton:
             icon: "flip-vertical"   # line-scan
             size_hint: None,None
-            pos_hint: {"center_x":.1,"center_y":.55}
+            pos_hint: {"center_x":.1,"center_y":.65}
         
         MDLabel:
             text: "MO Num:"
             size_hint: None, None
-            pos_hint: {"center_x":.25,"center_y":.55}
+            pos_hint: {"center_x":.25,"center_y":.65}
 
         MDLabel:
             id: checkInConfirmMONum
@@ -141,17 +161,17 @@
             halign: 'left'
             size_hint: None, None
             text_size: None, None
-            pos_hint: {"center_x":.55,"center_y":.55}
+            pos_hint: {"center_x":.55,"center_y":.65}
 ###############################################################
         MDIconButton:
             icon: "barcode"
             size_hint: None,None
-            pos_hint: {"center_x":.1,"center_y":.35}
+            pos_hint: {"center_x":.1,"center_y":.5}
 
         MDLabel:
             text: "Board ID"
             size_hint: None, None
-            pos_hint: {"center_x":.25,"center_y":.35}
+            pos_hint: {"center_x":.25,"center_y":.5}
 
         MDLabel:
             id: checkInConfirmBoardID
@@ -159,17 +179,17 @@
             halign: 'left'
             size_hint: None, None
             text_size: None, None
-            pos_hint: {"center_x":.55,"center_y":.35}
+            pos_hint: {"center_x":.55,"center_y":.5}
 ###############################################################
         MDIconButton:
             icon: "google-analytics" # progress-alert,
             size_hint: None,None
-            pos_hint: {"center_x":.1,"center_y":.15}
+            pos_hint: {"center_x":.1,"center_y":.35}
 
         MDLabel:
             text: "Priority"
             size_hint: None, None
-            pos_hint: {"center_x":.25,"center_y":.15}
+            pos_hint: {"center_x":.25,"center_y":.35}
 
         MDLabel:
             id: checkInConfirmPriority
@@ -177,8 +197,27 @@
             halign: 'left'
             size_hint: None, None
             text_size: None, None
-            pos_hint: {"center_x":.55,"center_y":.15}
+            pos_hint: {"center_x":.55,"center_y":.35}
 ###############################################################
+        MDIconButton:
+            icon: "progress-alert" # progress-alert,
+            size_hint: None,None
+            pos_hint: {"center_x":.1,"center_y":.2}
+
+        MDLabel:
+            text: "Rework Type"
+            size_hint: None, None
+            pos_hint: {"center_x":.25,"center_y":.2}
+
+        MDLabel:
+            id: checkInConfirmRWType
+            text: ""
+            halign: 'left'
+            size_hint: None, None
+            text_size: None, None
+            pos_hint: {"center_x":.55,"center_y":.2}
+###############################################################
+
         MDRaisedButton:
             text: "Confirm"
             size_hint: .22,.1
@@ -310,3 +349,12 @@
             size_hint: .22,.1
             pos_hint: {"center_x":.8,"center_y":.15}
             on_release: root.confirmCheckOut()
+
+
+
+<CloseDoor>:
+    MDFloatLayout:
+        MDLabel:
+            text: "Ta Da..."
+            size_hint: None, None
+            pos_hint: {"center_x":.5,"center_y":.5}

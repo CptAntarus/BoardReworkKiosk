@@ -18,6 +18,7 @@ class CheckOutConfirm(Screen):
         pattern = r"(?:'([^']*)'|(\d+))"
 
         matches = re.findall(pattern, data)
+
         self.values = [group[0] if group[0] else group[1] for group in matches]
 
         print("SELECTED BOARD: ", self.values)
@@ -28,9 +29,9 @@ class CheckOutConfirm(Screen):
         self.ids.checkOutConfirmPriority.text = self.values[5]
         self.hashKey = self.values[1]
 
+
     def confirmCheckOut(self):
         now = datetime.now()
-        # Remove from KIOSK_BOXES
 
 #################################################################################
 #        - Copy over to ReworkDB
@@ -47,21 +48,23 @@ class CheckOutConfirm(Screen):
                 board_id TEXT,
                 priority TEXT,
                 time_stamp TEXT,
-                in_out_status TEXT                                
+                in_out_status TEXT,
+                rework_type TEXT                              
             )
         ''')
 
         cursor.execute('''
-            INSERT INTO checkins (hash_key, u_num, mo, board_id, priority, time_stamp, in_out_status)
-            values (?,?,?,?,?,?,?)
+            INSERT INTO checkins (hash_key, u_num, mo, board_id, priority, time_stamp, in_out_status, rework_type)
+            values (?,?,?,?,?,?,?,?)
             ''', (   
-                self.values[1],
-                self.values[2],
-                self.values[3],
-                self.values[4],
-                self.values[5],
+                self.values[1], # hash_key
+                GlobalScreenManager.CURRENT_USER, # U-Number
+                self.values[3], # MO Number
+                self.values[4], # Board ID
+                self.values[5], # Priority
                 now.strftime("%m-%d-%Y %H:%M:%S"),
-                "OUT"
+                "OUT",
+                GlobalScreenManager.CURRENT_RW_TYPE
             )
         )
 
@@ -121,4 +124,4 @@ class CheckOutConfirm(Screen):
 #       - Return to Login
 #################################################################################
         MDApp.get_running_app().reset(0.1)
-        MDApp.get_running_app().switchScreen('startScreen')
+        MDApp.get_running_app().switchScreen('closeDoor')

@@ -18,6 +18,9 @@ class CheckOutBoard(Screen):
         self.ids.BoardReworkBtn.disabled = True
         self.ids.BGAReworkBtn.disabled = True
 
+#################################################################################
+#        - Show checkout options based on permissions
+#################################################################################
         if GlobalScreenManager.CURRENT_USER in GlobalScreenManager.REWORK_USERS:
             self.ids.BoardReworkBtn.opacity = 1
             self.ids.BoardReworkBtn.disabled = False
@@ -28,7 +31,9 @@ class CheckOutBoard(Screen):
             self.ids.errorMSG.text = "You are not registered for Check-Out"
             self.ids.errorMSG.opacity = 1
 
-
+#################################################################################
+#        - Search database for next board if any
+#################################################################################
     def findBoard(self):
         try:
             conn = sqlite3.connect('KioskDB.db')
@@ -40,17 +45,21 @@ class CheckOutBoard(Screen):
                         LIMIT 1
                         """)
             result = cursor.fetchone()
-            GlobalScreenManager.BOARD_CHECKOUT = str(result)
 
+            # Check that database is not empty
+            if result is None:
+                raise ValueError("No board found")
+
+            GlobalScreenManager.BOARD_CHECKOUT = str(result)
             print("Top Priority task: (CheckOutScreen) ",result)
 
-            conn.close()
-
             MDApp.get_running_app().switchScreen('checkOutComfirm')
-        except:
-            print("No Board in Kiosk")
 
-            self.ids.errorMSG.text = "No Board in Kiosk"
+        except Exception as e:
+            print("No Board in Kiosk")
+            print(e)
+
+            self.ids.errorMSG.text = "No Boards in Kiosk"
             self.ids.errorMSG.opacity = 1
 
             self.ids.BoardReworkBtn.opacity = 0
@@ -60,6 +69,10 @@ class CheckOutBoard(Screen):
 
             Clock.schedule_once(self.setExceptionText, 2)
             Clock.schedule_once(lambda dt: MDApp.get_running_app().switchScreen('startScreen'), 2.1)
+
+        finally:
+            conn.close()
+
 
     def setExceptionText(self, dt):
         pass

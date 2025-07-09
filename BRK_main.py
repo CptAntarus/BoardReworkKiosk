@@ -21,6 +21,7 @@ from BRK_CheckInBoard import CheckInBoard
 from BRK_CheckOutBoard import CheckOutBoard
 from BRK_CheckInConfirm import CheckInConfirmScreen
 from BRK_CheckOutConfirm import CheckOutConfirm
+from BRK_CloseDoor import CloseDoor
 
 
 class BRKGui(MDApp):
@@ -32,12 +33,13 @@ class BRKGui(MDApp):
         self.sm.add_widget(CheckOutBoard(name='checkOutBoard'))
         self.sm.add_widget(CheckInConfirmScreen(name='checkInConfirm'))
         self.sm.add_widget(CheckOutConfirm(name='checkOutComfirm'))
+        self.sm.add_widget(CloseDoor(name="closeDoor"))
 
         self.populateDoorsList()
 
         self.sm.transition = NoTransition()
         self.theme_cls.theme_style = 'Dark'
-        self.switchScreen('startScreen') #inOutScreen
+        self.switchScreen('startScreen') #checkInBoard
 
         return self.sm
     

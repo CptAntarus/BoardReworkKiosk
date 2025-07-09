@@ -16,6 +16,7 @@ class CheckInConfirmScreen(Screen):
         self.ids.checkInConfirmMONum.text = str(GlobalScreenManager.CURRENT_MO)
         self.ids.checkInConfirmBoardID.text = str(GlobalScreenManager.CURRENT_BID)
         self.ids.checkInConfirmPriority.text = str(GlobalScreenManager.CURRENT_PRIORITY)
+        self.ids.checkInConfirmRWType.text = str(GlobalScreenManager.CURRENT_RW_TYPE)
 
 
     def assignBox(self):
@@ -27,22 +28,6 @@ class CheckInConfirmScreen(Screen):
 #################################################################################
 #        - Assign a slot in the kiosk (REWORK LATER)
 #################################################################################
-        # assigned = False
-        # for row in range(len(GlobalScreenManager.KIOSK_BOXES)):
-        #     if assigned:
-        #         break
-        #     for col in range(len(GlobalScreenManager.KIOSK_BOXES[row])):
-        #         if assigned:
-        #             break
-        #         for slot in range(len(GlobalScreenManager.KIOSK_BOXES[row][col])):
-        #             if not GlobalScreenManager.KIOSK_BOXES[row][col][slot]:
-        #                 GlobalScreenManager.KIOSK_BOXES[row][col][slot] = GlobalScreenManager.HASH_KEY
-        #                 assigned = True
-        #                 break
-
-        # print(GlobalScreenManager.KIOSK_BOXES[row][col][slot])
-        # print(GlobalScreenManager.KIOSK_BOXES)
-
         try:            
             numRows = len(GlobalScreenManager.KIOSK_BOXES)
             numCols = len(GlobalScreenManager.KIOSK_BOXES[0]) if numRows > 0 else 0
@@ -83,13 +68,14 @@ class CheckInConfirmScreen(Screen):
                 time_stamp TEXT,
                 in_out_status TEXT,
                 index_row,
-                index_col                                
+                index_col,
+                rework_type TEXT                               
             )
         ''')
 
         cursor.execute('''
-            INSERT INTO checkins (hash_key, u_num, mo, board_id, priority, time_stamp, in_out_status, index_row, index_col)
-            values (?,?,?,?,?,?,?,?,?)
+            INSERT INTO checkins (hash_key, u_num, mo, board_id, priority, time_stamp, in_out_status, index_row, index_col, rework_type)
+            values (?,?,?,?,?,?,?,?,?,?)
             ''', (
                 GlobalScreenManager.HASH_KEY,
                 GlobalScreenManager.CURRENT_USER,
@@ -99,7 +85,8 @@ class CheckInConfirmScreen(Screen):
                 now.strftime("%m-%d-%Y %H:%M:%S"),
                 "IN",
                 self.indexRow,
-                self.indexCol
+                self.indexCol,
+                GlobalScreenManager.CURRENT_RW_TYPE
             )
         )
 
@@ -127,13 +114,14 @@ class CheckInConfirmScreen(Screen):
                 board_id TEXT,
                 priority TEXT,
                 time_stamp TEXT,
-                in_out_status TEXT                                
+                in_out_status TEXT,
+                rework_type TEXT                                
             )
         ''')
 
         cursor.execute('''
-            INSERT INTO checkins (hash_key, u_num, mo, board_id, priority, time_stamp, in_out_status)
-            values (?,?,?,?,?,?,?)
+            INSERT INTO checkins (hash_key, u_num, mo, board_id, priority, time_stamp, in_out_status, rework_type)
+            values (?,?,?,?,?,?,?,?)
             ''', (
                 GlobalScreenManager.HASH_KEY,
                 GlobalScreenManager.CURRENT_USER,
@@ -141,7 +129,8 @@ class CheckInConfirmScreen(Screen):
                 GlobalScreenManager.CURRENT_BID,
                 GlobalScreenManager.CURRENT_PRIORITY,
                 now.strftime("%m-%d-%Y %H:%M:%S"),
-                "IN"
+                "IN",
+                GlobalScreenManager.CURRENT_RW_TYPE
             )
         )
 
@@ -157,4 +146,4 @@ class CheckInConfirmScreen(Screen):
 #        - Return to Login
 #################################################################################
         MDApp.get_running_app().reset(.1)
-        MDApp.get_running_app().switchScreen('startScreen')
+        MDApp.get_running_app().switchScreen('closeDoor')
