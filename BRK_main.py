@@ -32,7 +32,7 @@ class BRKGui(MDApp):
         self.sm.add_widget(CheckInBoard(name='checkInBoard'))
         self.sm.add_widget(CheckOutBoard(name='checkOutBoard'))
         self.sm.add_widget(CheckInConfirmScreen(name='checkInConfirm'))
-        self.sm.add_widget(CheckOutConfirm(name='checkOutComfirm'))
+        self.sm.add_widget(CheckOutConfirm(name='checkOutConfirm'))
         self.sm.add_widget(CloseDoor(name="closeDoor"))
 
         self.populateDoorsList()

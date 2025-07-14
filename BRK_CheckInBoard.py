@@ -97,7 +97,7 @@ class CheckInBoard(Screen):
 
         else:
             print("Invalid Input")
-            self.ids.boardInPriority.text = ""
+            self.ids.boardInRWType.text = ""
             Clock.schedule_once(self.clearInputRWType, 0.1)
 
 

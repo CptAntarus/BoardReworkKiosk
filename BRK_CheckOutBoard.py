@@ -53,7 +53,7 @@ class CheckOutBoard(Screen):
             GlobalScreenManager.BOARD_CHECKOUT = str(result)
             print("Top Priority task: (CheckOutScreen) ",result)
 
-            MDApp.get_running_app().switchScreen('checkOutComfirm')
+            MDApp.get_running_app().switchScreen('checkOutConfirm')
 
         except Exception as e:
             print("No Board in Kiosk")

@@ -96,28 +96,6 @@
             size_hint: 0.7, None
             pos_hint: {"center_x":.4,"center_y":.2}
             on_text_validate: root.validateRWType(self.text)
-        
-        # MDBoxLayout:
-        #     orientation: 'horizontal'
-        #     id: boardInPriority
-        #     opacity: 0
-        #     disabled: True
-        #     spacing: dp(75)
-        #     padding: dp(20)
-        #     size_hint: 0.7, None
-        #     pos_hint: {"center_x":.5, "center_y":.25}
-
-        #     MDRaisedButton:
-        #         text: "Priority 1"
-        #         on_release: root.setPriority(1)
-
-        #     MDRaisedButton:
-        #         text: "Priority 2"
-        #         on_release: root.setPriority(2)
-
-        #     MDRaisedButton:
-        #         text: "Priority 3"
-        #         on_release: root.setPriority(3)
 
 <CheckInConfirmScreen>:
     MDFloatLayout:
@@ -355,6 +333,15 @@
 <CloseDoor>:
     MDFloatLayout:
         MDLabel:
-            text: "Ta Da..."
-            size_hint: None, None
+            id: closeDoorMsg
+            text: ""
+            font_style: "H5"
+            size_hint: .5, .5
             pos_hint: {"center_x":.5,"center_y":.5}
+        
+        MDRaisedButton:
+            id: closeDoorDoneBtn
+            text: "Done"
+            size_hint: .22,.1
+            pos_hint: {"center_x":.8,"center_y":.15}
+            on_release: app.switchScreen('startScreen')
