@@ -17,21 +17,10 @@ class GlobalScreenManager(ScreenManager):
     KIOSK_BOXES = [[None for _ in range(20)] for _ in range(3)]
     # KIOSK_BOXES = [[[None for _ in range(3)] for _ in range(3)] for _ in range(3)]
 
-    USERS = [
-        "U155759",
-        "U312110",
-        "U313773",
-        "U120099"
-    ]
-
-    REWORK_USERS = [
-        "U155759",
-        "U312110"
-    ]
-
-    BGA_USERS = [
-        "U155759"
-    ]
+    USERS = []
+    REWORK_USERS = []
+    BGA_USERS = []
+    ADMIN_USERS = []
 
 
 
