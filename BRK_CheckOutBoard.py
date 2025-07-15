@@ -65,7 +65,7 @@ class CheckOutBoard(Screen):
             print("No Board in Kiosk")
             print(e)
 
-            self.ids.errorMSG.text = "No Boards in Kiosk"
+            self.ids.errorMSG.text = "No NBR Boards in Kiosk"
             self.ids.errorMSG.opacity = 1
 
             self.ids.checkOutLabel.opacity = 0
@@ -110,7 +110,7 @@ class CheckOutBoard(Screen):
             print("No Board in Kiosk")
             print(e)
 
-            self.ids.errorMSG.text = "No Boards in Kiosk"
+            self.ids.errorMSG.text = "No BGA Boards in Kiosk"
             self.ids.errorMSG.opacity = 1
 
             self.ids.checkOutLabel.opacity = 0
