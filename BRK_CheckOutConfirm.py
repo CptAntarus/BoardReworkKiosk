@@ -4,7 +4,7 @@ from kivy.clock import Clock
 from datetime import datetime
 from BRK_GSM import GlobalScreenManager
 import sqlite3
-import re
+
 
 class CheckOutConfirm(Screen):
     def on_enter(self):
@@ -14,24 +14,21 @@ class CheckOutConfirm(Screen):
         Clock.schedule_once(self.delayedInit,0.1)
 
     def delayedInit(self, dt):
-        data = GlobalScreenManager.BOARD_CHECKOUT
-        pattern = r"(?:'([^']*)'|(\d+))"
+        data = GlobalScreenManager.BOARD_CHECKOUT  # this is already a tuple
 
-        matches = re.findall(pattern, data)
-
-        self.values = [group[0] if group[0] else group[1] for group in matches]
-
-        print("SELECTED BOARD: ", self.values)
+        print("SELECTED BOARD:", data)
 
         self.ids.checkOutConfirmUNum.text = str(GlobalScreenManager.CURRENT_USER)
-        self.ids.checkOutConfirmMONum.text = self.values[3]
-        self.ids.checkOutConfirmBoardID.text = self.values[4]
-        self.ids.checkOutConfirmPriority.text = self.values[5]
-        self.hashKey = self.values[1]
+        self.ids.checkOutConfirmMONum.text = str(data[3])       # MO
+        self.ids.checkOutConfirmBoardID.text = str(data[4])     # Board Number
+        self.ids.checkOutConfirmPriority.text = str(data[5])    # Priority
+        self.ids.checkOutConfirmRWType.text = str(data[10])     # Rework Type
 
+        self.hashKey = str(data[1])
 
     def confirmCheckOut(self):
         now = datetime.now()
+        data = GlobalScreenManager.BOARD_CHECKOUT
 
 #################################################################################
 #        - Copy over to ReworkDB
@@ -57,14 +54,14 @@ class CheckOutConfirm(Screen):
             INSERT INTO checkins (hash_key, u_num, mo, board_id, priority, time_stamp, in_out_status, rework_type)
             values (?,?,?,?,?,?,?,?)
             ''', (   
-                self.values[1], # hash_key
+                data[1], # hash_key
                 GlobalScreenManager.CURRENT_USER, # U-Number
-                self.values[3], # MO Number
-                self.values[4], # Board ID
-                self.values[5], # Priority
+                data[3], # MO Number
+                data[4], # Board ID
+                data[5], # Priority
                 now.strftime("%m-%d-%Y %H:%M:%S"),
                 "OUT",
-                GlobalScreenManager.CURRENT_RW_TYPE
+                data[10]
             )
         )
 
@@ -85,7 +82,7 @@ class CheckOutConfirm(Screen):
         cursor.execute("""
                        DELETE FROM checkins
                        WHERE hash_key = ?
-                    """, (self.hashKey,))
+                    """, (data[1],))
 
          # Print Database
         print("KioskDB =======================================")
@@ -106,7 +103,7 @@ class CheckOutConfirm(Screen):
 
             for i in range(numRows):
                 for j in range(numCols):
-                    if GlobalScreenManager.KIOSK_BOXES[i][j] == self.values[1]:
+                    if GlobalScreenManager.KIOSK_BOXES[i][j] == data[1]:
                         GlobalScreenManager.KIOSK_BOXES[i][j] = None
                         removed = True
                         break

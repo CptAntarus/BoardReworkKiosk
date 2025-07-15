@@ -23,6 +23,8 @@ from BRK_CheckOutBoard import CheckOutBoard
 from BRK_CheckInConfirm import CheckInConfirmScreen
 from BRK_CheckOutConfirm import CheckOutConfirm
 from BRK_CloseDoor import CloseDoor
+from BRK_AdminCheckout import AdminCheckout
+
 
 
 class BRKGui(MDApp):
@@ -35,6 +37,7 @@ class BRKGui(MDApp):
         self.sm.add_widget(CheckInConfirmScreen(name='checkInConfirm'))
         self.sm.add_widget(CheckOutConfirm(name='checkOutConfirm'))
         self.sm.add_widget(CloseDoor(name="closeDoor"))
+        self.sm.add_widget(AdminCheckout(name="adminCheckout"))
 
         self.populateDoorsList()
         self.populateUsersList()

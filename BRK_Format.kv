@@ -127,7 +127,7 @@
             icon: "flip-vertical"   # line-scan
             size_hint: None,None
             pos_hint: {"center_x":.1,"center_y":.65}
-        
+
         MDLabel:
             text: "MO Num:"
             size_hint: None, None
@@ -211,6 +211,16 @@
             pos_hint: {"top": 1}
             elevation: 10
 
+        MDLabel:
+            id: checkOutLabel
+            opacity: 1
+            text: "Select Option"
+            pos_hint: {"center_x": 0.5, "center_y": 0.65}
+            halign: "center"
+            font_style: "H4"
+            size_hint: 1,None
+            height: self.texture_size[1]
+
         MDRaisedButton:
             id: BGAReworkBtn
             opacity: 0
@@ -219,7 +229,7 @@
             size_hint: .3,.2
             font_style: "H5"
             pos_hint: {"center_x":.25, "center_y":.4}
-            on_release:
+            on_release: root.findBGABoard()
 
         MDRaisedButton:
             id: BoardReworkBtn
@@ -229,7 +239,17 @@
             size_hint: .3,.2
             font_style: "H5"
             pos_hint: {"center_x":.75, "center_y":.4}
-            on_release: root.findBoard()
+            on_release: root.findNBRBoard()
+
+        MDRaisedButton:
+            id: AdminCheckoutBtn
+            opacity: 0
+            disabled: True
+            text: "Admin Checkout"
+            size_hint: .2,.1
+            font_style: "H5"
+            pos_hint: {"center_x":.5, "center_y":.2}
+            on_release: app.switchScreen("adminCheckout")
 
         MDLabel:
             id: errorMSG
@@ -253,12 +273,12 @@
         MDIconButton:
             icon: "card-account-details" # account, badge-account-horizontal
             size_hint: None,None
-            pos_hint: {"center_x":.1,"center_y":.75}
+            pos_hint: {"center_x":.1,"center_y":.8}
 
         MDLabel:
             text: 'U Number:'
             size_hint: None, None
-            pos_hint: {"center_x":.25,"center_y":.75}
+            pos_hint: {"center_x":.25,"center_y":.8}
 
         MDLabel:
             id: checkOutConfirmUNum
@@ -266,17 +286,17 @@
             halign: 'left'
             size_hint: None, None
             text_size: None, None
-            pos_hint: {"center_x":.55,"center_y":.75}
+            pos_hint: {"center_x":.55,"center_y":.8}
 ###############################################################
         MDIconButton:
             icon: "flip-vertical"   # line-scan
             size_hint: None,None
-            pos_hint: {"center_x":.1,"center_y":.55}
+            pos_hint: {"center_x":.1,"center_y":.65}
         
         MDLabel:
             text: "MO Num:"
             size_hint: None, None
-            pos_hint: {"center_x":.25,"center_y":.55}
+            pos_hint: {"center_x":.25,"center_y":.65}
 
         MDLabel:
             id: checkOutConfirmMONum
@@ -284,17 +304,17 @@
             halign: 'left'
             size_hint: None, None
             text_size: None, None
-            pos_hint: {"center_x":.55,"center_y":.55}
+            pos_hint: {"center_x":.55,"center_y":.65}
 ###############################################################
         MDIconButton:
             icon: "barcode"
             size_hint: None,None
-            pos_hint: {"center_x":.1,"center_y":.35}
+            pos_hint: {"center_x":.1,"center_y":.5}
 
         MDLabel:
             text: "Board ID"
             size_hint: None, None
-            pos_hint: {"center_x":.25,"center_y":.35}
+            pos_hint: {"center_x":.25,"center_y":.5}
 
         MDLabel:
             id: checkOutConfirmBoardID
@@ -302,17 +322,17 @@
             halign: 'left'
             size_hint: None, None
             text_size: None, None
-            pos_hint: {"center_x":.55,"center_y":.35}
+            pos_hint: {"center_x":.55,"center_y":.5}
 ###############################################################
         MDIconButton:
             icon: "google-analytics" # progress-alert,
             size_hint: None,None
-            pos_hint: {"center_x":.1,"center_y":.15}
+            pos_hint: {"center_x":.1,"center_y":.35}
 
         MDLabel:
             text: "Priority"
             size_hint: None, None
-            pos_hint: {"center_x":.25,"center_y":.15}
+            pos_hint: {"center_x":.25,"center_y":.35}
 
         MDLabel:
             id: checkOutConfirmPriority
@@ -320,7 +340,25 @@
             halign: 'left'
             size_hint: None, None
             text_size: None, None
-            pos_hint: {"center_x":.55,"center_y":.15}
+            pos_hint: {"center_x":.55,"center_y":.35}
+###############################################################
+        MDIconButton:
+            icon: "progress-alert" # progress-alert,
+            size_hint: None,None
+            pos_hint: {"center_x":.1,"center_y":.2}
+
+        MDLabel:
+            text: "Rework Type"
+            size_hint: None, None
+            pos_hint: {"center_x":.25,"center_y":.2}
+
+        MDLabel:
+            id: checkOutConfirmRWType
+            text: ""
+            halign: 'left'
+            size_hint: None, None
+            text_size: None, None
+            pos_hint: {"center_x":.55,"center_y":.2}
 ###############################################################
         MDRaisedButton:
             text: "Confirm"
@@ -345,3 +383,17 @@
             size_hint: .22,.1
             pos_hint: {"center_x":.8,"center_y":.15}
             on_release: app.switchScreen('startScreen')
+
+
+<AdminCheckOut>:
+    MDBoxLayout:
+        orientation: 'vertical'
+
+        MDTopAppBar:
+            title: "Boards In Kiosk"
+            right_action_items: [["menu", lambda x: root.open_menu(x)]]
+            left_action_items: [["arrow-left", lambda y: app.backButton(y)]]
+
+        ScrollView:
+            MDList:
+                id: reportList
