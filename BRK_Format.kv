@@ -377,26 +377,20 @@
             size_hint: .7,.7
             pos_hint: {"center_x":.5,"center_y":.5}
         
-        # MDLabel:
-        #     id: boardLocationX
-        #     text: ""
-        #     font_style: "H5"
-        #     size_hint: 1,1
-        #     pos_hint: {"center_x":.85,"center_y":.5}
-
-        # MDLabel:
-        #     id: boardLocationY
-        #     text: ""
-        #     font_style: "H5"
-        #     size_hint: .4,.4
-        #     pos_hint: {"center_x":.93,"center_y":.5}    
+        MDLabel:
+            id: doorCountDown
+            text: "00:00"
+            font_style: "H5"
+            size_hint: None, None
+            size: dp(100), dp(40)
+            pos_hint: {"center_x":.9,"center_y":.9}
 
         MDRaisedButton:
             id: closeDoorDoneBtn
             text: "Done"
             size_hint: .22,.1
             pos_hint: {"center_x":.8,"center_y":.15}
-            on_release: app.switchScreen('startScreen')
+            on_release: root.doneBtn()
 
 
 <AdminCheckOut>:
