@@ -9,6 +9,8 @@ class GlobalScreenManager(ScreenManager):
     CURRENT_RW_TYPE = 0
     HASH_KEY = 0
     BOARD_CHECKOUT = 0
+    CURRENT_POS_X = 0
+    CURRENT_POS_Y = 0
 
     SCREEN_HIST = []
 
@@ -21,6 +23,7 @@ class GlobalScreenManager(ScreenManager):
     REWORK_USERS = []
     BGA_USERS = []
     ADMIN_USERS = []
+    QA_USERS = []
 
 
 

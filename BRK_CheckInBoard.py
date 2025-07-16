@@ -117,8 +117,3 @@ class CheckInBoard(Screen):
         self.ids.boardInRWType.text = ""
         self.ids.boardInRWType.focus = True
 
-
-    # DEPRICATED: Used for old priority buttons
-    # def setPriority(self, priority):
-    #     GlobalScreenManager.CURRENT_PRIORITY = priority
-    #     MDApp.get_running_app().switchScreen('checkInConfirm')

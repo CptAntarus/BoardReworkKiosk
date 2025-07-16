@@ -26,7 +26,7 @@ class CheckInConfirmScreen(Screen):
         print(GlobalScreenManager.HASH_KEY)
 
 #################################################################################
-#        - Assign a slot in the kiosk (REWORK LATER)
+#        - Assign a slot in the kiosk
 #################################################################################
         try:            
             numRows = len(GlobalScreenManager.KIOSK_BOXES)
@@ -39,6 +39,11 @@ class CheckInConfirmScreen(Screen):
                         GlobalScreenManager.KIOSK_BOXES[i][j] = GlobalScreenManager.HASH_KEY
                         self.indexRow = i
                         self.indexCol = j
+
+                        GlobalScreenManager.CURRENT_POS_X = i
+                        GlobalScreenManager.CURRENT_POS_Y = j
+                        
+
                         assigned = True
                         break
                 if assigned:
@@ -143,7 +148,6 @@ class CheckInConfirmScreen(Screen):
         conn.close()
 
 #################################################################################
-#        - Return to Login
+#        - Go to Door Screen
 #################################################################################
-        MDApp.get_running_app().reset(.1)
         MDApp.get_running_app().switchScreen('closeDoor')

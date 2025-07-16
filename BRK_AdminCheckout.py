@@ -64,8 +64,8 @@ class AdminCheckout(Screen):
 
             for row in rows:
                 item = ThreeLineListItem(
-                    text="Board: " + str(row[4]) + " " + str(row[10]), # Board Number
-                    secondary_text="Priority: " + str(row[5]), # Priority
+                    text="Board: " + str(row[4]), # Board Number
+                    secondary_text="Priority: " + str(row[5]) + " - " + str(row[10]), # Priority
                     tertiary_text="Time: " + str(row[6]), # Entry Time
                     on_release=self.make_select_handler(row)
                 )

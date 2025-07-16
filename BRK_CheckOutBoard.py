@@ -82,7 +82,7 @@ class CheckOutBoard(Screen):
 
 
 #################################################################################
-#        - Search database for next Normal board rework if any
+#        - Search database for next BGA board rework if any
 #################################################################################
     def findBGABoard(self):
         try:

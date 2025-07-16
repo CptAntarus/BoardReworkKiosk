@@ -118,7 +118,6 @@ class CheckOutConfirm(Screen):
             print(GlobalScreenManager.KIOSK_BOXES)
 
 #################################################################################
-#       - Return to Login
+#       - Go to board out screen
 #################################################################################
-        MDApp.get_running_app().reset(0.1)
         MDApp.get_running_app().switchScreen('closeDoor')
