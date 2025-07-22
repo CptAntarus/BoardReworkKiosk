@@ -6,7 +6,6 @@ from BRK_GSM import GlobalScreenManager, GSM
 
 class CloseDoor(Screen):
     def on_enter(self):
-        print("Made it to CloseDoor==================")
         Clock.schedule_once(self.delayedInit, 0.1)
 
 

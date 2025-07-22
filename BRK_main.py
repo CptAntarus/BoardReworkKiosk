@@ -146,11 +146,11 @@ class BRKGui(MDApp):
         GlobalScreenManager.CURRENT_PRIORITY = 0
         GlobalScreenManager.CURRENT_RW_TYPE = 0
         GlobalScreenManager.HASH_KEY = 0
-        GlobalScreenManager.PREVIOUS_SCREEN = ""
         GlobalScreenManager.BOARD_CHECKOUT = 0
         GlobalScreenManager.CURRENT_POS_X = 0
         GlobalScreenManager.CURRENT_POS_Y = 0
         GlobalScreenManager.CHECKOUT_USER = 0
+        GlobalScreenManager.CURRENT_RW_STATUS = 0
 
         self.sm.get_screen('startScreen').ids.EmpID.text = ""
         self.sm.get_screen('checkInBoard').ids.boardInMO.text = ""

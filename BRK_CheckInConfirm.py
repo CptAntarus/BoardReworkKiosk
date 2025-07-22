@@ -18,6 +18,29 @@ class CheckInConfirmScreen(Screen):
         self.ids.checkInConfirmPriority.text = str(GlobalScreenManager.CURRENT_PRIORITY)
         self.ids.checkInConfirmRWType.text = str(GlobalScreenManager.CURRENT_RW_TYPE)
 
+        self.ids.completedCheck.opacity = 0
+        self.ids.inProgressCheck.opacity = 0
+        self.ids.confirmBtn.disabled = True
+        self.completed = 0
+        self.inProgress = 0
+
+    def assignStatusCompleted(self):
+        self.completed = 0 if self.completed else 1
+        self.ids.completedCheck.opacity = 1 if self.completed else 0
+        self.ids.inProgressCheck.opacity = 0
+        self.inProgress = 0
+        self.ids.confirmBtn.disabled = False
+        GlobalScreenManager.CURRENT_RW_STATUS = "Completed"
+
+
+
+    def assignStatusInProgress(self):
+        self.inProgress = 0 if self.inProgress else 1
+        self.ids.inProgressCheck.opacity = 1 if self.inProgress else 0
+        self.ids.completedCheck.opacity = 0
+        self.completed = 0
+        self.ids.confirmBtn.disabled = False
+        GlobalScreenManager.CURRENT_RW_STATUS = "In Progress"
 
     def assignBox(self):
         # Create hash Key
@@ -74,13 +97,14 @@ class CheckInConfirmScreen(Screen):
                 in_out_status TEXT,
                 index_row,
                 index_col,
-                rework_type TEXT                               
+                rework_type TEXT,
+                rework_status TEXT
             )
         ''')
 
         cursor.execute('''
-            INSERT INTO checkins (hash_key, u_num, mo, board_id, priority, time_stamp, in_out_status, index_row, index_col, rework_type)
-            values (?,?,?,?,?,?,?,?,?,?)
+            INSERT INTO checkins (hash_key, u_num, mo, board_id, priority, time_stamp, in_out_status, index_row, index_col, rework_type, rework_status)
+            values (?,?,?,?,?,?,?,?,?,?,?)
             ''', (
                 GlobalScreenManager.HASH_KEY,
                 GlobalScreenManager.CURRENT_USER,
@@ -91,7 +115,8 @@ class CheckInConfirmScreen(Screen):
                 "IN",
                 self.indexRow,
                 self.indexCol,
-                GlobalScreenManager.CURRENT_RW_TYPE
+                GlobalScreenManager.CURRENT_RW_TYPE,
+                GlobalScreenManager.CURRENT_RW_STATUS
             )
         )
 
@@ -120,13 +145,14 @@ class CheckInConfirmScreen(Screen):
                 priority TEXT,
                 time_stamp TEXT,
                 in_out_status TEXT,
-                rework_type TEXT                                
+                rework_type TEXT,
+                rework_status TEXT                               
             )
         ''')
 
         cursor.execute('''
-            INSERT INTO checkins (hash_key, u_num, mo, board_id, priority, time_stamp, in_out_status, rework_type)
-            values (?,?,?,?,?,?,?,?)
+            INSERT INTO checkins (hash_key, u_num, mo, board_id, priority, time_stamp, in_out_status, rework_type, rework_status)
+            values (?,?,?,?,?,?,?,?,?)
             ''', (
                 GlobalScreenManager.HASH_KEY,
                 GlobalScreenManager.CURRENT_USER,
@@ -135,7 +161,8 @@ class CheckInConfirmScreen(Screen):
                 GlobalScreenManager.CURRENT_PRIORITY,
                 now.strftime("%m-%d-%Y %H:%M:%S"),
                 "IN",
-                GlobalScreenManager.CURRENT_RW_TYPE
+                GlobalScreenManager.CURRENT_RW_TYPE,
+                GlobalScreenManager.CURRENT_RW_STATUS
             )
         )
 

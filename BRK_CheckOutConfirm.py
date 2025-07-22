@@ -46,13 +46,14 @@ class CheckOutConfirm(Screen):
                 priority TEXT,
                 time_stamp TEXT,
                 in_out_status TEXT,
-                rework_type TEXT                              
+                rework_type TEXT,
+                rework_status TEXT                              
             )
         ''')
 
         cursor.execute('''
-            INSERT INTO checkins (hash_key, u_num, mo, board_id, priority, time_stamp, in_out_status, rework_type)
-            values (?,?,?,?,?,?,?,?)
+            INSERT INTO checkins (hash_key, u_num, mo, board_id, priority, time_stamp, in_out_status, rework_type, rework_status)
+            values (?,?,?,?,?,?,?,?,?)
             ''', (   
                 data[1], # hash_key
                 GlobalScreenManager.CHECKOUT_USER, # U-Number
@@ -61,7 +62,8 @@ class CheckOutConfirm(Screen):
                 data[5], # Priority
                 now.strftime("%m-%d-%Y %H:%M:%S"),
                 "OUT",
-                data[10]
+                data[10], # rework_type
+                data[11]  # rework_status
             )
         )
 

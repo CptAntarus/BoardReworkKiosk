@@ -195,11 +195,36 @@
             text_size: None, None
             pos_hint: {"center_x":.55,"center_y":.2}
 ###############################################################
-
+        MDRaisedButton:
+            text: "Completed"
+            size_hint: .11,.1
+            pos_hint: {"center_x":.85,"center_y":.55}
+            on_release: root.assignStatusCompleted()
+        MDIconButton:
+            id: completedCheck
+            icon: "check-bold"
+            opacity: 0
+            size_hint: None,None
+            pos_hint: {"center_x":.95,"center_y":.55}
+###############################################################
+        MDRaisedButton:
+            text: "In Progress"
+            size_hint: .1,.1
+            pos_hint: {"center_x":.85,"center_y":.4}
+            on_release: root.assignStatusInProgress()
+        MDIconButton:
+            id: inProgressCheck
+            icon: "check-bold"
+            opacity: 0
+            size_hint: None,None
+            pos_hint: {"center_x":.95,"center_y":.4}
+###############################################################
         MDRaisedButton:
             text: "Confirm"
+            id: confirmBtn
             size_hint: .22,.1
-            pos_hint: {"center_x":.8,"center_y":.15}
+            pos_hint: {"center_x":.85,"center_y":.15}
+            disabled: True
             on_release: root.assignBox()
 
 
