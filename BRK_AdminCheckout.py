@@ -86,4 +86,4 @@ class AdminCheckout(Screen):
         GlobalScreenManager.BOARD_CHECKOUT = row
         print("Selected board data:", row)
 
-        MDApp.get_running_app().switchScreen("checkOutConfirm")
+        MDApp.get_running_app().switchScreen("adminConfirm")

@@ -24,6 +24,8 @@ from BRK_CheckInConfirm import CheckInConfirmScreen
 from BRK_CheckOutConfirm import CheckOutConfirm
 from BRK_CloseDoor import CloseDoor
 from BRK_AdminCheckout import AdminCheckout
+from BRK_AdminConfirm import AdminConfirm
+from BRK_AdminEnterUser import AdminEnterUser
 
 
 
@@ -38,13 +40,15 @@ class BRKGui(MDApp):
         self.sm.add_widget(CheckOutConfirm(name='checkOutConfirm'))
         self.sm.add_widget(CloseDoor(name="closeDoor"))
         self.sm.add_widget(AdminCheckout(name="adminCheckout"))
+        self.sm.add_widget(AdminConfirm(name="adminConfirm"))
+        self.sm.add_widget(AdminEnterUser(name="adminEnterUser"))
 
         self.populateDoorsList()
         self.populateUsersList()
 
         self.sm.transition = NoTransition()
         self.theme_cls.theme_style = 'Dark'
-        self.switchScreen('startScreen') #checkInBoard
+        self.switchScreen('startScreen')
 
         return self.sm
 
@@ -99,24 +103,21 @@ class BRKGui(MDApp):
         cursor = conn.cursor()
         cursor.execute('SELECT * FROM User_Table')
 
-        rows = cursor.fetchall()
+        data = cursor.fetchall()
 
         print("REMOTE_DB =====================================")
-        for i, row in enumerate(rows):
+        for row in data:
             print(row)
-            data = str(row)
-            pattern = r"'([^']*)'|(True|False)"
-            matches = re.findall(pattern, data)
-            values = [group[0] if group[0] else group[1] for group in matches]
-
-            if values[2] == 'True': # Basic Access
-                GlobalScreenManager.USERS.append(values[0])
-            if values[3] == 'True': # Rework Access
-                GlobalScreenManager.REWORK_USERS.append(values[0])
-            if values[4] == 'True': # BGA Access
-                GlobalScreenManager.BGA_USERS.append(values[0])
-            if values[5] == 'True': # Admin Access
-                GlobalScreenManager.ADMIN_USERS.append(values[0])
+            if row[2] == True: # Basic Access
+                GlobalScreenManager.USERS.append(row[0])
+            if row[3] == True: # Rework Access
+                GlobalScreenManager.REWORK_USERS.append(row[0])
+            if row[4] == True: # BGA Access
+                GlobalScreenManager.BGA_USERS.append(row[0])
+            if row[5] == True: # Admin Access
+                GlobalScreenManager.ADMIN_USERS.append(row[0])
+            if row[6] == True: # Admin Access
+                GlobalScreenManager.QA_USERS.append(row[0])
 
         # Close the connection
         conn.close()
@@ -125,6 +126,7 @@ class BRKGui(MDApp):
         print("Rework Users: ",GlobalScreenManager.REWORK_USERS)
         print("BGA Users:    ",GlobalScreenManager.BGA_USERS)
         print("Admin Users:  ",GlobalScreenManager.ADMIN_USERS)
+        print("QA Users:     ",GlobalScreenManager.QA_USERS)
 
 #################################################################################
 #        - Screen functionality
@@ -148,6 +150,7 @@ class BRKGui(MDApp):
         GlobalScreenManager.BOARD_CHECKOUT = 0
         GlobalScreenManager.CURRENT_POS_X = 0
         GlobalScreenManager.CURRENT_POS_Y = 0
+        GlobalScreenManager.CHECKOUT_USER = 0
 
         self.sm.get_screen('startScreen').ids.EmpID.text = ""
         self.sm.get_screen('checkInBoard').ids.boardInMO.text = ""

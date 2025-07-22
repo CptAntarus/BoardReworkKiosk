@@ -11,6 +11,7 @@ class GlobalScreenManager(ScreenManager):
     BOARD_CHECKOUT = 0
     CURRENT_POS_X = 0
     CURRENT_POS_Y = 0
+    CHECKOUT_USER = 0
 
     SCREEN_HIST = []
 

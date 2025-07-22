@@ -14,11 +14,11 @@ class CheckOutConfirm(Screen):
         Clock.schedule_once(self.delayedInit,0.1)
 
     def delayedInit(self, dt):
-        data = GlobalScreenManager.BOARD_CHECKOUT  # this is already a tuple
+        data = GlobalScreenManager.BOARD_CHECKOUT
 
         print("SELECTED BOARD:", data)
 
-        self.ids.checkOutConfirmUNum.text = str(GlobalScreenManager.CURRENT_USER)
+        self.ids.checkOutConfirmUNum.text = str(GlobalScreenManager.CHECKOUT_USER)
         self.ids.checkOutConfirmMONum.text = str(data[3])       # MO
         self.ids.checkOutConfirmBoardID.text = str(data[4])     # Board Number
         self.ids.checkOutConfirmPriority.text = str(data[5])    # Priority
@@ -55,7 +55,7 @@ class CheckOutConfirm(Screen):
             values (?,?,?,?,?,?,?,?)
             ''', (   
                 data[1], # hash_key
-                GlobalScreenManager.CURRENT_USER, # U-Number
+                GlobalScreenManager.CHECKOUT_USER, # U-Number
                 data[3], # MO Number
                 data[4], # Board ID
                 data[5], # Priority

@@ -24,6 +24,7 @@ class CheckOutBoard(Screen):
 #        - Show checkout options based on permissions
 #################################################################################
         if GlobalScreenManager.CURRENT_USER in GlobalScreenManager.REWORK_USERS:
+            self.ids.checkOutLabel.opacity = 1
             self.ids.BoardReworkBtn.opacity = 1
             self.ids.BoardReworkBtn.disabled = False
             if GlobalScreenManager.CURRENT_USER in GlobalScreenManager.BGA_USERS:
@@ -34,6 +35,7 @@ class CheckOutBoard(Screen):
                     self.ids.AdminCheckoutBtn.disabled = False
         else:
             self.ids.errorMSG.text = "You are not registered for Check-Out"
+            self.ids.checkOutLabel.opacity = 0
             self.ids.errorMSG.opacity = 1
 
 #################################################################################
@@ -56,7 +58,8 @@ class CheckOutBoard(Screen):
             if result is None:
                 raise ValueError("No board found")
 
-            GlobalScreenManager.BOARD_CHECKOUT = result #str(result)
+            GlobalScreenManager.BOARD_CHECKOUT = result
+            GlobalScreenManager.CHECKOUT_USER = GlobalScreenManager.CURRENT_USER
             print("Top Priority task: (CheckOutScreen) ",result)
 
             MDApp.get_running_app().switchScreen('checkOutConfirm')
@@ -101,7 +104,8 @@ class CheckOutBoard(Screen):
             if result is None:
                 raise ValueError("No board found")
 
-            GlobalScreenManager.BOARD_CHECKOUT = result #str(result)
+            GlobalScreenManager.BOARD_CHECKOUT = result
+            GlobalScreenManager.CHECKOUT_USER = GlobalScreenManager.CURRENT_USER
             print("Top Priority task: (CheckOutScreen) ",result)
 
             MDApp.get_running_app().switchScreen('checkOutConfirm')
