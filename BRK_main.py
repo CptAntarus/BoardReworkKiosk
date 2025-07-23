@@ -1,15 +1,12 @@
 import sqlite3
-import pyodbc
+import pymssql
 import re
 
 # KivyMD Imports
 from kivymd.app import MDApp
-from kivymd.uix.textfield import textfield
-from kivymd.uix.anchorlayout import AnchorLayout
-from kivymd.uix.button import MDIconButton
 
 # Kivy Imports
-from kivy.uix.screenmanager import Screen, ScreenManager, NoTransition
+from kivy.uix.screenmanager import NoTransition
 
 from kivy.lang import Builder
 Builder.load_file("BRK_Format.kv")
@@ -91,42 +88,44 @@ class BRKGui(MDApp):
             print(GlobalScreenManager.KIOSK_BOXES)
             conn.close()
 
-
+#################################################################################
+#        - Pull Users from User Database
+#################################################################################
     def populateUsersList(self):
-        conn = pyodbc.connect(
-            driver='ODBC Driver 17 for SQL Server',
-            host='USW-SQL30003.rootforest.com',
-            user='OvenBakedUsr',
-            password='aztmvcjfrizkcpdcehky',
-            database='Oven_Bake_Log'
-        )
-        cursor = conn.cursor()
-        cursor.execute('SELECT * FROM User_Table')
+        server='USW-SQL30003.rootforest.com'
+        user='OvenBakedUsr'
+        password='aztmvcjfrizkcpdcehky'
+        database='Oven_Bake_Log'
+        with pymssql.connect(server, user, password, database) as conn:
+            print("Created connection...")
+            with conn.cursor() as cursor:
+                print("Successfully connected to SQL database.")
 
-        data = cursor.fetchall()
+                query = "SELECT * FROM User_Table"
+                cursor.execute(query)
 
-        print("REMOTE_DB =====================================")
-        for row in data:
-            print(row)
-            if row[2] == True: # Basic Access
-                GlobalScreenManager.USERS.append(row[0])
-            if row[3] == True: # Rework Access
-                GlobalScreenManager.REWORK_USERS.append(row[0])
-            if row[4] == True: # BGA Access
-                GlobalScreenManager.BGA_USERS.append(row[0])
-            if row[5] == True: # Admin Access
-                GlobalScreenManager.ADMIN_USERS.append(row[0])
-            if row[6] == True: # Admin Access
-                GlobalScreenManager.QA_USERS.append(row[0])
+                data = cursor.fetchall()
 
-        # Close the connection
-        conn.close()
+                print("REMOTE_DB =============================================================================")
+                for row in data:
+                    print(row)
+                    if row[2] == True: # Basic Access
+                        GlobalScreenManager.USERS.append(row[0])
+                    if row[3] == True: # Rework Access
+                        GlobalScreenManager.REWORK_USERS.append(row[0])
+                    if row[4] == True: # BGA Access
+                        GlobalScreenManager.BGA_USERS.append(row[0])
+                    if row[5] == True: # Admin Access
+                        GlobalScreenManager.ADMIN_USERS.append(row[0])
+                    if row[6] == True: # Admin Access
+                        GlobalScreenManager.QA_USERS.append(row[0])
 
-        print("Users:        ",GlobalScreenManager.USERS)
-        print("Rework Users: ",GlobalScreenManager.REWORK_USERS)
-        print("BGA Users:    ",GlobalScreenManager.BGA_USERS)
-        print("Admin Users:  ",GlobalScreenManager.ADMIN_USERS)
-        print("QA Users:     ",GlobalScreenManager.QA_USERS)
+                print("Users:        ",GlobalScreenManager.USERS)
+                print("Rework Users: ",GlobalScreenManager.REWORK_USERS)
+                print("BGA Users:    ",GlobalScreenManager.BGA_USERS)
+                print("Admin Users:  ",GlobalScreenManager.ADMIN_USERS)
+                print("QA Users:     ",GlobalScreenManager.QA_USERS)
+                print("=======================================================================================")
 
 #################################################################################
 #        - Screen functionality
