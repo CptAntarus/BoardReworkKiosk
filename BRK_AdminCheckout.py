@@ -3,8 +3,7 @@ from kivy.uix.screenmanager import Screen
 from kivy.clock import Clock
 from kivymd.uix.menu import MDDropdownMenu
 from kivymd.uix.list import ThreeLineListItem
-import sqlite3
-import re
+import pymssql
 
 from BRK_GSM import GlobalScreenManager
 
@@ -32,52 +31,55 @@ class AdminCheckout(Screen):
         }
 
         sort_key = key_map.get(text_item, "Priority")
-
-        conn = sqlite3.connect('KioskDB.db')
-        cursor = conn.cursor()
-
+        
         # Refresh the list
         report_list = self.ids.reportList
         report_list.clear_widgets()
 
-        try:
-            cursor.execute(f"""
-                SELECT * FROM checkins
-                ORDER BY {sort_key} ASC
-            """)
+        server='USW-SQL30003.rootforest.com'
+        user='OvenBakedUsr'
+        password='aztmvcjfrizkcpdcehky'
+        database='Oven_Bake_Log'
+        with pymssql.connect(server, user, password, database) as conn:
+            print("Created connection...")
+            with conn.cursor() as cursor:
+                print("Successfully connected to SQL database.")
 
-            rows = cursor.fetchall()
+                try:
+                    cursor.execute(f"""
+                        SELECT * FROM Kiosk_Table
+                        ORDER BY {sort_key} ASC
+                    """)
 
-            # Check if kiosk is empty
-            if not rows:
-                print("Database is empty")
-                report_list.add_widget(
-                    ThreeLineListItem(
-                        text="No Boards In Kiosk",
-                        secondary_text="Check back later",
-                        tertiary_text="",
-                        on_release=lambda *args: None
-                    )
-                )
-                return
+                    rows = cursor.fetchall()
+
+                    # Check if kiosk is empty
+                    if not rows:
+                        print("Database is empty")
+                        report_list.add_widget(
+                            ThreeLineListItem(
+                                text="No Boards In Kiosk",
+                                secondary_text="Check back later",
+                                tertiary_text="",
+                                on_release=lambda *args: None
+                            )
+                        )
+                        return
 
 
-            for row in rows:
-                item = ThreeLineListItem(
-                    text="Board: " + str(row[4]), # Board Number
-                    secondary_text="Priority: " + str(row[5]) + " - " + str(row[10]), # Priority
-                    tertiary_text="Time: " + str(row[6]), # Entry Time
-                    on_release=self.make_select_handler(row)
-                )
-                report_list.add_widget(item)
+                    for row in rows:
+                        item = ThreeLineListItem(
+                            text="Board: " + str(row[4]), # Board Number
+                            secondary_text="Priority: " + str(row[5]) + " - " + str(row[10]), # Priority
+                            tertiary_text="Time: " + str(row[6]), # Entry Time
+                            on_release=self.make_select_handler(row)
+                        )
+                        report_list.add_widget(item)
 
-            print(f"Sorted by: {sort_key}")
+                    print(f"Sorted by: {sort_key}")
 
-        except Exception as e:
-            print("Error sorting reports:", e)
-
-        finally:
-            conn.close()
+                except Exception as e:
+                    print("Error sorting reports:", e)
 
     def make_select_handler(self, row_data):
         return lambda *args: self.selectReport(row_data)

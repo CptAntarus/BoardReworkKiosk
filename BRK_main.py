@@ -1,6 +1,4 @@
-import sqlite3
 import pymssql
-import re
 
 # KivyMD Imports
 from kivymd.app import MDApp
@@ -8,10 +6,11 @@ from kivymd.app import MDApp
 # Kivy Imports
 from kivy.uix.screenmanager import NoTransition
 
+# Load the format file
 from kivy.lang import Builder
 Builder.load_file("BRK_Format.kv")
 
-
+# Import all screens
 from BRK_GSM import GlobalScreenManager
 from BRK_StartScreen import StartScreen
 from BRK_InOutScreen import InOutScreen
@@ -23,7 +22,6 @@ from BRK_CloseDoor import CloseDoor
 from BRK_AdminCheckout import AdminCheckout
 from BRK_AdminConfirm import AdminConfirm
 from BRK_AdminEnterUser import AdminEnterUser
-
 
 
 class BRKGui(MDApp):
@@ -53,40 +51,42 @@ class BRKGui(MDApp):
 #        - Init helpers
 #################################################################################
     def populateDoorsList(self):
-        conn = sqlite3.connect("KioskDB.db")
-        cursor = conn.cursor()
+        server='USW-SQL30003.rootforest.com'
+        user='OvenBakedUsr'
+        password='aztmvcjfrizkcpdcehky'
+        database='Oven_Bake_Log'
+        with pymssql.connect(server, user, password, database) as conn:
+            print("Created connection...")
+            with conn.cursor() as cursor:
+                print("Successfully connected to SQL database.")
 
-        try:
-            cursor.execute("SELECT * FROM checkins")
-            rows = cursor.fetchall()
+                try:
+                    cursor.execute("SELECT * FROM Kiosk_Table")
+                    rows = cursor.fetchall()
 
-            numRows = len(GlobalScreenManager.KIOSK_BOXES)
-            numCols = len(GlobalScreenManager.KIOSK_BOXES[0]) if numRows > 0 else 0
-            index = 0
+                    numRows = len(GlobalScreenManager.KIOSK_BOXES)
+                    numCols = len(GlobalScreenManager.KIOSK_BOXES[0]) if numRows > 0 else 0
+                    index = 0
 
-            for row in rows:
-                if index >= numRows * numCols:
-                    print("Too many entires in DB. No slots left")
-                else:
-                    data = str(row)
-                    pattern = r"(?:'([^']*)'|(\d+(?:\.\d+)?))"
-                    matches = re.findall(pattern, data)
-                    values = [group[0] if group[0] else group[1] for group in matches]
+                    for row in rows:
+                        if index >= numRows * numCols:
+                            print("Too many entires in DB. No slots left")
+                        else:
+                            index_row = int(row[8])
+                            index_col = int(row[9])
+                            hashKey = row[1]
 
-                    hashKey = values[1]
+                            # print(f"values[8]: {values[8]}:::::::::values[9]: {values[9]}")
 
-                    # print(f"values[8]: {values[8]}:::::::::values[9]: {values[9]}")
+                            # values[8 and 9] are the index of the slot the physical board is in
+                            GlobalScreenManager.KIOSK_BOXES[index_row][index_col] = hashKey
+                            index += 1
 
-                    # values[8 and 9] are the index of the slot the board was previously in
-                    GlobalScreenManager.KIOSK_BOXES[int(values[8])][int(values[9])] = hashKey
-                    index += 1
+                except Exception as e:
+                    print("Error repopulating kiosk boxes:",e)
 
-        except Exception as e:
-            print("Error repopulating kiosk boxes:",e)
-
-        finally:
-            print(GlobalScreenManager.KIOSK_BOXES)
-            conn.close()
+                finally:
+                    print(GlobalScreenManager.KIOSK_BOXES)
 
 #################################################################################
 #        - Pull Users from User Database
@@ -106,9 +106,7 @@ class BRKGui(MDApp):
 
                 data = cursor.fetchall()
 
-                print("REMOTE_DB =============================================================================")
                 for row in data:
-                    print(row)
                     if row[2] == True: # Basic Access
                         GlobalScreenManager.USERS.append(row[0])
                     if row[3] == True: # Rework Access
@@ -120,12 +118,15 @@ class BRKGui(MDApp):
                     if row[6] == True: # Admin Access
                         GlobalScreenManager.QA_USERS.append(row[0])
 
-                print("Users:        ",GlobalScreenManager.USERS)
-                print("Rework Users: ",GlobalScreenManager.REWORK_USERS)
-                print("BGA Users:    ",GlobalScreenManager.BGA_USERS)
-                print("Admin Users:  ",GlobalScreenManager.ADMIN_USERS)
-                print("QA Users:     ",GlobalScreenManager.QA_USERS)
-                print("=======================================================================================")
+            # Uncomment to show users pulled from User_Table
+                    # print(row)
+                # print("REMOTE_DB =============================================================================")
+                # print("Users:        ",GlobalScreenManager.USERS)
+                # print("Rework Users: ",GlobalScreenManager.REWORK_USERS)
+                # print("BGA Users:    ",GlobalScreenManager.BGA_USERS)
+                # print("Admin Users:  ",GlobalScreenManager.ADMIN_USERS)
+                # print("QA Users:     ",GlobalScreenManager.QA_USERS)
+                # print("=======================================================================================")
 
 #################################################################################
 #        - Screen functionality

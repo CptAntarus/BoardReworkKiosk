@@ -3,13 +3,13 @@ from kivy.uix.screenmanager import Screen
 from kivy.clock import Clock
 from datetime import datetime
 from BRK_GSM import GlobalScreenManager
-import sqlite3
+import pymssql
 
 
 class CheckOutConfirm(Screen):
     def on_enter(self):
         print("==========================================")
-        print("Top Priority task: (CheckOutConfirm) ",GlobalScreenManager.BOARD_CHECKOUT)
+        # print("Top Priority task: (CheckOutConfirm) ",GlobalScreenManager.BOARD_CHECKOUT)
 
         Clock.schedule_once(self.delayedInit,0.1)
 
@@ -31,69 +31,53 @@ class CheckOutConfirm(Screen):
         data = GlobalScreenManager.BOARD_CHECKOUT
 
 #################################################################################
-#        - Copy over to ReworkDB
+#        - Copy over to Rework_Table
 #################################################################################
-        conn = sqlite3.connect('ReworkDB.db')
-        cursor = conn.cursor()
+        server='USW-SQL30003.rootforest.com'
+        user='OvenBakedUsr'
+        password='aztmvcjfrizkcpdcehky'
+        database='Oven_Bake_Log'
+        with pymssql.connect(server, user, password, database) as conn:
+            print("Created connection...")
+            with conn.cursor() as cursor:
+                print("Successfully connected to SQL database.")
+                cursor.execute('''
+                    INSERT INTO Rework_Table (hash_key, [u-num], mo, board_id, priority, time_stamp, in_out_status, rework_type, rework_status)
+                    values (%s,%s,%s,%s,%s,%s,%s,%s,%s)
+                    ''',
+                    (   
+                        data[1], # hash_key
+                        GlobalScreenManager.CHECKOUT_USER, # U-Number
+                        data[3], # MO Number
+                        data[4], # Board ID
+                        data[5], # Priority
+                        now.strftime("%m-%d-%Y %H:%M:%S"),
+                        "OUT",
+                        data[10], # rework_type
+                        data[11]  # rework_status
+                    )
+                )
+                conn.commit()
 
-        cursor.execute('''
-            CREATE TABLE IF NOT EXISTS checkins (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                hash_key TEXT,
-                u_num TEXT,
-                mo TEXT,
-                board_id TEXT,
-                priority TEXT,
-                time_stamp TEXT,
-                in_out_status TEXT,
-                rework_type TEXT,
-                rework_status TEXT                              
-            )
-        ''')
-
-        cursor.execute('''
-            INSERT INTO checkins (hash_key, u_num, mo, board_id, priority, time_stamp, in_out_status, rework_type, rework_status)
-            values (?,?,?,?,?,?,?,?,?)
-            ''', (   
-                data[1], # hash_key
-                GlobalScreenManager.CHECKOUT_USER, # U-Number
-                data[3], # MO Number
-                data[4], # Board ID
-                data[5], # Priority
-                now.strftime("%m-%d-%Y %H:%M:%S"),
-                "OUT",
-                data[10], # rework_type
-                data[11]  # rework_status
-            )
-        )
-
-        # Print Database
-        print("ReworkDB =====================================")
-        for row in cursor.execute('SELECT * FROM checkins'):
-            print(row)
-
-        conn.commit()
-        conn.close()
+            # Print Database
+                print("Rework_Table =====================================")
+                cursor.execute('SELECT * FROM Rework_Table')
+                rows = cursor.fetchall()
+                for row in rows:
+                    print(row)
 
 #################################################################################
-#        - Delete from KioskDB
+#        - Delete from Kiosk_Table
 #################################################################################
-        conn = sqlite3.connect('KioskDB.db')
-        cursor = conn.cursor()
-
-        cursor.execute("""
-                       DELETE FROM checkins
-                       WHERE hash_key = ?
-                    """, (data[1],))
+                cursor.execute("DELETE FROM Kiosk_Table WHERE hash_key = %s", (data[1],))
+                conn.commit()
 
          # Print Database
-        print("KioskDB =======================================")
-        for row in cursor.execute('SELECT * FROM checkins'):
-            print(row)
-        
-        conn.commit()
-        conn.close()
-
+                print("Kiosk_Table =====================================")
+                cursor.execute('SELECT * FROM Kiosk_Table')
+                rows = cursor.fetchall()
+                for row in rows:
+                    print(row)
 
 #################################################################################
 #       - Remove from KIOSK_BOXES

@@ -8,6 +8,7 @@ from BRK_GSM import GlobalScreenManager
 class AdminEnterUser(Screen):
     def on_enter(self):
         print("Admin Enter User")
+        self.ids.newUser.text = ""
 
     def editText(self, character):
         inputField = self.ids.newUser

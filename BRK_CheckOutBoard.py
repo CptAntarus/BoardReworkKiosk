@@ -1,10 +1,9 @@
 from kivymd.app import MDApp
 from kivy.uix.screenmanager import Screen
 from kivy.clock import Clock
-from kivymd.uix.label import MDLabel
 
 from BRK_GSM import GlobalScreenManager
-import sqlite3
+import pymssql
 
 class CheckOutBoard(Screen):
     def __init__(self, **kwargs):
@@ -39,20 +38,26 @@ class CheckOutBoard(Screen):
             self.ids.errorMSG.opacity = 1
 
 #################################################################################
-#        - Search database for next Normal board rework if any
+#        - Search Kiosk_Table for next Normal board rework if any
 #################################################################################
     def findNBRBoard(self):
         try:
-            conn = sqlite3.connect('KioskDB.db')
-            cursor = conn.cursor()
+            server='USW-SQL30003.rootforest.com'
+            user='OvenBakedUsr'
+            password='aztmvcjfrizkcpdcehky'
+            database='Oven_Bake_Log'
+            with pymssql.connect(server, user, password, database) as conn:
+                print("Created connection...")
+                with conn.cursor() as cursor:
+                    print("Successfully connected to SQL database.")
 
-            cursor.execute("""
-                        SELECT * FROM checkins
+                    cursor.execute("""
+                        SELECT TOP 1 * FROM Kiosk_Table
                         WHERE rework_type = 'NBR'
                         ORDER BY priority ASC, time_stamp ASC
-                        LIMIT 1
-                        """)
-            result = cursor.fetchone()
+                    """)
+                    result = cursor.fetchone()
+                    print("=================result==============", result)
 
             # Check that database is not empty
             if result is None:
@@ -85,20 +90,26 @@ class CheckOutBoard(Screen):
 
 
 #################################################################################
-#        - Search database for next BGA board rework if any
+#        - Search Kiosk_Table for next BGA board rework if any
 #################################################################################
     def findBGABoard(self):
         try:
-            conn = sqlite3.connect('KioskDB.db')
-            cursor = conn.cursor()
+            server='USW-SQL30003.rootforest.com'
+            user='OvenBakedUsr'
+            password='aztmvcjfrizkcpdcehky'
+            database='Oven_Bake_Log'
+            with pymssql.connect(server, user, password, database) as conn:
+                print("Created connection...")
+                with conn.cursor() as cursor:
+                    print("Successfully connected to SQL database.")
 
-            cursor.execute("""
-                        SELECT * FROM checkins
+                    cursor.execute("""
+                        SELECT TOP 1 * FROM Kiosk_Table
                         WHERE rework_type = 'BGA'
                         ORDER BY priority ASC, time_stamp ASC
-                        LIMIT 1
-                        """)
-            result = cursor.fetchone()
+                    """)
+                    result = cursor.fetchone()
+                    print("=================result==============", result)
 
             # Check that database is not empty
             if result is None:

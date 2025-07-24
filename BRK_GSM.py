@@ -14,13 +14,12 @@ class GlobalScreenManager(ScreenManager):
     CHECKOUT_USER = 0
     CURRENT_RW_STATUS = 0
 
+    # Keeps a list of screens for easy navigation
     SCREEN_HIST = []
 
-    # 3 rows, 4 cols, 5 slots/box
-    # KIOSK_BOXES = [[[None for _ in range(3)] for _ in range(4)] for _ in range(5)]
     KIOSK_BOXES = [[None for _ in range(20)] for _ in range(3)]
-    # KIOSK_BOXES = [[[None for _ in range(3)] for _ in range(3)] for _ in range(3)]
 
+    # Stores the different list of users by access level
     USERS = []
     REWORK_USERS = []
     BGA_USERS = []
