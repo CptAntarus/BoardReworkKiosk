@@ -1,9 +1,26 @@
+#################################################################################
+#
+#       - File: BRK_AdminCheckout.py
+#       - Author: Dylan Hendrix
+#       - Discription: This screen controls the logic when the user selects
+#                       admin checkout from the checkout screen.
+#
+################################################################################
+#
+#       - Entry:   BRK_CheckoutBoard.py
+#
+#       - Exits:   BRK_AdminConfirm.py
+#                  BRK_NoBoardScreen.py
+#
+#################################################################################
+
+import pymssql
+import json
 from kivymd.app import MDApp
 from kivy.uix.screenmanager import Screen
 from kivy.clock import Clock
 from kivymd.uix.menu import MDDropdownMenu
 from kivymd.uix.list import ThreeLineListItem
-import pymssql
 
 from BRK_GSM import GlobalScreenManager
 
@@ -11,6 +28,7 @@ from BRK_GSM import GlobalScreenManager
 class AdminCheckout(Screen):
     def on_enter(self):
         self.sortOption("Priority")
+
 
     def open_menu(self, item):
         sortOps = ["Priority", "Time", "Board"]
@@ -36,11 +54,16 @@ class AdminCheckout(Screen):
         report_list = self.ids.reportList
         report_list.clear_widgets()
 
-        server='USW-SQL30003.rootforest.com'
-        user='OvenBakedUsr'
-        password='aztmvcjfrizkcpdcehky'
-        database='Oven_Bake_Log'
-        with pymssql.connect(server, user, password, database) as conn:
+        with open("BRK_Creds.json") as f:
+            config = json.load(f)
+
+        with pymssql.connect(
+            server=config["SERVER"],
+            user=config["USER"],
+            password=config["PASSWORD"], 
+            database=config["DATABASE"]
+            ) as conn:
+            
             print("Created connection...")
             with conn.cursor() as cursor:
                 print("Successfully connected to SQL database.")
@@ -56,16 +79,8 @@ class AdminCheckout(Screen):
                     # Check if kiosk is empty
                     if not rows:
                         print("Database is empty")
-                        report_list.add_widget(
-                            ThreeLineListItem(
-                                text="No Boards In Kiosk",
-                                secondary_text="Check back later",
-                                tertiary_text="",
-                                on_release=lambda *args: None
-                            )
-                        )
-                        return
-
+                        GlobalScreenManager.noBoardsFlag = "NONE"
+                        MDApp.get_running_app().switchScreen("noBoardScreen")
 
                     for row in rows:
                         item = ThreeLineListItem(
@@ -81,8 +96,10 @@ class AdminCheckout(Screen):
                 except Exception as e:
                     print("Error sorting reports:", e)
 
+
     def make_select_handler(self, row_data):
         return lambda *args: self.selectReport(row_data)
+
 
     def selectReport(self, row):
         GlobalScreenManager.BOARD_CHECKOUT = row

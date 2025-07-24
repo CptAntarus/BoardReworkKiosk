@@ -1,16 +1,29 @@
+#################################################################################
+#
+#       - File: BRK_CheckInBoard.py
+#       - Author: Dylan Hendrix
+#       - Discription: This screen controls the board input process and 
+#                       validates entered of data.
+#
+################################################################################
+#
+#       - Entry:   BRK_InOutScreen.py
+#
+#       - Exit:    BRK_CheckInConfirm.py
+#
+#################################################################################
+
 from kivymd.app import MDApp
 from kivy.uix.screenmanager import Screen
 from kivy.clock import Clock
 import re
 
-from BRK_GSM import GlobalScreenManager, GSM
+from BRK_GSM import GlobalScreenManager
+
 
 class CheckInBoard(Screen):
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-        self.sm = GSM()
-
     def on_enter(self):
+        # Rest Text inputs
         self.ids.boardInMO.text = ""
         self.ids.boardInBarCode.text = ""
         self.ids.boardInPriority.text = ""
@@ -22,6 +35,7 @@ class CheckInBoard(Screen):
 
         Clock.schedule_once(self.set_focus, 0.1)
 
+
     def set_focus(self, dt):
         self.ids.boardInMO.focus = True
 
@@ -29,11 +43,10 @@ class CheckInBoard(Screen):
     def validateMO(self, textInput):
         pattern = r"\d{10}"
 
-
         if re.fullmatch(pattern, textInput):
             GlobalScreenManager.CURRENT_MO = textInput
 
-            # Activate 2nd text box
+            # Activate Board ID text box
             self.ids.boardInBarCode.opacity = 1
             self.ids.boardInBarCode.disabled = False
             self.ids.boardInBarCode.focus = True
@@ -43,14 +56,14 @@ class CheckInBoard(Screen):
             self.ids.boardInMO.text=""
             Clock.schedule_once(self.clearInputMO,0.1)
     
+
     def validateBarCode(self, textInput):
         pattern = r"\d{6}-\d{3}/\w{1}/\w{2}\d{4}"
-
 
         if re.fullmatch(pattern, textInput):
             GlobalScreenManager.CURRENT_BID = textInput
 
-            # Activate Priority Buttons
+            # Activate Priority text box
             self.ids.boardInPriority.opacity = 1
             self.ids.boardInPriority.disabled = False
             self.ids.boardInPriority.focus = True
@@ -59,6 +72,7 @@ class CheckInBoard(Screen):
             print("Invalid Input")
             self.ids.boardInBarCode.text = ""
             Clock.schedule_once(self.clearInputBarCode, 0.1)
+
 
     def validatePriority(self, textInput):
         pattern = r"priority [0-9]"
@@ -74,6 +88,7 @@ class CheckInBoard(Screen):
                 GlobalScreenManager.CURRENT_PRIORITY = 3
                 print(f"GSM Priority: {GlobalScreenManager.CURRENT_PRIORITY}")
 
+            # Activate Rework Type text box
             self.ids.boardInRWType.opacity = 1
             self.ids.boardInRWType.disabled = False
             self.ids.boardInRWType.focus = True
@@ -105,15 +120,17 @@ class CheckInBoard(Screen):
         self.ids.boardInMO.text=""
         self.ids.boardInMO.focus=True
 
+
     def clearInputBarCode(self, dt):
         self.ids.boardInBarCode.text=""
         self.ids.boardInBarCode.focus=True
+
 
     def clearInputPriority(self, dt):
         self.ids.boardInPriority.text = ""
         self.ids.boardInPriority.focus = True
 
+
     def clearInputRWType(self, dt):
         self.ids.boardInRWType.text = ""
         self.ids.boardInRWType.focus = True
-

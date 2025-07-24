@@ -1,9 +1,21 @@
+#################################################################################
+#
+#       - File: BRK_main.py
+#       - Author: Dylan Hendrix
+#       - Discription: Main file to control the flow of the app, import
+#                       screens, and handle populate inital values
+#
+################################################################################
+#
+#       - Entry:   None
+#
+#       - Exit:    BRK_StartScreen.py
+#
+#################################################################################
+
 import pymssql
-
-# KivyMD Imports
+import json
 from kivymd.app import MDApp
-
-# Kivy Imports
 from kivy.uix.screenmanager import NoTransition
 
 # Load the format file
@@ -22,6 +34,7 @@ from BRK_CloseDoor import CloseDoor
 from BRK_AdminCheckout import AdminCheckout
 from BRK_AdminConfirm import AdminConfirm
 from BRK_AdminEnterUser import AdminEnterUser
+from BRK_NoBoardScreen import NoBoardScreen
 
 
 class BRKGui(MDApp):
@@ -37,6 +50,7 @@ class BRKGui(MDApp):
         self.sm.add_widget(AdminCheckout(name="adminCheckout"))
         self.sm.add_widget(AdminConfirm(name="adminConfirm"))
         self.sm.add_widget(AdminEnterUser(name="adminEnterUser"))
+        self.sm.add_widget(NoBoardScreen(name="noBoardScreen"))
 
         self.populateDoorsList()
         self.populateUsersList()
@@ -51,11 +65,16 @@ class BRKGui(MDApp):
 #        - Init helpers
 #################################################################################
     def populateDoorsList(self):
-        server='USW-SQL30003.rootforest.com'
-        user='OvenBakedUsr'
-        password='aztmvcjfrizkcpdcehky'
-        database='Oven_Bake_Log'
-        with pymssql.connect(server, user, password, database) as conn:
+        with open("BRK_Creds.json") as f:
+            config = json.load(f)
+
+        with pymssql.connect(
+            server=config["SERVER"],
+            user=config["USER"],
+            password=config["PASSWORD"], 
+            database=config["DATABASE"]
+            ) as conn:
+
             print("Created connection...")
             with conn.cursor() as cursor:
                 print("Successfully connected to SQL database.")
@@ -76,8 +95,6 @@ class BRKGui(MDApp):
                             index_col = int(row[9])
                             hashKey = row[1]
 
-                            # print(f"values[8]: {values[8]}:::::::::values[9]: {values[9]}")
-
                             # values[8 and 9] are the index of the slot the physical board is in
                             GlobalScreenManager.KIOSK_BOXES[index_row][index_col] = hashKey
                             index += 1
@@ -86,17 +103,25 @@ class BRKGui(MDApp):
                     print("Error repopulating kiosk boxes:",e)
 
                 finally:
-                    print(GlobalScreenManager.KIOSK_BOXES)
+                    print("KIOSK_BOXES =======================================")
+                    print("Row[0]: ", GlobalScreenManager.KIOSK_BOXES[0])
+                    print("Row[1]: ", GlobalScreenManager.KIOSK_BOXES[1])
+                    print("Row[2]: ", GlobalScreenManager.KIOSK_BOXES[2])
 
 #################################################################################
 #        - Pull Users from User Database
 #################################################################################
     def populateUsersList(self):
-        server='USW-SQL30003.rootforest.com'
-        user='OvenBakedUsr'
-        password='aztmvcjfrizkcpdcehky'
-        database='Oven_Bake_Log'
-        with pymssql.connect(server, user, password, database) as conn:
+        with open("BRK_Creds.json") as f:
+            config = json.load(f)
+
+        with pymssql.connect(
+            server=config["SERVER"],
+            user=config["USER"],
+            password=config["PASSWORD"], 
+            database=config["DATABASE"]
+            ) as conn:
+
             print("Created connection...")
             with conn.cursor() as cursor:
                 print("Successfully connected to SQL database.")
@@ -139,6 +164,9 @@ class BRKGui(MDApp):
         if GlobalScreenManager.SCREEN_HIST:
             self.sm.current = GlobalScreenManager.SCREEN_HIST.pop()
 
+#################################################################################
+#        - Clean up between cycles
+#################################################################################
     def reset(self,dt):
         GlobalScreenManager.CURRENT_USER = 0
         GlobalScreenManager.CURRENT_MO = 0
@@ -158,6 +186,7 @@ class BRKGui(MDApp):
         self.sm.get_screen('checkInBoard').ids.boardInPriority.text = ""
 
         GlobalScreenManager.SCREEN_HIST.clear()
+
 
 if __name__ == '__main__':
     BRKGui().run()

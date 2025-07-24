@@ -2,5 +2,7 @@ __pycache__/
 
 BRK_Env
 
+BRK_Creds.json
+
 icons.py
 test.py

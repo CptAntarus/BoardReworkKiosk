@@ -1,24 +1,41 @@
+#################################################################################
+#
+#       - File: BRK_CheckOutConfirm.py
+#       - Author: Dylan Hendrix
+#       - Discription: This screen allows the user to confirm their checkout
+#
+################################################################################
+#
+#       - Entry:   BRK_CheckoutBoard.py
+#
+#       - Exit:    BRK_CloseDoor.py
+#
+#################################################################################
+
+import pymssql
+import json
 from kivymd.app import MDApp
 from kivy.uix.screenmanager import Screen
 from kivy.clock import Clock
 from datetime import datetime
+
 from BRK_GSM import GlobalScreenManager
-import pymssql
 
 
 class CheckOutConfirm(Screen):
     def on_enter(self):
-        print("==========================================")
-        # print("Top Priority task: (CheckOutConfirm) ",GlobalScreenManager.BOARD_CHECKOUT)
-
         Clock.schedule_once(self.delayedInit,0.1)
 
+
     def delayedInit(self, dt):
+        # Board being checked out
         data = GlobalScreenManager.BOARD_CHECKOUT
 
+        print("==========================================")
         print("SELECTED BOARD:", data)
 
-        self.ids.checkOutConfirmUNum.text = str(GlobalScreenManager.CHECKOUT_USER)
+        # Populate text fileds
+        self.ids.checkOutConfirmUNum.text = str(GlobalScreenManager.CHECKOUT_USER) # U-Number
         self.ids.checkOutConfirmMONum.text = str(data[3])       # MO
         self.ids.checkOutConfirmBoardID.text = str(data[4])     # Board Number
         self.ids.checkOutConfirmPriority.text = str(data[5])    # Priority
@@ -26,18 +43,25 @@ class CheckOutConfirm(Screen):
 
         self.hashKey = str(data[1])
 
+
     def confirmCheckOut(self):
+        # Save current time & board being checked out
         now = datetime.now()
         data = GlobalScreenManager.BOARD_CHECKOUT
 
 #################################################################################
 #        - Copy over to Rework_Table
 #################################################################################
-        server='USW-SQL30003.rootforest.com'
-        user='OvenBakedUsr'
-        password='aztmvcjfrizkcpdcehky'
-        database='Oven_Bake_Log'
-        with pymssql.connect(server, user, password, database) as conn:
+        with open("BRK_Creds.json") as f:
+            config = json.load(f)
+
+        with pymssql.connect(
+            server=config["SERVER"],
+            user=config["USER"],
+            password=config["PASSWORD"], 
+            database=config["DATABASE"]
+            ) as conn:
+
             print("Created connection...")
             with conn.cursor() as cursor:
                 print("Successfully connected to SQL database.")
@@ -46,20 +70,20 @@ class CheckOutConfirm(Screen):
                     values (%s,%s,%s,%s,%s,%s,%s,%s,%s)
                     ''',
                     (   
-                        data[1], # hash_key
+                        data[1],  # hash_key
                         GlobalScreenManager.CHECKOUT_USER, # U-Number
-                        data[3], # MO Number
-                        data[4], # Board ID
-                        data[5], # Priority
-                        now.strftime("%m-%d-%Y %H:%M:%S"),
-                        "OUT",
+                        data[3],  # MO Number
+                        data[4],  # Board ID
+                        data[5],  # Priority
+                        now.strftime("%m-%d-%Y %H:%M:%S"), # Time
+                        "OUT",    # Operation
                         data[10], # rework_type
                         data[11]  # rework_status
                     )
                 )
                 conn.commit()
 
-            # Print Database
+            # Print Database (Can be removed for final product)
                 print("Rework_Table =====================================")
                 cursor.execute('SELECT * FROM Rework_Table')
                 rows = cursor.fetchall()
@@ -72,7 +96,7 @@ class CheckOutConfirm(Screen):
                 cursor.execute("DELETE FROM Kiosk_Table WHERE hash_key = %s", (data[1],))
                 conn.commit()
 
-         # Print Database
+            # Print Database (Can be removed for final product)
                 print("Kiosk_Table =====================================")
                 cursor.execute('SELECT * FROM Kiosk_Table')
                 rows = cursor.fetchall()
@@ -97,13 +121,15 @@ class CheckOutConfirm(Screen):
                     break
 
         except Exception as e:
-            print("Error repopulating kiosk boxes:",e)
+            print("Error removing board from kiosk boxes:",e)
 
         finally:
             print("KIOSK_BOXES =======================================")
-            print(GlobalScreenManager.KIOSK_BOXES)
+            print("Row[0]: ", GlobalScreenManager.KIOSK_BOXES[0])
+            print("Row[1]: ", GlobalScreenManager.KIOSK_BOXES[1])
+            print("Row[2]: ", GlobalScreenManager.KIOSK_BOXES[2])
 
 #################################################################################
-#       - Go to board out screen
+#       - Go to CloseDoor screen
 #################################################################################
         MDApp.get_running_app().switchScreen('closeDoor')

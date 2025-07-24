@@ -1,3 +1,11 @@
+#################################################################################
+#
+#       - File: BRK_Format.kv
+#       - Author: Dylan Hendrix
+#       - Discription: This file contians format instructions for every screen
+#
+#################################################################################
+
 <StartScreen>:
     FloatLayout:
         MDLabel:
@@ -17,6 +25,7 @@
             height: "48dp"
             pos_hint: {"center_x": 0.5, "center_y": 0.4}
             on_text_validate: root.validateUsr(self.text)
+
 
 <InOutScreen>:
     FloatLayout:
@@ -97,6 +106,7 @@
             pos_hint: {"center_x":.4,"center_y":.2}
             on_text_validate: root.validateRWType(self.text)
 
+
 <CheckInConfirmScreen>:
     MDFloatLayout:
         MDTopAppBar:
@@ -105,16 +115,15 @@
             pos_hint: {"top": 1}
             elevation: 10
 
+############################# U Number #############################
         MDIconButton:
             icon: "card-account-details" # account, badge-account-horizontal
             size_hint: None,None
             pos_hint: {"center_x":.1,"center_y":.8}
-
         MDLabel:
             text: 'U Number:'
             size_hint: None, None
             pos_hint: {"center_x":.25,"center_y":.8}
-
         MDLabel:
             id: checkInConfirmUNum
             text: ""
@@ -122,17 +131,16 @@
             size_hint: None, None
             text_size: None, None
             pos_hint: {"center_x":.55,"center_y":.8}
-###############################################################
+
+############################# MO Number #############################
         MDIconButton:
             icon: "flip-vertical"   # line-scan
             size_hint: None,None
             pos_hint: {"center_x":.1,"center_y":.65}
-
         MDLabel:
             text: "MO Num:"
             size_hint: None, None
             pos_hint: {"center_x":.25,"center_y":.65}
-
         MDLabel:
             id: checkInConfirmMONum
             text: ""
@@ -140,17 +148,16 @@
             size_hint: None, None
             text_size: None, None
             pos_hint: {"center_x":.55,"center_y":.65}
-###############################################################
+
+############################# Board ID #############################
         MDIconButton:
             icon: "barcode"
             size_hint: None,None
             pos_hint: {"center_x":.1,"center_y":.5}
-
         MDLabel:
             text: "Board ID"
             size_hint: None, None
             pos_hint: {"center_x":.25,"center_y":.5}
-
         MDLabel:
             id: checkInConfirmBoardID
             text: "filter-variant"
@@ -158,17 +165,16 @@
             size_hint: None, None
             text_size: None, None
             pos_hint: {"center_x":.55,"center_y":.5}
-###############################################################
+
+############################# Priority #############################
         MDIconButton:
             icon: "google-analytics" # progress-alert,
             size_hint: None,None
             pos_hint: {"center_x":.1,"center_y":.35}
-
         MDLabel:
             text: "Priority"
             size_hint: None, None
             pos_hint: {"center_x":.25,"center_y":.35}
-
         MDLabel:
             id: checkInConfirmPriority
             text: ""
@@ -176,7 +182,8 @@
             size_hint: None, None
             text_size: None, None
             pos_hint: {"center_x":.55,"center_y":.35}
-###############################################################
+
+############################# Rework Type #############################
         MDIconButton:
             icon: "progress-alert" # progress-alert,
             size_hint: None,None
@@ -194,7 +201,8 @@
             size_hint: None, None
             text_size: None, None
             pos_hint: {"center_x":.55,"center_y":.2}
-###############################################################
+
+############################# Completed Button #############################
         MDRaisedButton:
             text: "Completed"
             size_hint: .11,.1
@@ -206,7 +214,8 @@
             opacity: 0
             size_hint: None,None
             pos_hint: {"center_x":.95,"center_y":.55}
-###############################################################
+
+############################# InProgress Button #############################
         MDRaisedButton:
             text: "In Progress"
             size_hint: .1,.1
@@ -218,7 +227,8 @@
             opacity: 0
             size_hint: None,None
             pos_hint: {"center_x":.95,"center_y":.4}
-###############################################################
+            
+############################# Confirm Button #############################
         MDRaisedButton:
             text: "Confirm"
             id: confirmBtn
@@ -287,6 +297,7 @@
             halign: "center"
             text_size: self.width, None
 
+
 <CheckOutConfirm>:
     MDFloatLayout:
         MDTopAppBar:
@@ -312,17 +323,15 @@
             size_hint: None, None
             text_size: None, None
             pos_hint: {"center_x":.55,"center_y":.8}
-############################# MO Number #############################
+############################# U Number #############################
         MDIconButton:
             icon: "flip-vertical"   # line-scan
             size_hint: None,None
             pos_hint: {"center_x":.1,"center_y":.65}
-        
         MDLabel:
             text: "MO Num:"
             size_hint: None, None
             pos_hint: {"center_x":.25,"center_y":.65}
-
         MDLabel:
             id: checkOutConfirmMONum
             text: ""
@@ -330,17 +339,16 @@
             size_hint: None, None
             text_size: None, None
             pos_hint: {"center_x":.55,"center_y":.65}
+
 ############################# Board ID #############################
         MDIconButton:
             icon: "barcode"
             size_hint: None,None
             pos_hint: {"center_x":.1,"center_y":.5}
-
         MDLabel:
             text: "Board ID"
             size_hint: None, None
             pos_hint: {"center_x":.25,"center_y":.5}
-
         MDLabel:
             id: checkOutConfirmBoardID
             text: "filter-variant"
@@ -348,17 +356,16 @@
             size_hint: None, None
             text_size: None, None
             pos_hint: {"center_x":.55,"center_y":.5}
+
 ############################# Priority #############################
         MDIconButton:
             icon: "google-analytics" # progress-alert,
             size_hint: None,None
             pos_hint: {"center_x":.1,"center_y":.35}
-
         MDLabel:
             text: "Priority"
             size_hint: None, None
             pos_hint: {"center_x":.25,"center_y":.35}
-
         MDLabel:
             id: checkOutConfirmPriority
             text: ""
@@ -366,17 +373,16 @@
             size_hint: None, None
             text_size: None, None
             pos_hint: {"center_x":.55,"center_y":.35}
+
 ############################# Rework Type #############################
         MDIconButton:
             icon: "progress-alert" # progress-alert,
             size_hint: None,None
             pos_hint: {"center_x":.1,"center_y":.2}
-
         MDLabel:
             text: "Rework Type"
             size_hint: None, None
             pos_hint: {"center_x":.25,"center_y":.2}
-
         MDLabel:
             id: checkOutConfirmRWType
             text: ""
@@ -384,13 +390,13 @@
             size_hint: None, None
             text_size: None, None
             pos_hint: {"center_x":.55,"center_y":.2}
+
 ############################# Confirm Button #############################
         MDRaisedButton:
             text: "Confirm"
             size_hint: .22,.1
             pos_hint: {"center_x":.8,"center_y":.15}
             on_release: root.confirmCheckOut()
-
 
 
 <CloseDoor>:
@@ -401,7 +407,7 @@
             font_style: "H5"
             size_hint: .7,.7
             pos_hint: {"center_x":.5,"center_y":.5}
-        
+
         MDLabel:
             id: doorCountDown
             text: "00:00"
@@ -433,6 +439,7 @@
             MDList:
                 id: reportList
 
+
 <AdminConfirm>:
     MDFloatLayout:
         MDTopAppBar:
@@ -448,21 +455,20 @@
             font_style: "H5"
             size_hint: .7,.7
             pos_hint: {"center_x":.5,"center_y":.7}
-        
+
         MDRaisedButton:
             id: yesBtn
             text: "Yes"
             size_hint: .22,.1
             pos_hint: {"center_x":.25,"center_y":.4}
             on_release: root.CheckoutForOther()
-        
+
         MDRaisedButton:
             id: noBtn
             text: "No"
             size_hint: .22,.1
             pos_hint: {"center_x":.75,"center_y":.4}
             on_release: root.CheckoutForSelf()
-
 
 
 <AdminEnterUser>:
@@ -480,7 +486,7 @@
             size_hint: 0.7, None
             height: "48dp"
             pos_hint: {"center_x": 0.5, "center_y": 0.75}
-        
+
         MDRaisedButton:
             id: confirmNewUserBtn
             text: "Confirm"
@@ -498,7 +504,7 @@
             width: self.minimum_width
             height: self.minimum_height
             adaptive_size: True
-                
+
             MDRaisedButton:
                 text: "1"
                 font_size: "24sp"
@@ -547,3 +553,22 @@
                 icon: "backspace"
                 font_size: "24sp"
                 on_release: root.editText("Backspace")
+
+
+<NoBoardScreen>:
+    MDFloatLayout:
+        MDTopAppBar:
+            title: "Board Check-Out"
+            left_action_items: [["arrow-left", lambda y: app.backButton()]]
+            pos_hint: {"top": 1}
+            elevation: 10
+
+        MDLabel:
+            id: noBoardsMsg
+            font_style: "H5"
+            text: ""
+            size_hint: .5, None
+            height: self.texture_size[1]
+            pos_hint: {"center_x": .5, "center_y": .5}
+            halign: "center"
+            text_size: self.width, None

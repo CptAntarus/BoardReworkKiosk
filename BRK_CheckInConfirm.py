@@ -1,12 +1,29 @@
+#################################################################################
+#
+#       - File: BRK_CheckInConfirm.py
+#       - Author: Dylan Hendrix
+#       - Discription: This screen allows the user to confirm their entry
+#
+################################################################################
+#
+#       - Entry:   BRK_CheckInBoard.py
+#
+#       - Exit:    BRK_CloseDoor.py
+#
+#################################################################################
+
+import pymssql
+import json
 from kivymd.app import MDApp
 from kivy.uix.screenmanager import Screen
 from datetime import datetime
-import pymssql
 
 from BRK_GSM import GlobalScreenManager
 
+
 class CheckInConfirmScreen(Screen):
     def on_enter(self):
+        # Populate text fileds
         self.ids.checkInConfirmUNum.text = str(GlobalScreenManager.CURRENT_USER)
         self.ids.checkInConfirmMONum.text = str(GlobalScreenManager.CURRENT_MO)
         self.ids.checkInConfirmBoardID.text = str(GlobalScreenManager.CURRENT_BID)
@@ -19,6 +36,7 @@ class CheckInConfirmScreen(Screen):
         self.completed = 0
         self.inProgress = 0
 
+
     def assignStatusCompleted(self):
         self.completed = 0 if self.completed else 1
         self.ids.completedCheck.opacity = 1 if self.completed else 0
@@ -26,6 +44,7 @@ class CheckInConfirmScreen(Screen):
         self.inProgress = 0
         self.ids.confirmBtn.disabled = False
         GlobalScreenManager.CURRENT_RW_STATUS = "Completed"
+
 
     def assignStatusInProgress(self):
         self.inProgress = 0 if self.inProgress else 1
@@ -35,11 +54,15 @@ class CheckInConfirmScreen(Screen):
         self.ids.confirmBtn.disabled = False
         GlobalScreenManager.CURRENT_RW_STATUS = "In Progress"
 
+
+#################################################################################
+#        - Log data after user clicks "Confirm"
+#################################################################################
     def assignBox(self):
-        # Create hash Key
+        # Generate hash Key
         now = datetime.now()
         GlobalScreenManager.HASH_KEY = str(GlobalScreenManager.CURRENT_MO + GlobalScreenManager.CURRENT_BID + now.strftime("%H%M%S"))
-        print(GlobalScreenManager.HASH_KEY)
+        # print(GlobalScreenManager.HASH_KEY)
 
 #################################################################################
 #        - Assign a slot in the kiosk
@@ -58,28 +81,35 @@ class CheckInConfirmScreen(Screen):
 
                         GlobalScreenManager.CURRENT_POS_X = i
                         GlobalScreenManager.CURRENT_POS_Y = j
-                        
 
                         assigned = True
                         break
+
                 if assigned:
                     break
 
         except Exception as e:
-            print("Error repopulating kiosk boxes:",e)
+            print("Error assigning kiosk box:",e)
 
         finally:
             print("KIOSK_BOXES =======================================")
-            print(GlobalScreenManager.KIOSK_BOXES)
+            print("Row[0]: ", GlobalScreenManager.KIOSK_BOXES[0])
+            print("Row[1]: ", GlobalScreenManager.KIOSK_BOXES[1])
+            print("Row[2]: ", GlobalScreenManager.KIOSK_BOXES[2])
 
 #################################################################################
 #        - Push to Kiosk_Table
 #################################################################################
-        server='USW-SQL30003.rootforest.com'
-        user='OvenBakedUsr'
-        password='aztmvcjfrizkcpdcehky'
-        database='Oven_Bake_Log'
-        with pymssql.connect(server, user, password, database) as conn:
+        with open("BRK_Creds.json") as f:
+            config = json.load(f)
+
+        with pymssql.connect(
+            server=config["SERVER"],
+            user=config["USER"],
+            password=config["PASSWORD"], 
+            database=config["DATABASE"]
+            ) as conn:
+            
             print("Created connection...")
             with conn.cursor() as cursor:
                 print("Successfully connected to SQL database.")

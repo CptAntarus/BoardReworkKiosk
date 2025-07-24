@@ -1,3 +1,18 @@
+#################################################################################
+#
+#       - File: BRK_AdminEnterUser.py
+#       - Author: Dylan Hendrix
+#       - Discription: This screen allows admin users to enter a different
+#                       Someone else's U-Number to check out a board.
+#
+################################################################################
+#
+#       - Entry:   BRK_AdminConfirm.py
+#
+#       - Exit:    BRK_CheckOutConfirm.py
+#
+#################################################################################
+
 from kivymd.app import MDApp
 from kivy.uix.screenmanager import Screen
 from kivy.clock import Clock
@@ -10,6 +25,7 @@ class AdminEnterUser(Screen):
         print("Admin Enter User")
         self.ids.newUser.text = ""
 
+
     def editText(self, character):
         inputField = self.ids.newUser
 
@@ -19,6 +35,7 @@ class AdminEnterUser(Screen):
             inputField.text = inputField.text[:-1]
         else:
             inputField.text += character
+
 
     def confirmNewUser(self):
         uNum = self.ids.newUser.text
@@ -32,6 +49,7 @@ class AdminEnterUser(Screen):
             print("Invalid User")
             self.ids.newUser.text=""
             Clock.schedule_once(self.clearInput,0.1)
+
 
     def clearInput(self, dt):
         self.ids.newUser.text=""

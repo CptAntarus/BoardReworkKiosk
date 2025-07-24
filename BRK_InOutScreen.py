@@ -1,13 +1,21 @@
-from kivymd.app import MDApp
-from kivy.uix.screenmanager import Screen
-from kivy.clock import Clock
+#################################################################################
+#
+#       - File: BRK_InOutScreen.py
+#       - Author: Dylan Hendrix
+#       - Discription: This is the screen that sends the user either to the
+#                       input or output functionalities
+#
+################################################################################
+#
+#       - Entry:   BRK_CloseDoor.py
+#
+#       - Exit:    BRK_InOutScreen.py
+#
+#################################################################################
 
-from BRK_GSM import GlobalScreenManager, GSM
+from kivy.uix.screenmanager import Screen
+
 
 class InOutScreen(Screen):
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-        self.sm = GSM()
-
     def on_enter(self):
         pass
