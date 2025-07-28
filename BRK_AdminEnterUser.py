@@ -23,7 +23,7 @@ from BRK_GSM import GlobalScreenManager
 class AdminEnterUser(Screen):
     def on_enter(self):
         print("Admin Enter User")
-        self.ids.newUser.text = ""
+        self.ids.newUser.text = "U"
 
 
     def editText(self, character):
@@ -47,10 +47,10 @@ class AdminEnterUser(Screen):
             
         else:
             print("Invalid User")
-            self.ids.newUser.text=""
+            self.ids.newUser.text="U"
             Clock.schedule_once(self.clearInput,0.1)
 
 
     def clearInput(self, dt):
-        self.ids.newUser.text=""
+        self.ids.newUser.text="U"
         self.ids.newUser.focus=True

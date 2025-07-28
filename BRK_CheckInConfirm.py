@@ -30,29 +30,43 @@ class CheckInConfirmScreen(Screen):
         self.ids.checkInConfirmPriority.text = str(GlobalScreenManager.CURRENT_PRIORITY)
         self.ids.checkInConfirmRWType.text = str(GlobalScreenManager.CURRENT_RW_TYPE)
 
+        # Reset state
         self.ids.completedCheck.opacity = 0
         self.ids.inProgressCheck.opacity = 0
         self.ids.confirmBtn.disabled = True
-        self.completed = 0
-        self.inProgress = 0
+        self.selected_status = None  # can be "Completed", "In Progress", or None
 
 
     def assignStatusCompleted(self):
-        self.completed = 0 if self.completed else 1
-        self.ids.completedCheck.opacity = 1 if self.completed else 0
-        self.ids.inProgressCheck.opacity = 0
-        self.inProgress = 0
-        self.ids.confirmBtn.disabled = False
-        GlobalScreenManager.CURRENT_RW_STATUS = "Completed"
+        if self.selected_status == "Completed": # Second Click
+            self.ids.completedCheck.opacity = 0
+            self.selected_status = None
+            GlobalScreenManager.CURRENT_RW_STATUS = None
+            self.ids.confirmBtn.disabled = True
+            self.ids.confirmHintTxt.opacity = 1
+        else: # First Click
+            self.ids.completedCheck.opacity = 1
+            self.ids.inProgressCheck.opacity = 0
+            self.selected_status = "Completed"
+            GlobalScreenManager.CURRENT_RW_STATUS = "Completed"
+            self.ids.confirmBtn.disabled = False
+            self.ids.confirmHintTxt.opacity = 0
 
 
     def assignStatusInProgress(self):
-        self.inProgress = 0 if self.inProgress else 1
-        self.ids.inProgressCheck.opacity = 1 if self.inProgress else 0
-        self.ids.completedCheck.opacity = 0
-        self.completed = 0
-        self.ids.confirmBtn.disabled = False
-        GlobalScreenManager.CURRENT_RW_STATUS = "In Progress"
+        if self.selected_status == "In Progress": # Second Click
+            self.ids.inProgressCheck.opacity = 0
+            self.selected_status = None
+            GlobalScreenManager.CURRENT_RW_STATUS = None
+            self.ids.confirmBtn.disabled = True
+            self.ids.confirmHintTxt.opacity = 1
+        else: # First Click
+            self.ids.inProgressCheck.opacity = 1
+            self.ids.completedCheck.opacity = 0
+            self.selected_status = "In Progress"
+            GlobalScreenManager.CURRENT_RW_STATUS = "In Progress"
+            self.ids.confirmBtn.disabled = False
+            self.ids.confirmHintTxt.opacity = 0
 
 
 #################################################################################

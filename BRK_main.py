@@ -3,7 +3,7 @@
 #       - File: BRK_main.py
 #       - Author: Dylan Hendrix
 #       - Discription: Main file to control the flow of the app, import
-#                       screens, and handle populate inital values
+#                       screens, and populate inital values
 #
 ################################################################################
 #
