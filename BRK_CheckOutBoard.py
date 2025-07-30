@@ -30,8 +30,6 @@ class CheckOutBoard(Screen):
         # Disable all buttons before permissions validation
         self.ids.BoardReworkBtn.opacity = 0
         self.ids.BGAReworkBtn.opacity = 0
-        self.ids.AdminCheckoutBtn.opacity = 0
-        self.ids.AdminCheckoutBtn.disabled = True
         self.ids.BoardReworkBtn.disabled = True
         self.ids.BGAReworkBtn.disabled = True
 
@@ -45,9 +43,7 @@ class CheckOutBoard(Screen):
             if GlobalScreenManager.CURRENT_USER in GlobalScreenManager.BGA_USERS:
                 self.ids.BGAReworkBtn.opacity = 1
                 self.ids.BGAReworkBtn.disabled = False
-                if GlobalScreenManager.CURRENT_USER in GlobalScreenManager.ADMIN_USERS:
-                    self.ids.AdminCheckoutBtn.opacity = 1
-                    self.ids.AdminCheckoutBtn.disabled = False
+
         else:
             self.ids.errorMSG.text = "You are not registered for Check-Out"
             self.ids.checkOutLabel.opacity = 0

@@ -1,16 +1,15 @@
 #################################################################################
 #
-#       - File: BRK_AdminCheckout.py
+#       - File: BRK_InProgressCheckout.py
 #       - Author: Dylan Hendrix
-#       - Discription: This screen controls the logic when the user selects
-#                       admin checkout from the checkout screen.
+#       - Discription: This is the screen that shows the boards the current
+#                       user has in the kiosk
 #
 ################################################################################
 #
-#       - Entry:   BRK_CheckoutBoard.py
+#       - Entry:   
 #
-#       - Exits:   BRK_AdminConfirm.py
-#                  BRK_NoBoardScreen.py
+#       - Exit:    
 #
 #################################################################################
 
@@ -20,14 +19,15 @@ import re
 from datetime import datetime
 from kivymd.app import MDApp
 from kivy.uix.screenmanager import Screen
-from kivymd.uix.menu import MDDropdownMenu
 from kivymd.uix.list import ThreeLineListItem
 
 from BRK_GSM import GlobalScreenManager
 
 
-class AdminCheckout(Screen):
+class InProgressCheckout(Screen):
     def on_enter(self):
+        print("PersonalCheckout Screen")
+
         with open("BRK_Creds.json") as f:
             config = json.load(f)
 
@@ -60,54 +60,12 @@ class AdminCheckout(Screen):
                     print("Error sorting reports:", e)
 
                 finally:
-                    self.sortOption("Priority")
+                    self.sortByUser(GlobalScreenManager.CURRENT_USER)
 
 
-#################################################################################
-#        - Drop-down menu builders
-#################################################################################
-    def open_menu(self, item):
-        menu_items = [
-            {"text": "Priority", "on_release": lambda x="Priority": self.sortOption(x)},
-            {"text": "Time", "on_release": lambda x="Time": self.sortOption(x)},
-            {"text": "User", "on_release": lambda: self.whichUserSort()},
-        ]
-        self.caller = item
-        self.mainMenu = MDDropdownMenu(caller=self.caller, items=menu_items)
-        self.mainMenu.open()
-
-
-    def whichUserSort(self):
-        self.mainMenu.dismiss()
-        UsersInKiosk = {row[2] for row in self.rows} # Pull list of Users w/ board(s) in kiosk
-        
-        # pair uNum with name
-        uNumWithName = [
-            (uNum, GlobalScreenManager.USER_NAMES[uNum])
-            for uNum in UsersInKiosk
-        ]
-
-        # Sort by Name
-        sortedPairs = sorted(uNumWithName, key=lambda x: x[1].lower())
-        
-        usersMenuItems = [
-            {
-                "text": f"{uNum} -- {UserName}", "on_release": lambda x=uNum: self.sortByUser(x)
-            } for uNum, UserName in sortedPairs
-        ]
-
-        self.userMenu = MDDropdownMenu(caller=self.caller, items=usersMenuItems)
-        self.userMenu.open()
-    
-
-#################################################################################
-#        - Helpers
-#################################################################################
     def getTimeDelta(self, row):
         nowMonth = int(datetime.now().strftime("%m"))
         nowDay = int(datetime.now().strftime("%d"))
-        nowYear = int(datetime.now().strftime("%Y"))
-        # print("+",nowMonth,nowDay,nowYear,"+")
 
         pattern = r"(\d{2})-(\d{2})"
         longMonths = [1,3,5,7,8,10,11]
@@ -133,7 +91,7 @@ class AdminCheckout(Screen):
             timeDelta = deltaDay
 
         return timeDelta
-    
+
 
     def convertTimeDeltaToMsg(self, timeDelta):
         if timeDelta == 0:
@@ -160,11 +118,11 @@ class AdminCheckout(Screen):
         return timeMsg
 
 
-#################################################################################
-#        - Clear and sort by new option
-#################################################################################
+    #################################################################################
+    #        - Clear and sort by new option
+    #################################################################################
     def sortByUser(self, user):
-        report_list = self.ids.reportList
+        report_list = self.ids.inProgressReportList
         report_list.clear_widgets()
 
         sortedRows = sorted(self.rows, key=self.getTimeDelta)
@@ -184,47 +142,9 @@ class AdminCheckout(Screen):
                 )
                 report_list.add_widget(item)
 
-
-    def sortOption(self, text_item):
-        key_map = {
-            "Priority": 5,
-            "User"    : 2,
-            "Time"    : "time"
-        }
-
-        sort_key = key_map.get(text_item, "Priority")
-        
-        # Refresh the list
-        report_list = self.ids.reportList
-        report_list.clear_widgets()
-
-        if sort_key == "time":
-            sortedRows = sorted(self.rows, key=self.getTimeDelta, reverse=True)
-        else:
-            sortedRows = sorted(self.rows, key=lambda row: row[sort_key])
-
-        for row in sortedRows:
-            ####### Assign time msg #######
-            timeDelta = self.getTimeDelta(row)
-            timeMsg = self.convertTimeDeltaToMsg(timeDelta)
-
-            ####### Make a line in list #######
-            item = ThreeLineListItem(
-                text="Board: " + str(row[4]), # Board Number
-                secondary_text="Priority: " + str(row[5]) + " - " + str(row[10]), # Priority
-                tertiary_text="Time: " + str(timeMsg), # How long board has been in Kiosk
-                on_release=lambda x: self.selectReport(row)
-            )
-            report_list.add_widget(item)
-
-        print(f"Sorted by: {sort_key}")
-
-
-#################################################################################
-#        - Select report and switch screen
-#################################################################################
     def selectReport(self, row):
+        GlobalScreenManager.CHECKOUT_USER = GlobalScreenManager.CURRENT_USER
         GlobalScreenManager.BOARD_CHECKOUT = row
-        print("Selected board data:", row)
+        print("Selected board data:", row) 
 
-        MDApp.get_running_app().switchScreen("adminConfirm")
+        MDApp.get_running_app().switchScreen("checkOutConfirm")

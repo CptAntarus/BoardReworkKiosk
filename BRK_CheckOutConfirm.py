@@ -70,7 +70,7 @@ class CheckOutConfirm(Screen):
                     INSERT INTO Rework_Table (hash_key, [u-num], mo, board_id, priority, time_stamp, in_out_status, rework_type, rework_status)
                     values (%s,%s,%s,%s,%s,%s,%s,%s,%s)
                     ''',
-                    (   
+                    (
                         data[1],  # hash_key
                         GlobalScreenManager.CHECKOUT_USER, # U-Number
                         data[3],  # MO Number

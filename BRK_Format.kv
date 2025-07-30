@@ -6,6 +6,9 @@
 #
 #################################################################################
 
+#################################################################################
+#        - Inital Screens
+#################################################################################
 <StartScreen>:
     FloatLayout:
         MDLabel:
@@ -25,7 +28,6 @@
             height: "48dp"
             pos_hint: {"center_x": 0.5, "center_y": 0.4}
             on_text_validate: root.validateUsr(self.text)
-
 
 <InOutScreen>:
     FloatLayout:
@@ -56,9 +58,79 @@
             font_style: "H5"
             size_hint: .3,.2
             pos_hint: {"center_x":.75, "center_y":.4}
+            on_release: app.switchScreen("selectCheckout")
+
+<SelectCheckout>:
+    MDFloatLayout:
+        MDTopAppBar:
+            title: ""
+            left_action_items: [["arrow-left", lambda y: app.backButton()]]
+            pos_hint: {"top": 1}
+            elevation: 10
+
+        MDLabel:
+            id: SelectCheckOutLabel
+            opacity: 1
+            text: "Select Option"
+            pos_hint: {"center_x": 0.5, "center_y": 0.8}
+            halign: "center"
+            font_style: "H4"
+            size_hint: 1,None
+            height: self.texture_size[1]
+
+        MDRaisedButton:
+            id: NewReworkBtn
+            disabled: True
+            text: "New Rework"
+            size_hint: .35,.15
+            font_style: "H5"
+            pos_hint: {"center_x":.5, "center_y":.62}
             on_release: app.switchScreen("checkOutBoard")
 
+        MDRaisedButton:
+            id: InProgressBtn
+            opacity: 0
+            disabled: True
+            text: "In Progress"
+            size_hint: .35,.15
+            font_style: "H5"
+            pos_hint: {"center_x":.5, "center_y":.42}
+            on_release: app.switchScreen("inProgressCheckOut")
 
+        MDRaisedButton:
+            id: AdminCheckoutBtn
+            opacity: 0
+            disabled: True
+            text: "Admin Checkout"
+            size_hint: .2,.1
+            font_style: "H5"
+            pos_hint: {"center_x":.3, "center_y":.2}
+            on_release: app.switchScreen("adminCheckout")
+
+        MDRaisedButton:
+            id: QACheckoutBtn
+            opacity: 0
+            disabled: True
+            text: "QA Checkout"
+            size_hint: .2,.1
+            font_style: "H5"
+            pos_hint: {"center_x":.7, "center_y":.2}
+            on_release: app.switchScreen("qACheckOut")
+        
+        MDLabel:
+            id: errorMSG
+            opacity: 0
+            font_style: "H5"
+            text: ""
+            size_hint: .5, None
+            height: self.texture_size[1]
+            pos_hint: {"center_x": .5, "center_y": .5}
+            halign: "center"
+            text_size: self.width, None
+
+#################################################################################
+#        - Normal Checkin Screens
+#################################################################################
 <CheckInBoard>:
     MDFloatLayout:
         MDTopAppBar:
@@ -205,7 +277,7 @@
 ############################# Completed Button #############################
         MDRaisedButton:
             text: "Completed"
-            size_hint: .11,.1
+            size_hint: .1,.1
             pos_hint: {"center_x":.85,"center_y":.55}
             on_release: root.assignStatusCompleted()
         MDIconButton:
@@ -244,6 +316,9 @@
             on_release: root.assignBox()
 
 
+#################################################################################
+#        - Normal Checkout Screens
+#################################################################################
 <CheckOutBoard>:
     MDFloatLayout:
         MDTopAppBar:
@@ -282,26 +357,35 @@
             pos_hint: {"center_x":.75, "center_y":.4}
             on_release: root.findNBRBoard()
 
-        MDRaisedButton:
-            id: AdminCheckoutBtn
-            opacity: 0
-            disabled: True
-            text: "Admin Checkout"
-            size_hint: .2,.1
-            font_style: "H5"
-            pos_hint: {"center_x":.5, "center_y":.2}
-            on_release: app.switchScreen("adminCheckout")
 
-        MDLabel:
-            id: errorMSG
-            opacity: 0
-            font_style: "H5"
-            text: ""
-            size_hint: .5, None
-            height: self.texture_size[1]
-            pos_hint: {"center_x": .5, "center_y": .5}
-            halign: "center"
-            text_size: self.width, None
+<InProgressCheckOut>:
+    MDBoxLayout:
+        orientation: 'vertical'
+
+        MDTopAppBar:
+            title: "Boards In Kiosk"
+            left_action_items: [["arrow-left", lambda y: app.backButton(y)]]
+            pos_hint: {"top": 1}
+            elevation: 10
+
+        ScrollView:
+            MDList:
+                id: inProgressReportList
+
+
+<QACheckOut>:
+    MDBoxLayout:
+        orientation: 'vertical'
+
+        MDTopAppBar:
+            title: "Boards In Kiosk"
+            left_action_items: [["arrow-left", lambda y: app.backButton(y)]]
+            pos_hint: {"top": 1}
+            elevation: 10
+
+        ScrollView:
+            MDList:
+                id: inProgressReportList
 
 
 <CheckOutConfirm>:
@@ -405,31 +489,10 @@
             on_release: root.confirmCheckOut()
 
 
-<CloseDoor>:
-    MDFloatLayout:
-        MDLabel:
-            id: closeDoorMsg
-            text: ""
-            font_style: "H5"
-            size_hint: .7,.7
-            pos_hint: {"center_x":.5,"center_y":.5}
 
-        MDLabel:
-            id: doorCountDown
-            text: "00:00"
-            font_style: "H5"
-            size_hint: None, None
-            size: dp(100), dp(40)
-            pos_hint: {"center_x":.9,"center_y":.9}
-
-        MDRaisedButton:
-            id: closeDoorDoneBtn
-            text: "Done"
-            size_hint: .22,.1
-            pos_hint: {"center_x":.8,"center_y":.15}
-            on_release: root.doneBtn()
-
-
+#################################################################################
+#        - Admin Screens
+#################################################################################
 <AdminCheckOut>:
     MDBoxLayout:
         orientation: 'vertical'
@@ -444,7 +507,6 @@
         ScrollView:
             MDList:
                 id: reportList
-
 
 <AdminConfirm>:
     MDFloatLayout:
@@ -559,6 +621,33 @@
                 icon: "backspace"
                 font_size: "24sp"
                 on_release: root.editText("Backspace")
+
+#################################################################################
+#        - Miscellaneous
+#################################################################################
+<CloseDoor>:
+    MDFloatLayout:
+        MDLabel:
+            id: closeDoorMsg
+            text: ""
+            font_style: "H5"
+            size_hint: .7,.7
+            pos_hint: {"center_x":.5,"center_y":.5}
+
+        MDLabel:
+            id: doorCountDown
+            text: "00:00"
+            font_style: "H5"
+            size_hint: None, None
+            size: dp(100), dp(40)
+            pos_hint: {"center_x":.9,"center_y":.9}
+
+        MDRaisedButton:
+            id: closeDoorDoneBtn
+            text: "Done"
+            size_hint: .22,.1
+            pos_hint: {"center_x":.8,"center_y":.15}
+            on_release: root.doneBtn()
 
 
 <NoBoardScreen>:

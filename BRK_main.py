@@ -35,7 +35,9 @@ from BRK_AdminCheckout import AdminCheckout
 from BRK_AdminConfirm import AdminConfirm
 from BRK_AdminEnterUser import AdminEnterUser
 from BRK_NoBoardScreen import NoBoardScreen
-
+from BRK_SelectCheckout import SelectCheckout
+from BRK_InProgressCheckout import InProgressCheckout
+from BRK_QACheckOut import QACheckOut
 
 class BRKGui(MDApp):
     def build(self):
@@ -51,6 +53,9 @@ class BRKGui(MDApp):
         self.sm.add_widget(AdminConfirm(name="adminConfirm"))
         self.sm.add_widget(AdminEnterUser(name="adminEnterUser"))
         self.sm.add_widget(NoBoardScreen(name="noBoardScreen"))
+        self.sm.add_widget(SelectCheckout(name="selectCheckout"))
+        self.sm.add_widget(QACheckOut(name="qACheckOut"))
+        self.sm.add_widget(InProgressCheckout(name="inProgressCheckOut"))
 
         self.populateDoorsList()
         self.populateUsersList()
