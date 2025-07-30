@@ -24,7 +24,8 @@ from BRK_GSM import GlobalScreenManager
 class CheckInConfirmScreen(Screen):
     def on_enter(self):
         # Populate text fileds
-        self.ids.checkInConfirmUNum.text = str(GlobalScreenManager.CURRENT_USER)
+        outputUser = GlobalScreenManager.CURRENT_USER + "  ---  " + GlobalScreenManager.USER_NAMES[GlobalScreenManager.CURRENT_USER]
+        self.ids.checkInConfirmUNum.text = str(outputUser)
         self.ids.checkInConfirmMONum.text = str(GlobalScreenManager.CURRENT_MO)
         self.ids.checkInConfirmBoardID.text = str(GlobalScreenManager.CURRENT_BID)
         self.ids.checkInConfirmPriority.text = str(GlobalScreenManager.CURRENT_PRIORITY)

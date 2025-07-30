@@ -35,7 +35,8 @@ class CheckOutConfirm(Screen):
         print("SELECTED BOARD:", data)
 
         # Populate text fileds
-        self.ids.checkOutConfirmUNum.text = str(GlobalScreenManager.CHECKOUT_USER) # U-Number
+        outputUser = GlobalScreenManager.CHECKOUT_USER + "  ---  " + GlobalScreenManager.USER_NAMES[GlobalScreenManager.CHECKOUT_USER]
+        self.ids.checkOutConfirmUNum.text = str(outputUser)      # U-num & Name
         self.ids.checkOutConfirmMONum.text = str(data[3])       # MO
         self.ids.checkOutConfirmBoardID.text = str(data[4])     # Board Number
         self.ids.checkOutConfirmPriority.text = str(data[5])    # Priority

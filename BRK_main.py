@@ -132,6 +132,8 @@ class BRKGui(MDApp):
                 data = cursor.fetchall()
 
                 for row in data:
+                    GlobalScreenManager.USER_NAMES[row[0]] = row[1]  # Save Usernames with U-Num as the key
+
                     if row[2] == True: # Basic Access
                         GlobalScreenManager.USERS.append(row[0])
                     if row[3] == True: # Rework Access

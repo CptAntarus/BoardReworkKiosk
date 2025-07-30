@@ -31,6 +31,7 @@ class GlobalScreenManager(ScreenManager):
     KIOSK_BOXES = [[None for _ in range(20)] for _ in range(3)]
 
     # Stores the different list of users by access level
+    USER_NAMES = {}
     USERS = []
     REWORK_USERS = []
     BGA_USERS = []
