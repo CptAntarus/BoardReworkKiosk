@@ -20,7 +20,6 @@ import re
 from datetime import datetime
 from kivymd.app import MDApp
 from kivy.uix.screenmanager import Screen
-from kivy.clock import Clock
 from kivymd.uix.menu import MDDropdownMenu
 from kivymd.uix.list import ThreeLineListItem
 
@@ -63,6 +62,10 @@ class AdminCheckout(Screen):
                 finally:
                     self.sortOption("Priority")
 
+
+#################################################################################
+#        - Drop-down menu builders
+#################################################################################
     def open_menu(self, item):
         menu_items = [
             {"text": "Priority", "on_release": lambda x="Priority": self.sortOption(x)},
@@ -76,17 +79,30 @@ class AdminCheckout(Screen):
 
     def whichUserSort(self):
         self.mainMenu.dismiss()
-        UsersInKiosk = {row[2] for row in self.rows}
+        UsersInKiosk = {row[2] for row in self.rows} # Pull list of Users w/ board(s) in kiosk
+        
+        # pair uNum with name
+        uNumWithName = [
+            (uNum, GlobalScreenManager.USER_NAMES[uNum])
+            for uNum in UsersInKiosk
+        ]
+
+        # Sort by Name
+        sortedPairs = sorted(uNumWithName, key=lambda x: x[1].lower())
+        
         usersMenuItems = [
             {
-                "text": i + " -- " + GlobalScreenManager.USER_NAMES[i], "on_release": lambda x=i: self.sortByUser(x)
-            } for i in GlobalScreenManager.USERS if i in UsersInKiosk
+                "text": f"{uNum} -- {UserName}", "on_release": lambda x=uNum: self.sortByUser(x)
+            } for uNum, UserName in sortedPairs
         ]
 
         self.userMenu = MDDropdownMenu(caller=self.caller, items=usersMenuItems)
         self.userMenu.open()
     
 
+#################################################################################
+#        - Helpers
+#################################################################################
     def getTimeDelta(self, row):
         nowMonth = int(datetime.now().strftime("%m"))
         nowDay = int(datetime.now().strftime("%d"))
@@ -144,6 +160,9 @@ class AdminCheckout(Screen):
         return timeMsg
 
 
+#################################################################################
+#        - Clear and sort by new option
+#################################################################################
     def sortByUser(self, user):
         report_list = self.ids.reportList
         report_list.clear_widgets()
@@ -159,12 +178,11 @@ class AdminCheckout(Screen):
                 ####### Make a line in list #######
                 item = ThreeLineListItem(
                     text="Board: " + str(row[4]), # Board Number
-                    secondary_text="Priority: " + str(row[5]) + " - " + str(row[10]), # Priority
+                    secondary_text="Priority: " + str(row[5]) + " - " + str(row[10]), # Priority & RW Type
                     tertiary_text="Time: " + str(timeMsg), # How long board has been in Kiosk
-                    on_release=self.make_select_handler(row)
+                    on_release= lambda x: self.selectReport(row)
                 )
                 report_list.add_widget(item)
-
 
 
     def sortOption(self, text_item):
@@ -190,22 +208,21 @@ class AdminCheckout(Screen):
             timeDelta = self.getTimeDelta(row)
             timeMsg = self.convertTimeDeltaToMsg(timeDelta)
 
-           ####### Make a line in list #######
+            ####### Make a line in list #######
             item = ThreeLineListItem(
                 text="Board: " + str(row[4]), # Board Number
                 secondary_text="Priority: " + str(row[5]) + " - " + str(row[10]), # Priority
                 tertiary_text="Time: " + str(timeMsg), # How long board has been in Kiosk
-                on_release=self.make_select_handler(row)
+                on_release=lambda x: self.selectReport(row)
             )
             report_list.add_widget(item)
 
         print(f"Sorted by: {sort_key}")
 
 
-    def make_select_handler(self, row_data):
-        return lambda *args: self.selectReport(row_data)
-
-
+#################################################################################
+#        - Select report and switch screen
+#################################################################################
     def selectReport(self, row):
         GlobalScreenManager.BOARD_CHECKOUT = row
         print("Selected board data:", row)
