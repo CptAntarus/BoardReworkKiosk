@@ -54,8 +54,8 @@ class BRKGui(MDApp):
         self.sm.add_widget(AdminEnterUser(name="adminEnterUser"))
         self.sm.add_widget(NoBoardScreen(name="noBoardScreen"))
         self.sm.add_widget(SelectCheckout(name="selectCheckout"))
-        self.sm.add_widget(QACheckOut(name="qACheckOut"))
         self.sm.add_widget(InProgressCheckout(name="inProgressCheckOut"))
+        self.sm.add_widget(QACheckOut(name="qACheckOut"))
 
         self.populateDoorsList()
         self.populateUsersList()
@@ -151,7 +151,7 @@ class BRKGui(MDApp):
                         GlobalScreenManager.QA_USERS.append(row[0])
 
             # Uncomment to show users pulled from User_Table
-                    # print(row)
+                #     print(row)
                 # print("REMOTE_DB =============================================================================")
                 # print("Users:        ",GlobalScreenManager.USERS)
                 # print("Rework Users: ",GlobalScreenManager.REWORK_USERS)
@@ -188,9 +188,6 @@ class BRKGui(MDApp):
         GlobalScreenManager.CURRENT_RW_STATUS = 0
 
         self.sm.get_screen('startScreen').ids.EmpID.text = ""
-        self.sm.get_screen('checkInBoard').ids.boardInMO.text = ""
-        self.sm.get_screen('checkInBoard').ids.boardInBarCode.text = ""
-        self.sm.get_screen('checkInBoard').ids.boardInPriority.text = ""
 
         GlobalScreenManager.SCREEN_HIST.clear()
 

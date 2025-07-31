@@ -310,7 +310,7 @@
             text: "Select Status"
             size_hint: None, None
             pos_hint: {"center_x":.82,"center_y":.23}
-            opacity: 1
+            opacity: 0
         MDRaisedButton:
             text: "Confirm"
             id: confirmBtn
@@ -657,6 +657,8 @@
 <NoBoardScreen>:
     MDFloatLayout:
         MDTopAppBar:
+            id: noBoardScreenTopBar
+            opacity: 1
             title: "Board Check-Out"
             left_action_items: [["arrow-left", lambda y: app.backButton()]]
             pos_hint: {"top": 1}

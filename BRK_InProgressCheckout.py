@@ -45,9 +45,8 @@ class InProgressCheckout(Screen):
                 try:
                     cursor.execute("""
                         SELECT * FROM Kiosk_Table
-                        WHERE rework_status = %s
-                        """, ("In Progress",)) # ORDER BY time_stamp DESC priority
-                        # ORDER BY {sort_key} ASC
+                        WHERE rework_status = %s OR rework_status = %s
+                        """, ("In Progress", "Failed QA"))
 
                     self.rows = cursor.fetchall()
 

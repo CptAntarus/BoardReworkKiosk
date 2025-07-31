@@ -19,6 +19,7 @@ from datetime import datetime
 from kivymd.app import MDApp
 from kivy.uix.screenmanager import Screen
 from kivymd.uix.list import ThreeLineListItem
+from kivy.clock import Clock
 
 from BRK_GSM import GlobalScreenManager
 
@@ -26,10 +27,9 @@ from BRK_GSM import GlobalScreenManager
 class QACheckOut(Screen):
     def on_enter(self):
         print("QACheckOut Screen")
+        Clock.schedule_once(self.delayedInit,0.1)
 
-    def on_enter(self):
-        print("PersonalCheckout Screen")
-
+    def delayedInit(self,dt):
         with open("BRK_Creds.json") as f:
             config = json.load(f)
 
@@ -48,9 +48,8 @@ class QACheckOut(Screen):
                     cursor.execute("""
                         SELECT * FROM Kiosk_Table
                         WHERE rework_status = %s
-                        """, ("WQA",)) # ORDER BY time_stamp DESC priority
-                        # ORDER BY {sort_key} ASC
-
+                        ORDER BY priority DESC
+                        """, ("WQA",)) 
                     self.rows = cursor.fetchall()
 
                     # Check if kiosk is empty
@@ -63,7 +62,7 @@ class QACheckOut(Screen):
                     print("Error sorting reports:", e)
 
                 finally:
-                    self.sortByUser(GlobalScreenManager.CURRENT_USER)
+                    self.makeList(GlobalScreenManager.CURRENT_USER)
 
 
     def getTimeDelta(self, row):
@@ -124,7 +123,7 @@ class QACheckOut(Screen):
     #################################################################################
     #        - Clear and sort by new option
     #################################################################################
-    def sortByUser(self, user):
+    def makeList(self, user):
         report_list = self.ids.inProgressReportList
         report_list.clear_widgets()
 
@@ -135,15 +134,14 @@ class QACheckOut(Screen):
             timeDelta = self.getTimeDelta(row)
             timeMsg = self.convertTimeDeltaToMsg(timeDelta)
 
-            if user == row[2]:
-                ####### Make a line in list #######
-                item = ThreeLineListItem(
-                    text="Board: " + str(row[4]), # Board Number
-                    secondary_text="Priority: " + str(row[5]) + " - " + str(row[10]), # Priority & RW Type
-                    tertiary_text="Time: " + str(timeMsg), # How long board has been in Kiosk
-                    on_release= lambda x: self.selectReport(row)
-                )
-                report_list.add_widget(item)
+            ####### Make a line in list #######
+            item = ThreeLineListItem(
+                text="Board: " + str(row[4]), # Board Number
+                secondary_text="Priority: " + str(row[5]) + " - " + str(row[10]), # Priority & RW Type
+                tertiary_text="Time: " + str(timeMsg), # How long board has been in Kiosk
+                on_release= lambda x: self.selectReport(row)
+            )
+            report_list.add_widget(item)
 
     def selectReport(self, row):
         GlobalScreenManager.CHECKOUT_USER = GlobalScreenManager.CURRENT_USER

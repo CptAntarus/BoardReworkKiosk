@@ -52,6 +52,8 @@ class CheckOutConfirm(Screen):
             self.newStatus = "In Progress"
         elif data[11] == "WQA":
             self.newStatus = "In QA"
+        # elif data[11] == "Redo":
+        #     self.newStatus = "In QA"
 
 
         print("data[11]: ", data[11])

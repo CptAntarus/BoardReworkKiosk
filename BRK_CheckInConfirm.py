@@ -38,6 +38,9 @@ class CheckInConfirmScreen(Screen):
         self.ids.BtnTwoCheck.opacity = 0
         self.ids.confirmBtn.disabled = True
         self.BtnStatus = None
+        checkinUser = ""
+        self.status1 = ""
+        self.status2 = ""
 
 #################################################################################
 #        - Pull list of Boards from Kiosk_DB
@@ -69,18 +72,24 @@ class CheckInConfirmScreen(Screen):
                      print("Done getting rows")
                      print("self.rows", self.rows)
 
-        # Handle Status logic
+
+#################################################################################
+#        - Handle Status logic (Check INCOMMING baord)
+#################################################################################
+        # New Board
         print("CURRENT_BID: ", GlobalScreenManager.CURRENT_BID)
-        if not any(row[4] == GlobalScreenManager.CURRENT_BID for row in self.rows):    # New Board
+        if not any(row[4] == GlobalScreenManager.CURRENT_BID for row in self.rows):    
             GlobalScreenManager.CURRENT_RW_STATUS = "Initial"
             self.ids.confirmBtn.disabled = False
             print("Doing the if side")
 
-        elif self.rows[0][9] == "Initial":
+        # If it is in the kiosk but already has 'IN' tag, ie it's already in the dry box
+        elif self.rows[0][7] == "IN" or self.rows[0][9] == "DOUBLE":
             print("ERROR: Board Checked In A second Time without Checkout")
-            self.deactivateStatusBtns()
-            self.ids.confirmBtn.disabled = False
+            GlobalScreenManager.noBoardsFlag = "DOUBLE"
+            MDApp.get_running_app().switchScreen("noBoardScreen")
 
+        # Everything else
         else:
             print("Doing the else side")
             selectedBoard = self.rows[0]
@@ -88,31 +97,33 @@ class CheckInConfirmScreen(Screen):
             self.activateStatusBtns()
 
             if GlobalScreenManager.CURRENT_RW_STATUS == "In Progress":
-                print("something might have worked")
                 self.ids.statusBtnOne.text = "In Progress"
                 self.status1 = "In Progress"
                 self.ids.statusBtnTwo.text = "Waiting For QA"
                 self.status2 = "WQA"
             elif GlobalScreenManager.CURRENT_RW_STATUS == "In QA":
-                print("something might have worked a second time!")
-                self.ids.statusBtnOne.text = "Redo"
-                self.status1 = "Redo"
-                self.ids.statusBtnTwo.text = "Completed"
-                self.status2 = "Completed"
-
-        
-            
-            #change button text and values
+                self.ids.statusBtnOne.text = "Failed QA"
+                self.status1 = "Failed QA"
+                self.ids.statusBtnTwo.text = "Passed QA"
+                self.status2 = "Passed QA"
+            # elif GlobalScreenManager.CURRENT_RW_STATUS == "Failed QA":
+            #     self.ids.statusBtnOne.text = "Redo"
+            #     self.status1 = "Redo"
+            #     self.ids.statusBtnTwo.text = "Completed"
+            #     self.status2 = "Completed"
 
         print("Status: ", GlobalScreenManager.CURRENT_RW_STATUS)
 
+
     def activateStatusBtns(self):
+        self.ids.confirmHintTxt.opacity = 1
         self.ids.statusBtnOne.opacity = 1
         self.ids.statusBtnOne.disabled = False
         self.ids.statusBtnTwo.opacity = 1
         self.ids.statusBtnTwo.disabled = False
 
     def deactivateStatusBtns(self):
+        self.ids.confirmHintTxt.opacity = 0
         self.ids.statusBtnOne.opacity = 0
         self.ids.statusBtnOne.disabled = True
         self.ids.statusBtnTwo.opacity = 0
@@ -207,17 +218,32 @@ class CheckInConfirmScreen(Screen):
             password=config["PASSWORD"], 
             database=config["DATABASE"]
             ) as conn:
-            
             print("Created connection...")
+            
             with conn.cursor() as cursor:
                 print("Successfully connected to SQL database.")
+
+                # if redo assign to previous user
+                if self.status1 == "Failed QA":
+                    # Find user who submited board for QA
+                    cursor.execute("""
+                        SELECT * FROM Rework_Table
+                        WHERE board_id = %s AND rework_status = %s
+                        """, (GlobalScreenManager.CURRENT_BID, "WQA"))
+                    self.rows = cursor.fetchone()
+                    checkinUser = str(self.rows[2])
+                
+                else:
+                    checkinUser = GlobalScreenManager.CURRENT_USER
+
+                # Insert into Kiosk_Table
                 cursor.execute('''
                     INSERT INTO Kiosk_Table (hash_key, u_num, mo, board_id, priority, time_stamp, in_out_status, index_row, index_col, rework_type, rework_status)
                     values (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
                     ''', 
                     (
                         GlobalScreenManager.HASH_KEY,
-                        GlobalScreenManager.CURRENT_USER,
+                        checkinUser,
                         GlobalScreenManager.CURRENT_MO,
                         GlobalScreenManager.CURRENT_BID,
                         GlobalScreenManager.CURRENT_PRIORITY,
@@ -247,7 +273,7 @@ class CheckInConfirmScreen(Screen):
                     ''',
                     (
                         GlobalScreenManager.HASH_KEY,
-                        GlobalScreenManager.CURRENT_USER,
+                        checkinUser,
                         GlobalScreenManager.CURRENT_MO,
                         GlobalScreenManager.CURRENT_BID,
                         GlobalScreenManager.CURRENT_PRIORITY,
