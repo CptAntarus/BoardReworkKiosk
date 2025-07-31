@@ -68,9 +68,9 @@ class CheckOutBoard(Screen):
                 with conn.cursor() as cursor:
                     cursor.execute("""
                         SELECT TOP 1 * FROM Kiosk_Table
-                        WHERE rework_type = 'NBR'
+                        WHERE rework_type = %s AND rework_status = %s
                         ORDER BY priority ASC, time_stamp ASC
-                    """)
+                    """, ("NBR", "Initial"))
                     result = cursor.fetchone()
 
             # Check that Kiosk_Table is not empty
@@ -108,9 +108,9 @@ class CheckOutBoard(Screen):
                 with conn.cursor() as cursor:
                     cursor.execute("""
                         SELECT TOP 1 * FROM Kiosk_Table
-                        WHERE rework_type = 'BGA'
+                        WHERE rework_type = %s AND rework_status = %s
                         ORDER BY priority ASC, time_stamp ASC
-                    """)
+                    """, ("BGA", "Initial"))
                     result = cursor.fetchone()
 
             # Check that Kiosk_Table is not empty

@@ -24,11 +24,12 @@ from BRK_GSM import GlobalScreenManager
 
 class CheckOutConfirm(Screen):
     def on_enter(self):
+        self.newStatus = ""
         Clock.schedule_once(self.delayedInit,0.1)
 
 
     def delayedInit(self, dt):
-        # Board being checked out
+        # Board being checked out from Kiosk_Table
         data = GlobalScreenManager.BOARD_CHECKOUT
 
         print("==========================================")
@@ -43,6 +44,18 @@ class CheckOutConfirm(Screen):
         self.ids.checkOutConfirmRWType.text = str(data[10])     # Rework Type
 
         self.hashKey = str(data[1])
+
+        # Handle Status logic
+        if data[11] == "Initial":
+            self.newStatus = "In Progress"
+        elif data[11] == "In Progress":
+            self.newStatus = "In Progress"
+        elif data[11] == "WQA":
+            self.newStatus = "In QA"
+
+
+        print("data[11]: ", data[11])
+        print("Status: ", self.newStatus)
 
 
     def confirmCheckOut(self):
@@ -79,7 +92,7 @@ class CheckOutConfirm(Screen):
                         now.strftime("%m-%d-%Y %H:%M:%S"), # Time
                         "OUT",    # Operation
                         data[10], # rework_type
-                        data[11]  # rework_status
+                        self.newStatus  # rework_status
                     )
                 )
                 conn.commit()

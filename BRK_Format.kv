@@ -276,12 +276,14 @@
 
 ############################# Completed Button #############################
         MDRaisedButton:
-            text: "Completed"
+            id: statusBtnOne
+            text: ""
+            opacity: 0
             size_hint: .1,.1
             pos_hint: {"center_x":.85,"center_y":.55}
-            on_release: root.assignStatusCompleted()
+            on_release: root.assignStatusBtnOne("Status1")
         MDIconButton:
-            id: completedCheck
+            id: BtnOneCheck
             icon: "check-bold"
             opacity: 0
             size_hint: None,None
@@ -289,12 +291,14 @@
 
 ############################# InProgress Button #############################
         MDRaisedButton:
-            text: "In Progress"
+            id: statusBtnTwo
+            text: ""
+            opacity: 0
             size_hint: .1,.1
             pos_hint: {"center_x":.85,"center_y":.4}
-            on_release: root.assignStatusInProgress()
+            on_release: root.assignStatusBtnTwo("Status2")
         MDIconButton:
-            id: inProgressCheck
+            id: BtnTwoCheck
             icon: "check-bold"
             opacity: 0
             size_hint: None,None

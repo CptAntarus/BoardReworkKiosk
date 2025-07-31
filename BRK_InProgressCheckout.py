@@ -43,9 +43,10 @@ class InProgressCheckout(Screen):
                 print("Successfully connected to SQL database.")
 
                 try:
-                    cursor.execute(f"""
+                    cursor.execute("""
                         SELECT * FROM Kiosk_Table
-                    """)
+                        WHERE rework_status = %s
+                        """, ("In Progress",)) # ORDER BY time_stamp DESC priority
                         # ORDER BY {sort_key} ASC
 
                     self.rows = cursor.fetchall()
