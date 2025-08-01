@@ -39,7 +39,7 @@
             elevation: 10
 
         MDLabel:
-            text: "Select Operation"
+            text: "Select Option"
             pos_hint: {"center_x": 0.5, "center_y": 0.7}
             halign: "center"
             font_style: "H4"
@@ -47,18 +47,28 @@
             height: self.texture_size[1]
 
         MDRaisedButton:
-            text: "Check-In Board"
+            text: "Check-In"
             size_hint: .3,.2
             font_style: "H5"
-            pos_hint: {"center_x":.25, "center_y":.4}
+            pos_hint: {"center_x":.25, "center_y":.45}
             on_release: app.switchScreen("checkInBoard")
 
         MDRaisedButton:
-            text: "Check-Out Board"
+            text: "Check-Out"
             font_style: "H5"
             size_hint: .3,.2
-            pos_hint: {"center_x":.75, "center_y":.4}
+            pos_hint: {"center_x":.75, "center_y":.45}
             on_release: app.switchScreen("selectCheckout")
+        
+        MDRaisedButton:
+            id: CompletedBtn
+            opacity: 0
+            disabled: True
+            text: "Completed Check-Out"
+            font_style: "H5"
+            size_hint: .2,.1
+            pos_hint: {"center_x":.5, "center_y":.2}
+            on_release: #app.switchScreen("selectCheckout")
 
 <SelectCheckout>:
     MDFloatLayout:
@@ -81,21 +91,11 @@
         MDRaisedButton:
             id: NewReworkBtn
             disabled: True
-            text: "New Rework"
+            text: "New Checkout"
             size_hint: .35,.15
             font_style: "H5"
             pos_hint: {"center_x":.5, "center_y":.62}
             on_release: app.switchScreen("checkOutBoard")
-
-        MDRaisedButton:
-            id: InProgressBtn
-            opacity: 0
-            disabled: True
-            text: "In Progress"
-            size_hint: .35,.15
-            font_style: "H5"
-            pos_hint: {"center_x":.5, "center_y":.42}
-            on_release: app.switchScreen("inProgressCheckOut")
 
         MDRaisedButton:
             id: AdminCheckoutBtn
@@ -105,7 +105,7 @@
             size_hint: .2,.1
             font_style: "H5"
             pos_hint: {"center_x":.3, "center_y":.2}
-            on_release: app.switchScreen("adminCheckout")
+            on_release: root.swithToAdminCheckout()
 
         MDRaisedButton:
             id: QACheckoutBtn
@@ -115,7 +115,17 @@
             size_hint: .2,.1
             font_style: "H5"
             pos_hint: {"center_x":.7, "center_y":.2}
-            on_release: app.switchScreen("qACheckOut")
+            on_release: root.swithToQACheckout()
+        
+        MDRaisedButton:
+            id: InProgressBtn
+            opacity: 0
+            disabled: True
+            text: "In Progress"
+            size_hint: .35,.15
+            font_style: "H5"
+            pos_hint: {"center_x":.5, "center_y":.42}
+            on_release: root.swithToInProgressCheckout()
         
         MDLabel:
             id: errorMSG
@@ -362,34 +372,20 @@
             on_release: root.findNBRBoard()
 
 
-<InProgressCheckOut>:
+<ListCheckout>:
     MDBoxLayout:
         orientation: 'vertical'
 
         MDTopAppBar:
             title: "Boards In Kiosk"
+            right_action_items: [["menu", lambda x: root.open_menu(x)]]
             left_action_items: [["arrow-left", lambda y: app.backButton(y)]]
             pos_hint: {"top": 1}
             elevation: 10
 
         ScrollView:
             MDList:
-                id: inProgressReportList
-
-
-<QACheckOut>:
-    MDBoxLayout:
-        orientation: 'vertical'
-
-        MDTopAppBar:
-            title: "Boards In Kiosk"
-            left_action_items: [["arrow-left", lambda y: app.backButton(y)]]
-            pos_hint: {"top": 1}
-            elevation: 10
-
-        ScrollView:
-            MDList:
-                id: inProgressReportList
+                id: reportList
 
 
 <CheckOutConfirm>:
@@ -497,21 +493,6 @@
 #################################################################################
 #        - Admin Screens
 #################################################################################
-<AdminCheckOut>:
-    MDBoxLayout:
-        orientation: 'vertical'
-
-        MDTopAppBar:
-            title: "Boards In Kiosk"
-            right_action_items: [["menu", lambda x: root.open_menu(x)]]
-            left_action_items: [["arrow-left", lambda y: app.backButton(y)]]
-            pos_hint: {"top": 1}
-            elevation: 10
-
-        ScrollView:
-            MDList:
-                id: reportList
-
 <AdminConfirm>:
     MDFloatLayout:
         MDTopAppBar:

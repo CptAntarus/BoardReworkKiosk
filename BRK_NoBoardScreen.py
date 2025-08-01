@@ -38,7 +38,7 @@ class NoBoardScreen(Screen):
             GlobalScreenManager.noBoardsFlag = ""
 
         elif GlobalScreenManager.noBoardsFlag == "NONE":
-            self.ids.noBoardsMsg.text = "No Boards in Kiosk"
+            self.ids.noBoardsMsg.text = "No Boards in Kiosk "
             GlobalScreenManager.SCREEN_HIST.pop()
             GlobalScreenManager.noBoardsFlag = ""
 

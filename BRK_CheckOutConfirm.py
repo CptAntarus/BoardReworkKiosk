@@ -36,8 +36,8 @@ class CheckOutConfirm(Screen):
         print("SELECTED BOARD:", data)
 
         # Populate text fileds
-        outputUser = GlobalScreenManager.CHECKOUT_USER + "  ---  " + GlobalScreenManager.USER_NAMES[GlobalScreenManager.CHECKOUT_USER]
-        self.ids.checkOutConfirmUNum.text = str(outputUser)      # U-num & Name
+        outputUser = str(GlobalScreenManager.CHECKOUT_USER) + "  ---  " + str(GlobalScreenManager.USER_NAMES[GlobalScreenManager.CHECKOUT_USER])
+        self.ids.checkOutConfirmUNum.text = str(outputUser)     # U-num & Name
         self.ids.checkOutConfirmMONum.text = str(data[3])       # MO
         self.ids.checkOutConfirmBoardID.text = str(data[4])     # Board Number
         self.ids.checkOutConfirmPriority.text = str(data[5])    # Priority
@@ -52,8 +52,8 @@ class CheckOutConfirm(Screen):
             self.newStatus = "In Progress"
         elif data[11] == "WQA":
             self.newStatus = "In QA"
-        # elif data[11] == "Redo":
-        #     self.newStatus = "In QA"
+        elif data[11] == "Failed QA":
+            self.newStatus = "Failed QA"
 
 
         print("data[11]: ", data[11])

@@ -16,7 +16,7 @@
 import pymssql
 import json
 from kivymd.app import MDApp
-from kivy.uix.screenmanager import NoTransition
+from kivy.uix.screenmanager import NoTransition,FadeTransition
 
 # Load the format file
 from kivy.lang import Builder
@@ -31,13 +31,12 @@ from BRK_CheckOutBoard import CheckOutBoard
 from BRK_CheckInConfirm import CheckInConfirmScreen
 from BRK_CheckOutConfirm import CheckOutConfirm
 from BRK_CloseDoor import CloseDoor
-from BRK_AdminCheckout import AdminCheckout
+from BRK_ListCheckout import ListCheckout
 from BRK_AdminConfirm import AdminConfirm
 from BRK_AdminEnterUser import AdminEnterUser
 from BRK_NoBoardScreen import NoBoardScreen
 from BRK_SelectCheckout import SelectCheckout
-from BRK_InProgressCheckout import InProgressCheckout
-from BRK_QACheckOut import QACheckOut
+
 
 class BRKGui(MDApp):
     def build(self):
@@ -49,18 +48,16 @@ class BRKGui(MDApp):
         self.sm.add_widget(CheckInConfirmScreen(name='checkInConfirm'))
         self.sm.add_widget(CheckOutConfirm(name='checkOutConfirm'))
         self.sm.add_widget(CloseDoor(name="closeDoor"))
-        self.sm.add_widget(AdminCheckout(name="adminCheckout"))
+        self.sm.add_widget(ListCheckout(name="listCheckout"))
         self.sm.add_widget(AdminConfirm(name="adminConfirm"))
         self.sm.add_widget(AdminEnterUser(name="adminEnterUser"))
         self.sm.add_widget(NoBoardScreen(name="noBoardScreen"))
         self.sm.add_widget(SelectCheckout(name="selectCheckout"))
-        self.sm.add_widget(InProgressCheckout(name="inProgressCheckOut"))
-        self.sm.add_widget(QACheckOut(name="qACheckOut"))
 
         self.populateDoorsList()
         self.populateUsersList()
 
-        self.sm.transition = NoTransition()
+        self.sm.transition = FadeTransition(duration=0.2) #NoTransition()
         self.theme_cls.theme_style = 'Dark'
         self.switchScreen('startScreen')
 

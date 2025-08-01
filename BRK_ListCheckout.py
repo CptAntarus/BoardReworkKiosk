@@ -1,6 +1,6 @@
 #################################################################################
 #
-#       - File: BRK_AdminCheckout.py
+#       - File: BRK_ListCheckout.py
 #       - Author: Dylan Hendrix
 #       - Discription: This screen controls the logic when the user selects
 #                       admin checkout from the checkout screen.
@@ -26,7 +26,22 @@ from kivymd.uix.list import ThreeLineListItem
 from BRK_GSM import GlobalScreenManager
 
 
-class AdminCheckout(Screen):
+class ListCheckout(Screen):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.rows = []
+        self.DropDownOptions = []
+
+        self.AdminOptions = [
+            {"text": "Priority", "on_release": lambda x="Priority": self.sortOption(x)},
+            {"text": "Time", "on_release": lambda x="Time": self.sortOption(x)},
+            {"text": "User", "on_release": lambda: self.whichUserSort()},
+        ]
+        self.OtherUserOptions = [
+            {"text": "Priority", "on_release": lambda x="Priority": self.sortOption(x)},
+            {"text": "Time", "on_release": lambda x="Time": self.sortOption(x)},
+        ]
+
     def on_enter(self):
         with open("BRK_Creds.json") as f:
             config = json.load(f)
@@ -37,27 +52,52 @@ class AdminCheckout(Screen):
             password=config["PASSWORD"], 
             database=config["DATABASE"]
             ) as conn:
-            
+
             print("Creating connection...")
             with conn.cursor() as cursor:
                 print("Successfully connected to SQL database.")
 
                 try:
-                    cursor.execute(f"""
-                        SELECT * FROM Kiosk_Table
-                    """)
-                        # ORDER BY {sort_key} ASC
+                    if GlobalScreenManager.CHECKOUT_FLAG == "Admin_Checkout":
+                        self.DropDownOptions = self.AdminOptions
+                        dataBase = "Admin Checkout"
+                        self.confirmScreen = "adminConfirm"
+
+                        cursor.execute(f"""
+                            SELECT * FROM Kiosk_Table
+                        """)
+
+                    elif GlobalScreenManager.CHECKOUT_FLAG == "QA_Checkout":
+                        self.DropDownOptions = self.OtherUserOptions
+                        dataBase = "QA Checkout"
+                        self.confirmScreen = "checkOutConfirm"
+
+                        cursor.execute("""
+                            SELECT * FROM Kiosk_Table
+                            WHERE rework_status = %s
+                            ORDER BY priority DESC
+                            """, ("WQA",)) 
+            
+                    elif GlobalScreenManager.CHECKOUT_FLAG == "IP_Checkout":
+                        self.DropDownOptions = self.OtherUserOptions
+                        dataBase = "In Progress Checkout"
+                        self.confirmScreen = "checkOutConfirm"
+
+                        cursor.execute("""
+                            SELECT * FROM Kiosk_Table
+                            WHERE (rework_status = %s OR rework_status = %s) AND u_num = %s
+                            """, ("In Progress", "Failed QA", GlobalScreenManager.CURRENT_USER))
 
                     self.rows = cursor.fetchall()
 
                     # Check if kiosk is empty
                     if not self.rows:
-                        print("Database is empty")
+                        print(f"{dataBase} is empty")
                         GlobalScreenManager.noBoardsFlag = "NONE"
                         MDApp.get_running_app().switchScreen("noBoardScreen")
 
                 except Exception as e:
-                    print("Error sorting reports:", e)
+                    print("Error getting reports:", e)
 
                 finally:
                     self.sortOption("Priority")
@@ -67,13 +107,8 @@ class AdminCheckout(Screen):
 #        - Drop-down menu builders
 #################################################################################
     def open_menu(self, item):
-        menu_items = [
-            {"text": "Priority", "on_release": lambda x="Priority": self.sortOption(x)},
-            {"text": "Time", "on_release": lambda x="Time": self.sortOption(x)},
-            {"text": "User", "on_release": lambda: self.whichUserSort()},
-        ]
         self.caller = item
-        self.mainMenu = MDDropdownMenu(caller=self.caller, items=menu_items)
+        self.mainMenu = MDDropdownMenu(caller=self.caller, items=self.DropDownOptions)
         self.mainMenu.open()
 
 
@@ -173,11 +208,15 @@ class AdminCheckout(Screen):
             ####### Assign time msg #######
             timeDelta = self.getTimeDelta(row)
             timeMsg = self.convertTimeDeltaToMsg(timeDelta)
+            if row[11] == "Failed QA":
+                addedText = "   * Failed QA *"
+            else:
+                addedText = ""
 
             if user == row[2]:
                 ####### Make a line in list #######
                 item = ThreeLineListItem(
-                    text="Board: " + str(row[4]), # Board Number
+                    text="Board: " + str(row[4]) + f"{addedText}", # Board Number
                     secondary_text="Priority: " + str(row[5]) + " - " + str(row[10]), # Priority & RW Type
                     tertiary_text="Time: " + str(timeMsg), # How long board has been in Kiosk
                     on_release= lambda x: self.selectReport(row)
@@ -207,24 +246,27 @@ class AdminCheckout(Screen):
             ####### Assign time msg #######
             timeDelta = self.getTimeDelta(row)
             timeMsg = self.convertTimeDeltaToMsg(timeDelta)
+            if row[11] == "Failed QA":
+                addedText = "   * Failed QA *"
+            else:
+                addedText = ""
 
             ####### Make a line in list #######
             item = ThreeLineListItem(
-                text="Board: " + str(row[4]), # Board Number
+                text="Board: " + str(row[4]) + f"{addedText}", # Board Number
                 secondary_text="Priority: " + str(row[5]) + " - " + str(row[10]), # Priority
                 tertiary_text="Time: " + str(timeMsg), # How long board has been in Kiosk
-                on_release=lambda x: self.selectReport(row)
+                on_release=lambda x, r=row: self.selectReport(r)
             )
             report_list.add_widget(item)
-
-        print(f"Sorted by: {sort_key}")
 
 
 #################################################################################
 #        - Select report and switch screen
 #################################################################################
     def selectReport(self, row):
+        GlobalScreenManager.CHECKOUT_USER = GlobalScreenManager.CURRENT_USER
         GlobalScreenManager.BOARD_CHECKOUT = row
         print("Selected board data:", row)
 
-        MDApp.get_running_app().switchScreen("adminConfirm")
+        MDApp.get_running_app().switchScreen(f"{self.confirmScreen}")

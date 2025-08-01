@@ -4,6 +4,8 @@
 #       - Author: Dylan Hendrix
 #       - Discription: This screen allows the user to confirm their entry
 #
+#       - Notes:
+#
 ################################################################################
 #
 #       - Entry:   BRK_CheckInBoard.py
@@ -106,11 +108,11 @@ class CheckInConfirmScreen(Screen):
                 self.status1 = "Failed QA"
                 self.ids.statusBtnTwo.text = "Passed QA"
                 self.status2 = "Passed QA"
-            # elif GlobalScreenManager.CURRENT_RW_STATUS == "Failed QA":
-            #     self.ids.statusBtnOne.text = "Redo"
-            #     self.status1 = "Redo"
-            #     self.ids.statusBtnTwo.text = "Completed"
-            #     self.status2 = "Completed"
+            elif GlobalScreenManager.CURRENT_RW_STATUS == "Failed QA":
+                self.ids.statusBtnOne.text = "In Progress"
+                self.status1 = "Failed QA" # Keep 'Failed QA' Status
+                self.ids.statusBtnTwo.text = "Waiting For QA"
+                self.status2 = "WQA"
 
         print("Status: ", GlobalScreenManager.CURRENT_RW_STATUS)
 

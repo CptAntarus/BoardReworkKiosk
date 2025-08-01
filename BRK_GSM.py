@@ -23,6 +23,7 @@ class GlobalScreenManager(ScreenManager):
     CHECKOUT_USER = 0
     CURRENT_RW_STATUS = 0
     noBoardsFlag = ""
+    CHECKOUT_FLAG = ""
 
     # Keeps a list of screens for easy navigation
     SCREEN_HIST = []

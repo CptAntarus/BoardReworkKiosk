@@ -13,9 +13,11 @@
 #
 #################################################################################
 
+from kivymd.app import MDApp
 from kivy.uix.screenmanager import Screen
 
 from BRK_GSM import GlobalScreenManager
+
 
 
 class SelectCheckout(Screen):
@@ -52,3 +54,19 @@ class SelectCheckout(Screen):
         if GlobalScreenManager.CURRENT_USER in GlobalScreenManager.QA_USERS:
             self.ids.QACheckoutBtn.opacity = 1
             self.ids.QACheckoutBtn.disabled = False
+
+
+    def swithToAdminCheckout(self):
+        GlobalScreenManager.CHECKOUT_FLAG = "Admin_Checkout"
+        MDApp.get_running_app().switchScreen("listCheckout")
+
+
+    def swithToQACheckout(self):
+        GlobalScreenManager.CHECKOUT_FLAG = "QA_Checkout"
+        MDApp.get_running_app().switchScreen("listCheckout")
+
+
+    def swithToInProgressCheckout(self):
+        GlobalScreenManager.CHECKOUT_FLAG = "IP_Checkout"
+        MDApp.get_running_app().switchScreen("listCheckout")
+
