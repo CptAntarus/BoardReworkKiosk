@@ -60,7 +60,8 @@ class ListCheckout(Screen):
                 try:
                     if GlobalScreenManager.CHECKOUT_FLAG == "Admin_Checkout":
                         self.DropDownOptions = self.AdminOptions
-                        dataBase = "Admin Checkout"
+                        self.ids.ListCheckoutTopBar.title = "Admin Checkout"
+                        dataBaseErrorMsg = "Admin Checkout"
                         self.confirmScreen = "adminConfirm"
 
                         cursor.execute(f"""
@@ -69,8 +70,10 @@ class ListCheckout(Screen):
 
                     elif GlobalScreenManager.CHECKOUT_FLAG == "QA_Checkout":
                         self.DropDownOptions = self.OtherUserOptions
-                        dataBase = "QA Checkout"
+                        self.ids.ListCheckoutTopBar.title = "QA Checkout"
+                        dataBaseErrorMsg = "QA Checkout"
                         self.confirmScreen = "checkOutConfirm"
+
 
                         cursor.execute("""
                             SELECT * FROM Kiosk_Table
@@ -80,19 +83,31 @@ class ListCheckout(Screen):
             
                     elif GlobalScreenManager.CHECKOUT_FLAG == "IP_Checkout":
                         self.DropDownOptions = self.OtherUserOptions
-                        dataBase = "In Progress Checkout"
+                        self.ids.ListCheckoutTopBar.title = "Boards You have in Dry Box"
+                        dataBaseErrorMsg = "In Progress Checkout"
                         self.confirmScreen = "checkOutConfirm"
 
                         cursor.execute("""
                             SELECT * FROM Kiosk_Table
                             WHERE (rework_status = %s OR rework_status = %s) AND u_num = %s
                             """, ("In Progress", "Failed QA", GlobalScreenManager.CURRENT_USER))
+                    
+                    elif GlobalScreenManager.CHECKOUT_FLAG == "Completed_Checkout":
+                        self.DropDownOptions = self.OtherUserOptions
+                        self.ids.ListCheckoutTopBar.title = "Completed Checkout"
+                        dataBaseErrorMsg = "Completed Checkout"
+                        self.confirmScreen = "checkOutConfirm"
+
+                        cursor.execute("""
+                            SELECT * FROM Kiosk_Table
+                            WHERE rework_status = %s
+                            """, ("Passed QA",))
 
                     self.rows = cursor.fetchall()
 
                     # Check if kiosk is empty
                     if not self.rows:
-                        print(f"{dataBase} is empty")
+                        print(f"{dataBaseErrorMsg} is empty")
                         GlobalScreenManager.noBoardsFlag = "NONE"
                         MDApp.get_running_app().switchScreen("noBoardScreen")
 
@@ -219,7 +234,7 @@ class ListCheckout(Screen):
                     text="Board: " + str(row[4]) + f"{addedText}", # Board Number
                     secondary_text="Priority: " + str(row[5]) + " - " + str(row[10]), # Priority & RW Type
                     tertiary_text="Time: " + str(timeMsg), # How long board has been in Kiosk
-                    on_release= lambda x: self.selectReport(row)
+                    on_release= lambda x, r=row: self.selectReport(r)
                 )
                 report_list.add_widget(item)
 

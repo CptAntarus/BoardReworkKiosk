@@ -38,13 +38,18 @@ class NoBoardScreen(Screen):
             GlobalScreenManager.noBoardsFlag = ""
 
         elif GlobalScreenManager.noBoardsFlag == "NONE":
-            self.ids.noBoardsMsg.text = "No Boards in Kiosk "
+            self.ids.noBoardsMsg.text = "No Boards Match This Option"
             GlobalScreenManager.SCREEN_HIST.pop()
             GlobalScreenManager.noBoardsFlag = ""
 
         elif GlobalScreenManager.noBoardsFlag == "DOUBLE":
             self.ids.noBoardScreenTopBar.opacity = 0
             self.ids.noBoardsMsg.text = "Board Is already Logged in Dry Box"
+            Clock.schedule_once(self.switchToStartScreen,4)
+        
+        elif GlobalScreenManager.noBoardsFlag == "DONE":
+            self.ids.noBoardScreenTopBar.opacity = 0
+            self.ids.noBoardsMsg.text = "Board Is Logged As Completed"
             Clock.schedule_once(self.switchToStartScreen,4)
             
         else:

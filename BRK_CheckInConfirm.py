@@ -113,6 +113,11 @@ class CheckInConfirmScreen(Screen):
                 self.status1 = "Failed QA" # Keep 'Failed QA' Status
                 self.ids.statusBtnTwo.text = "Waiting For QA"
                 self.status2 = "WQA"
+            elif GlobalScreenManager.CURRENT_RW_STATUS == "Passed QA":
+                print("ERROR: Board Checked In A second Time without Checkout")
+                GlobalScreenManager.noBoardsFlag = "DONE"
+                MDApp.get_running_app().switchScreen("noBoardScreen")
+
 
         print("Status: ", GlobalScreenManager.CURRENT_RW_STATUS)
 
@@ -234,7 +239,7 @@ class CheckInConfirmScreen(Screen):
                         """, (GlobalScreenManager.CURRENT_BID, "WQA"))
                     self.rows = cursor.fetchone()
                     checkinUser = str(self.rows[2])
-                
+
                 else:
                     checkinUser = GlobalScreenManager.CURRENT_USER
 

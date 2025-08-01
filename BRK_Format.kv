@@ -32,9 +32,11 @@
 <InOutScreen>:
     FloatLayout:
         MDTopAppBar:
+            id: InOutTopBar
             title: "Board Rework"
             font_style: "H1"
             left_action_items: [["arrow-left", lambda y: app.backButton()]]
+            right_action_items: [["", lambda y: None]]
             pos_hint: {"top": 1}
             elevation: 10
 
@@ -68,13 +70,14 @@
             font_style: "H5"
             size_hint: .2,.1
             pos_hint: {"center_x":.5, "center_y":.2}
-            on_release: #app.switchScreen("selectCheckout")
+            on_release: root.switchToCompletedCheckout()
 
 <SelectCheckout>:
     MDFloatLayout:
         MDTopAppBar:
-            title: ""
+            title: "Board Checkout"
             left_action_items: [["arrow-left", lambda y: app.backButton()]]
+            right_action_items: [["", lambda y: None]]
             pos_hint: {"top": 1}
             elevation: 10
 
@@ -146,6 +149,7 @@
         MDTopAppBar:
             title: "Board Check-In"
             left_action_items: [["arrow-left", lambda y: app.backButton()]]
+            right_action_items: [["", lambda y: None]]
             pos_hint: {"top": 1}
             elevation: 10
 
@@ -194,6 +198,7 @@
         MDTopAppBar:
             title: "Confirm Check-In"
             left_action_items: [["arrow-left", lambda y: app.backButton()]]
+            right_action_items: [["", lambda y: None]]
             pos_hint: {"top": 1}
             elevation: 10
 
@@ -336,8 +341,9 @@
 <CheckOutBoard>:
     MDFloatLayout:
         MDTopAppBar:
-            title: "Board Check-Out"
+            title: "New Checkout"
             left_action_items: [["arrow-left", lambda y: app.backButton()]]
+            right_action_items: [["", lambda y: None]]
             pos_hint: {"top": 1}
             elevation: 10
 
@@ -377,7 +383,8 @@
         orientation: 'vertical'
 
         MDTopAppBar:
-            title: "Boards In Kiosk"
+            id: ListCheckoutTopBar
+            title: ""
             right_action_items: [["menu", lambda x: root.open_menu(x)]]
             left_action_items: [["arrow-left", lambda y: app.backButton(y)]]
             pos_hint: {"top": 1}
@@ -393,6 +400,7 @@
         MDTopAppBar:
             title: "Confrim Check-Out"
             left_action_items: [["arrow-left", lambda y: app.backButton()]]
+            right_action_items: [["", lambda y: None]]
             pos_hint: {"top": 1}
             elevation: 10
 ############################# U Number #############################
@@ -496,7 +504,7 @@
 <AdminConfirm>:
     MDFloatLayout:
         MDTopAppBar:
-            title: "Boards In Kiosk"
+            title: ""
             left_action_items: [["arrow-left", lambda y: app.backButton(y)]]
             pos_hint: {"top": 1}
             elevation: 10
@@ -528,6 +536,7 @@
         MDTopAppBar:
             title: "Enter Rework User"
             left_action_items: [["arrow-left", lambda y: app.backButton(y)]]
+            right_action_items: [["", lambda y: None]]
             pos_hint: {"top": 1}
             elevation: 10
 
@@ -640,8 +649,9 @@
         MDTopAppBar:
             id: noBoardScreenTopBar
             opacity: 1
-            title: "Board Check-Out"
+            title: ""
             left_action_items: [["arrow-left", lambda y: app.backButton()]]
+            right_action_items: [["", lambda y: None]]
             pos_hint: {"top": 1}
             elevation: 10
 

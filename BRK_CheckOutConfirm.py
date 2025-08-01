@@ -23,8 +23,12 @@ from BRK_GSM import GlobalScreenManager
 
 
 class CheckOutConfirm(Screen):
-    def on_enter(self):
+    def __init__(self, **kw):
+        super().__init__(**kw)
         self.newStatus = ""
+
+
+    def on_enter(self):
         Clock.schedule_once(self.delayedInit,0.1)
 
 
@@ -54,6 +58,8 @@ class CheckOutConfirm(Screen):
             self.newStatus = "In QA"
         elif data[11] == "Failed QA":
             self.newStatus = "Failed QA"
+        elif data[11] == "Passed QA":
+            self.newStatus = "Passed QA"
 
 
         print("data[11]: ", data[11])
@@ -62,8 +68,13 @@ class CheckOutConfirm(Screen):
 
     def confirmCheckOut(self):
         # Save current time & board being checked out
-        now = datetime.now()
+        self.now = datetime.now()
         data = GlobalScreenManager.BOARD_CHECKOUT
+    
+        if data[11] == "Passed QA":
+            print("Doing completed branch")
+            self.completedCheckout()
+            return
 
 #################################################################################
 #        - Copy over to Rework_Table
@@ -91,7 +102,7 @@ class CheckOutConfirm(Screen):
                         data[3],  # MO Number
                         data[4],  # Board ID
                         data[5],  # Priority
-                        now.strftime("%m-%d-%Y %H:%M:%S"), # Time
+                        self.now.strftime("%m-%d-%Y %H:%M:%S"), # Time
                         "OUT",    # Operation
                         data[10], # rework_type
                         self.newStatus  # rework_status
@@ -145,7 +156,77 @@ class CheckOutConfirm(Screen):
             print("Row[1]: ", GlobalScreenManager.KIOSK_BOXES[1])
             print("Row[2]: ", GlobalScreenManager.KIOSK_BOXES[2])
 
+        MDApp.get_running_app().switchScreen('closeDoor')
+
+
 #################################################################################
-#       - Go to CloseDoor screen
+#       - Handle Completed Process
 #################################################################################
+    def completedCheckout(self):
+        with open("BRK_Creds.json") as f:
+            config = json.load(f)
+
+        with pymssql.connect(
+            server=config["SERVER"],
+            user=config["USER"],
+            password=config["PASSWORD"], 
+            database=config["DATABASE"]
+            ) as conn:
+
+            print("Created connection...")
+            with conn.cursor() as cursor:
+                print("Successfully connected to SQL database.")
+                CompletedBoard = GlobalScreenManager.BOARD_CHECKOUT
+                boardID = CompletedBoard[4]
+
+                # Grab all entries of completed board from Rework_Table
+                cursor.execute("""
+                    SELECT * FROM Rework_Table WHERE board_id = %s      
+                """, (boardID,))
+                entriesOfCompletedBoard = cursor.fetchall()
+
+                print("THING TO TEST: ", entriesOfCompletedBoard)
+
+                # Push to History Table
+                for row in entriesOfCompletedBoard:
+                    cursor.execute("""
+                        INSERT INTO History_Table (
+                            [log count], hash_key, [u-num], mo, board_id, priority, time_stamp, in_out_status, rework_type, rework_status
+                        ) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
+                    """, (row))
+                    conn.commit()
+
+                print("History_Table =====================================")
+                cursor.execute('SELECT * FROM History_Table')
+                rows = cursor.fetchall()
+                for row in rows:
+                    print(row)
+
+#################################################################################
+#       - Remove from Rework_Table
+#################################################################################
+                cursor.execute("DELETE FROM Rework_Table WHERE board_id = %s", (boardID,))
+                conn.commit()
+
+            # Print Database (Can be removed for final product)
+                print("Rework_Table =====================================")
+                cursor.execute('SELECT * FROM Rework_Table')
+                rows = cursor.fetchall()
+                for row in rows:
+                    print(row)
+
+#################################################################################
+#       - Remove from KIOSK_BOXES
+#################################################################################
+                cursor.execute("DELETE FROM Kiosk_Table WHERE board_id = %s", (boardID,))
+                conn.commit()
+
+            # Print Database (Can be removed for final product)
+                print("Kiosk_Table =====================================")
+                cursor.execute('SELECT * FROM Kiosk_Table')
+                rows = cursor.fetchall()
+                for row in rows:
+                    print(row)
+        
+        
         MDApp.get_running_app().switchScreen('closeDoor')

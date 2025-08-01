@@ -53,3 +53,8 @@ class InOutScreen(Screen):
 
                 except Exception as e:
                     print("Error sorting reports:", e)
+    
+    
+    def switchToCompletedCheckout(self):
+        GlobalScreenManager.CHECKOUT_FLAG = "Completed_Checkout"
+        MDApp.get_running_app().switchScreen("listCheckout")
