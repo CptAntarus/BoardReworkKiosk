@@ -36,10 +36,14 @@ class CloseDoor(Screen):
 
         # Edit message according to operation
         if GlobalScreenManager.SCREEN_HIST[-1] == 'checkInConfirm':
-            self.ids.closeDoorMsg.text = 'Place Board In Kiosk @ ' + "( row " + str(GlobalScreenManager.CURRENT_POS_X) + ", " + " col " + str(GlobalScreenManager.CURRENT_POS_Y) + " )"
+            self.ids.closeDoorMsg.text = "Place Board In Dry Box in: "
+            self.ids.closeDoorRow.text = "Row: " + str(GlobalScreenManager.CURRENT_POS_X)
+            self.ids.closeDoorCol.text = "Column: " + str(GlobalScreenManager.CURRENT_POS_Y)
         elif GlobalScreenManager.SCREEN_HIST[-1] == 'checkOutConfirm':
             data = GlobalScreenManager.BOARD_CHECKOUT
-            self.ids.closeDoorMsg.text = 'Remove Board From Kiosk @ ' + "( row " + str(data[8]) + ", " + " col " + str(data[9]) + " )"
+            self.ids.closeDoorMsg.text = "Remove Board From Dry Box in: "
+            self.ids.closeDoorRow.text = "Row: " + str(data[8])
+            self.ids.closeDoorCol.text = "Column: " + str(data[9])
         else:
             print("Error selecting text")
 

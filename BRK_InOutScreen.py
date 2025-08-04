@@ -17,11 +17,18 @@ import pymssql
 import json
 from kivymd.app import MDApp
 from kivy.uix.screenmanager import Screen
+from kivy.clock import Clock
+from kivy.uix.screenmanager import NoTransition,FadeTransition
 
 from BRK_GSM import GlobalScreenManager
 
 
 class InOutScreen(Screen):
+    def __init__(self, **kw):
+        super().__init__(**kw)
+        self.themeStatus = ""
+
+
     def on_enter(self):
         with open("BRK_Creds.json") as f:
             config = json.load(f)
@@ -53,7 +60,19 @@ class InOutScreen(Screen):
 
                 except Exception as e:
                     print("Error sorting reports:", e)
-    
+
+
+    def toggleLightDark(self):
+        app = MDApp.get_running_app()
+        if self.themeStatus == "Dark":
+            self.themeStatus = "Light"
+            app.sm.transition = NoTransition()
+        else:
+            self.themeStatus = "Dark"
+            app.sm.transition = FadeTransition(duration=0.2)
+
+        MDApp.get_running_app().theme_cls.theme_style = self.themeStatus
+
     
     def switchToCompletedCheckout(self):
         GlobalScreenManager.CHECKOUT_FLAG = "Completed_Checkout"

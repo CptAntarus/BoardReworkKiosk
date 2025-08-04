@@ -40,7 +40,6 @@ class CheckInConfirmScreen(Screen):
         self.ids.BtnTwoCheck.opacity = 0
         self.ids.confirmBtn.disabled = True
         self.BtnStatus = None
-        checkinUser = ""
         self.status1 = ""
         self.status2 = ""
 
@@ -230,8 +229,10 @@ class CheckInConfirmScreen(Screen):
             with conn.cursor() as cursor:
                 print("Successfully connected to SQL database.")
 
+                print("BEFORE THE IF THING")
                 # if redo assign to previous user
-                if self.status1 == "Failed QA":
+                checkinUser = ""
+                if GlobalScreenManager.CURRENT_RW_STATUS == "Failed QA":
                     # Find user who submited board for QA
                     cursor.execute("""
                         SELECT * FROM Rework_Table
@@ -239,9 +240,12 @@ class CheckInConfirmScreen(Screen):
                         """, (GlobalScreenManager.CURRENT_BID, "WQA"))
                     self.rows = cursor.fetchone()
                     checkinUser = str(self.rows[2])
-
+                    print(f"IF:checkinUser: {checkinUser}")
                 else:
                     checkinUser = GlobalScreenManager.CURRENT_USER
+                    print(f"ELSE:checkinUser: {checkinUser}")
+                print("AFTER THE IF THING")
+                
 
                 # Insert into Kiosk_Table
                 cursor.execute('''

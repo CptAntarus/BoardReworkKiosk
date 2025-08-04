@@ -36,7 +36,7 @@
             title: "Board Rework"
             font_style: "H1"
             left_action_items: [["arrow-left", lambda y: app.backButton()]]
-            right_action_items: [["", lambda y: None]]
+            right_action_items: [["white-balance-sunny", lambda y: root.toggleLightDark()]]
             pos_hint: {"top": 1}
             elevation: 10
 
@@ -625,8 +625,20 @@
             id: closeDoorMsg
             text: ""
             font_style: "H5"
-            size_hint: .7,.7
-            pos_hint: {"center_x":.5,"center_y":.5}
+            size_hint: .5,.7
+            pos_hint: {"center_x":.5,"center_y":.7}
+        MDLabel:
+            id: closeDoorRow
+            text: ""
+            font_style: "H5"
+            size_hint: .5,.7
+            pos_hint: {"center_x":.55,"center_y":.5}
+        MDLabel:
+            id: closeDoorCol
+            text: ""
+            font_style: "H5"
+            size_hint: .5,.7
+            pos_hint: {"center_x":.55,"center_y":.4}
 
         MDLabel:
             id: doorCountDown

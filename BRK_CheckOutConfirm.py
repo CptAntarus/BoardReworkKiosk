@@ -59,7 +59,7 @@ class CheckOutConfirm(Screen):
         elif data[11] == "Failed QA":
             self.newStatus = "Failed QA"
         elif data[11] == "Passed QA":
-            self.newStatus = "Passed QA"
+            self.newStatus = "Completed"
 
 
         print("data[11]: ", data[11])
@@ -70,11 +70,6 @@ class CheckOutConfirm(Screen):
         # Save current time & board being checked out
         self.now = datetime.now()
         data = GlobalScreenManager.BOARD_CHECKOUT
-    
-        if data[11] == "Passed QA":
-            print("Doing completed branch")
-            self.completedCheckout()
-            return
 
 #################################################################################
 #        - Copy over to Rework_Table
@@ -155,6 +150,11 @@ class CheckOutConfirm(Screen):
             print("Row[0]: ", GlobalScreenManager.KIOSK_BOXES[0])
             print("Row[1]: ", GlobalScreenManager.KIOSK_BOXES[1])
             print("Row[2]: ", GlobalScreenManager.KIOSK_BOXES[2])
+
+        if data[11] == "Passed QA":
+            print("Doing completed branch")
+            self.completedCheckout()
+            return
 
         MDApp.get_running_app().switchScreen('closeDoor')
 
