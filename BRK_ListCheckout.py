@@ -47,7 +47,9 @@ class ListCheckout(Screen):
 
 
     def on_enter(self):
-        with open("BRK_Creds.json") as f:
+        load_dotenv()
+        creds = os.getenv("DB_CREDS_PATH")
+        with open(creds) as f:
             config = json.load(f)
 
         with pymssql.connect(

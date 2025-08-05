@@ -14,8 +14,10 @@
 #
 #################################################################################
 
-import pymssql
+import os
 import json
+import pymssql
+from dotenv import load_dotenv
 from kivymd.app import MDApp
 from kivy.uix.screenmanager import Screen
 from kivy.clock import Clock
@@ -75,7 +77,9 @@ class CheckOutConfirm(Screen):
 #################################################################################
 #        - Copy over to Rework_Table
 #################################################################################
-        with open("BRK_Creds.json") as f:
+        load_dotenv()
+        creds = os.getenv("DB_CREDS_PATH")
+        with open(creds) as f:
             config = json.load(f)
 
         with pymssql.connect(
@@ -164,7 +168,9 @@ class CheckOutConfirm(Screen):
 #       - Handle Completed Process
 #################################################################################
     def completedCheckout(self):
-        with open("BRK_Creds.json") as f:
+        load_dotenv()
+        creds = os.getenv("DB_CREDS_PATH")
+        with open(creds) as f:
             config = json.load(f)
 
         with pymssql.connect(

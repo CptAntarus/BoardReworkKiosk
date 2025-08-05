@@ -54,3 +54,29 @@
 
 [Credentials]
  - Credentials for the database are stored seperate file from the app. See Benjamin Barger for further detials.
+
+
+[Launching GUI]
+ - The Pi is set up with a script that runs on startup. This located in the local crontab. This can be accessed with:
+	-> "crontab -e"
+	-> Look for @reboot /home/washer/Rework_GUI/BoardReworkKiosk/runGUI.sh
+	
+ - This script assumes the directory names. (Adjust accordingly):
+
+Script:
+"""
+#!/bin/bash
+
+# This is the script to run the GUI
+
+sleep  7
+
+export Display=:0
+export XAUTHORITY=/home/washer/.Xauthority
+
+echo "Activating Env..."
+source ~/Rework_GUI/BoardReworkKiosk/ENV_BRK/bin/activate
+
+echo "Starting GUI..."
+python ~/Rework_GUI/BoardReworkKiosk/BRK_main.py
+"""

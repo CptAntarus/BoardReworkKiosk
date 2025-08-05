@@ -14,8 +14,10 @@
 #
 #################################################################################
 
-import pymssql
+import os
 import json
+import pymssql
+from dotenv import load_dotenv
 from kivymd.app import MDApp
 from kivy.uix.screenmanager import Screen
 from datetime import datetime
@@ -46,7 +48,9 @@ class CheckInConfirmScreen(Screen):
 #################################################################################
 #        - Pull all entries of current Board if any from Rework_Table
 #################################################################################
-        with open("BRK_Creds.json") as f:
+        load_dotenv()
+        creds = os.getenv("DB_CREDS_PATH")
+        with open(creds) as f:
             config = json.load(f)
 
         with pymssql.connect(
@@ -214,7 +218,9 @@ class CheckInConfirmScreen(Screen):
 #################################################################################
 #        - Push to Kiosk_Table
 #################################################################################
-        with open("BRK_Creds.json") as f:
+        load_dotenv()
+        creds = os.getenv("DB_CREDS_PATH")
+        with open(creds) as f:
             config = json.load(f)
 
         with pymssql.connect(
