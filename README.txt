@@ -37,14 +37,20 @@
 
 
 [Data Bases]
- - There are 3 datatables all within the "Oven_Bake_Log" database: "User_Table", "HISTORY", and "KIOSK". The history table stores a log of every transaction with the kiosk whether a board is put in, or taken out. While the kiosk table serves as a backup to the kiosk if it were reboot after a power loss or a crash. The kiosk table also stores the indicies where each board is located so that the boards are not misplaced after a reboot. The User_Table stores a list of all the valid users and their assosiated permissions.
+ - There are 4 datatables all within the "Oven_Bake_Log" database: "User_Table", "History_Table", "Rework_Table", and "Kiosk_Table". 
+	-> User_Table:    stores a list of all the valid users and their assosiated permissions.
+	-> History_Table: stores all the logs after a board is completed and checked out.
+	-> Rework_Table:  stores a log of every transaction with the drybox whether a board is put in, or taken out, as well as the status. Once the baord is completed and checked out all logs for that board will then be moved to History_Table.
+	-> Kiosk_Table:   serves as a backup for the kiosk if the system reboots after a power loss or a crash. It also stores the indicies where each board is located so that the boards are not misplaced after a reboot.
 
 - See Benjamin Barger for further details
 
 
 [Screen Navigation]
- - In order to simplify screen navigation I have two functions within BRK_main.py: "switchScreen", and "backButton". 'switchscreen' takes 1 argument, the new screen, saves the current screen to a history variable, and then switches to the new screen. 'backbutton' does not need any arguements passed to it because it pops the to item off of the history variable to and uses that to set the new screen.
+ - In order to simplify screen navigation I have two functions within BRK_main.py: "switchScreen", and "backButton". 
+ 	-> switchscreen: takes 1 argument, the new screen. It saves the current screen to "SCREEN_HIST", and then switches to the new screen. 
+	-> backbutton:   pops the top item from the "SCREEN_HIST" and sets the new screen with the 'popped' value.
 
 
 [Credentials]
- - Credentials for the database are stored in a seperate file. See Benjamin Barger for further detials.
+ - Credentials for the database are stored seperate file from the app. See Benjamin Barger for further detials.

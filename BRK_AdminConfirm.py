@@ -2,15 +2,15 @@
 #
 #       - File: BRK_AdminConfirm.py
 #       - Author: Dylan Hendrix
-#       - Discription: This screen controls the logic when the user selects
-#                       admin checkout from the checkout screen.
+#       - Discription: This screen controls the logic when an admin checks out
+#                       a board
 #
 ################################################################################
 #
-#       - Entry:   BRK_AdminCheckout.py
+#       - Comes From:   BRK_AdminCheckout.py
 #
-#       - Exits:   BRK_CheckOutConfirm.py,
-#                  BRK_AdminEnterUser.py
+#       - Goes To:      BRK_CheckOutConfirm.py,
+#                       BRK_AdminEnterUser.py
 #
 #################################################################################
 

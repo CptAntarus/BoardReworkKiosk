@@ -2,14 +2,17 @@
 #
 #       - File: BRK_SelectCheckout.py
 #       - Author: Dylan Hendrix
-#       - Discription: This is the screen that sends the user either to the
-#                       new checkout or checkout a board they've worked on before
+#       - Discription: This screen controls checkout selection: (new, in- 
+#                       progress, QA, Admin) and sends control to listCheckout
+#                       with coresponding flags set for the selected checkout
+#                       method.
 #
 ################################################################################
 #
-#       - Entry:   
+#       - Comes From:   BRK_InOutScreen.py
 #
-#       - Exit:    
+#       - Goes To:      BRK_CheckoutBoard.py
+#                       BRK_ListCheckout.py
 #
 #################################################################################
 
@@ -19,10 +22,9 @@ from kivy.uix.screenmanager import Screen
 from BRK_GSM import GlobalScreenManager
 
 
-
 class SelectCheckout(Screen):
     def on_enter(self):    
-        # Disable all buttons before permissions validation
+        # Disable all buttons before permission validation
         self.ids.NewReworkBtn.opacity = 0
         self.ids.InProgressBtn.opacity = 0
         self.ids.AdminCheckoutBtn.opacity = 0
@@ -51,6 +53,7 @@ class SelectCheckout(Screen):
         if GlobalScreenManager.CURRENT_USER in GlobalScreenManager.ADMIN_USERS:
             self.ids.AdminCheckoutBtn.opacity = 1
             self.ids.AdminCheckoutBtn.disabled = False
+
         if GlobalScreenManager.CURRENT_USER in GlobalScreenManager.QA_USERS:
             self.ids.QACheckoutBtn.opacity = 1
             self.ids.QACheckoutBtn.disabled = False
@@ -69,4 +72,3 @@ class SelectCheckout(Screen):
     def swithToInProgressCheckout(self):
         GlobalScreenManager.CHECKOUT_FLAG = "IP_Checkout"
         MDApp.get_running_app().switchScreen("listCheckout")
-

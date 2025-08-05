@@ -7,9 +7,9 @@
 #
 ################################################################################
 #
-#       - Entry:   None
+#       - Comes From:   None
 #
-#       - Exit:    BRK_StartScreen.py
+#       - Goes To:      BRK_StartScreen.py
 #
 #################################################################################
 
@@ -63,8 +63,9 @@ class BRKGui(MDApp):
 
         return self.sm
 
+
 #################################################################################
-#        - Init helpers
+#        - Fill boxes in drybox with their previous baord if any
 #################################################################################
     def populateDoorsList(self):
         with open("BRK_Creds.json") as f:
@@ -109,6 +110,7 @@ class BRKGui(MDApp):
                     print("Row[0]: ", GlobalScreenManager.KIOSK_BOXES[0])
                     print("Row[1]: ", GlobalScreenManager.KIOSK_BOXES[1])
                     print("Row[2]: ", GlobalScreenManager.KIOSK_BOXES[2])
+
 
 #################################################################################
 #        - Pull Users from User Database
@@ -157,6 +159,7 @@ class BRKGui(MDApp):
                 # print("QA Users:     ",GlobalScreenManager.QA_USERS)
                 # print("=======================================================================================")
 
+
 #################################################################################
 #        - Screen functionality
 #################################################################################
@@ -164,9 +167,11 @@ class BRKGui(MDApp):
         GlobalScreenManager.SCREEN_HIST.append(self.sm.current)
         self.sm.current = newScreen
 
+
     def backButton(self, *args):
         if GlobalScreenManager.SCREEN_HIST:
             self.sm.current = GlobalScreenManager.SCREEN_HIST.pop()
+
 
 #################################################################################
 #        - Clean up between cycles

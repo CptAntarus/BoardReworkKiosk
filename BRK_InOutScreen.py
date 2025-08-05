@@ -7,9 +7,10 @@
 #
 ################################################################################
 #
-#       - Entry:   BRK_CloseDoor.py
+#       - Comes From:   BRK_StartScreen.py
 #
-#       - Exit:    BRK_InOutScreen.py
+#       - Goes To:      BRK_CheckinBoard.py
+#                       BRK_SelectCheckout.py
 #
 #################################################################################
 
@@ -26,7 +27,7 @@ from BRK_GSM import GlobalScreenManager
 class InOutScreen(Screen):
     def __init__(self, **kw):
         super().__init__(**kw)
-        self.themeStatus = ""
+        self.themeStatus = "Dark"
 
 
     def on_enter(self):

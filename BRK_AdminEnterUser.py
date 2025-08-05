@@ -2,14 +2,14 @@
 #
 #       - File: BRK_AdminEnterUser.py
 #       - Author: Dylan Hendrix
-#       - Discription: This screen allows admin users to enter a different
-#                       Someone else's U-Number to check out a board.
+#       - Discription: This screen allows admin users to enter someone else's
+#                       U-Number to check out a board.
 #
 ################################################################################
 #
-#       - Entry:   BRK_AdminConfirm.py
+#       - Comes From:   BRK_AdminConfirm.py
 #
-#       - Exit:    BRK_CheckOutConfirm.py
+#       - Goes To:      BRK_CheckOutConfirm.py
 #
 #################################################################################
 
@@ -22,7 +22,6 @@ from BRK_GSM import GlobalScreenManager
 
 class AdminEnterUser(Screen):
     def on_enter(self):
-        print("Admin Enter User")
         self.ids.newUser.text = "U"
 
 
@@ -39,6 +38,7 @@ class AdminEnterUser(Screen):
 
     def confirmNewUser(self):
         uNum = self.ids.newUser.text
+        
         if uNum in GlobalScreenManager.USERS:
             print(f"Valid user: {uNum}")
             GlobalScreenManager.CHECKOUT_USER = self.ids.newUser.text.strip()

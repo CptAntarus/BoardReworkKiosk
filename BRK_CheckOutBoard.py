@@ -2,17 +2,16 @@
 #
 #       - File: BRK_CheckOutBoard.py
 #       - Author: Dylan Hendrix
-#       - Discription: This screen controls the initial checkout process
-#                       and passes control to the different checkout
-#                       methods.
+#       - Discription: This screen controls the checkout process for a new
+#                       checkout and passes control to the different checkout
+#                       methods (Normal rework & BGA reowrk).
 #
 ################################################################################
 #
-#       - Entry:   BRK_InOutScreen.py
+#       - Comes From:   BRK_SelectCheckout.py
 #
-#       - Exits:   BRK_CheckOutConfirm.py
-#                  BRK_AdminCheckout.py
-#                  BRK_NoBoardScreen.py
+#       - Goes To:      BRK_CheckOutConfirm.py
+#                       BRK_NoBoardScreen.py
 #
 #################################################################################
 

@@ -3,13 +3,13 @@
 #       - File: BRK_CheckInBoard.py
 #       - Author: Dylan Hendrix
 #       - Discription: This screen controls the board input process and 
-#                       validates entered of data.
+#                       validates entered data.
 #
 ################################################################################
 #
-#       - Entry:   BRK_InOutScreen.py
+#       - Comes From:   BRK_InOutScreen.py
 #
-#       - Exit:    BRK_CheckInConfirm.py
+#       - Goes To:      BRK_CheckInConfirm.py
 #
 #################################################################################
 
@@ -78,6 +78,7 @@ class CheckInBoard(Screen):
         pattern = r"priority [0-9]"
 
         if re.fullmatch(pattern, textInput):
+            # Assign Priority
             if textInput.lower() == "priority 1":
                 GlobalScreenManager.CURRENT_PRIORITY = 1
                 print(f"GSM Priority: {GlobalScreenManager.CURRENT_PRIORITY}")

@@ -2,15 +2,17 @@
 #
 #       - File: BRK_ListCheckout.py
 #       - Author: Dylan Hendrix
-#       - Discription: This screen controls the logic when the user selects
-#                       admin checkout from the checkout screen.
+#       - Discription: This screen dynamically displayes the boards to be
+#                       checked out based on the type of checkout. The boards
+#                       are displayed in a list based on different sort options.
 #
 ################################################################################
 #
-#       - Entry:   BRK_CheckoutBoard.py
+#       - Comes From:   BRK_SelectCheckout.py
 #
-#       - Exits:   BRK_AdminConfirm.py
-#                  BRK_NoBoardScreen.py
+#       - Goes To:      BRK_CheckOutConfirm.py
+#                       BRK_AdminConfirm.py
+#                       BRK_NoBoardScreen.py
 #
 #################################################################################
 
@@ -32,6 +34,7 @@ class ListCheckout(Screen):
         self.rows = []
         self.DropDownOptions = []
 
+        # Set up dropdown options
         self.AdminOptions = [
             {"text": "Priority", "on_release": lambda x="Priority": self.sortOption(x)},
             {"text": "Time", "on_release": lambda x="Time": self.sortOption(x)},
@@ -41,6 +44,7 @@ class ListCheckout(Screen):
             {"text": "Priority", "on_release": lambda x="Priority": self.sortOption(x)},
             {"text": "Time", "on_release": lambda x="Time": self.sortOption(x)},
         ]
+
 
     def on_enter(self):
         with open("BRK_Creds.json") as f:
@@ -73,7 +77,6 @@ class ListCheckout(Screen):
                         self.ids.ListCheckoutTopBar.title = "QA Checkout"
                         dataBaseErrorMsg = "QA Checkout"
                         self.confirmScreen = "checkOutConfirm"
-
 
                         cursor.execute("""
                             SELECT * FROM Kiosk_Table
@@ -154,35 +157,23 @@ class ListCheckout(Screen):
 #        - Helpers
 #################################################################################
     def getTimeDelta(self, row):
-        nowMonth = int(datetime.now().strftime("%m"))
-        nowDay = int(datetime.now().strftime("%d"))
-        nowYear = int(datetime.now().strftime("%Y"))
-        # print("+",nowMonth,nowDay,nowYear,"+")
-
+        today = datetime.now()
+        
         pattern = r"(\d{2})-(\d{2})"
-        longMonths = [1,3,5,7,8,10,11]
-        mediumMonths = [4,6,9,11]
-
-        ####### Get Data Time Difference #######
         match = re.match(pattern, row[6])
-        parts = match.groups() # parts = [month,day]
+        if not match:
+            return 0
+        
+        month, day = int(match[1]), int(match[2])
 
-        savedMonth = int(parts[0])
-        savedDay = int(parts[1])
-        deltaDay = nowDay - savedDay
+        savedDate = datetime(today.year, month, day)
 
-        # Calculte time in Kiosk
-        if nowMonth != savedMonth: # board from prev month
-            if savedMonth in longMonths:
-                timeDelta = (31-savedDay) + nowDay
-            if savedMonth in mediumMonths:
-                timeDelta = (30-savedDay) + nowDay
-            if savedMonth == 2:
-                timeDelta = (28-savedDay) + nowDay
-        else:
-            timeDelta = deltaDay
+        if savedDate > today:
+            savedDate(today.year - 1, month, day)
 
-        return timeDelta
+        delta = today - savedDate
+    
+        return delta.days
     
 
     def convertTimeDeltaToMsg(self, timeDelta):
@@ -282,6 +273,6 @@ class ListCheckout(Screen):
     def selectReport(self, row):
         GlobalScreenManager.CHECKOUT_USER = GlobalScreenManager.CURRENT_USER
         GlobalScreenManager.BOARD_CHECKOUT = row
-        print("Selected board data:", row)
+        # print("Selected board data:", row)
 
         MDApp.get_running_app().switchScreen(f"{self.confirmScreen}")

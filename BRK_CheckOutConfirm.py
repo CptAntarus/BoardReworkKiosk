@@ -6,9 +6,11 @@
 #
 ################################################################################
 #
-#       - Entry:   BRK_CheckoutBoard.py
+#       - Comes From:   BRK_CheckoutBoard.py
+#                       BRK_ListCheckout.py
+#                       BRK_AdminConfirm.py
 #
-#       - Exit:    BRK_CloseDoor.py
+#       - Exit:         BRK_CloseDoor.py
 #
 #################################################################################
 
@@ -60,7 +62,6 @@ class CheckOutConfirm(Screen):
             self.newStatus = "Failed QA"
         elif data[11] == "Passed QA":
             self.newStatus = "Completed"
-
 
         print("data[11]: ", data[11])
         print("Status: ", self.newStatus)

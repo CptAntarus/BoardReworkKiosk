@@ -8,9 +8,9 @@
 #
 ################################################################################
 #
-#       - Entry:   BRK_CheckInBoard.py
+#       - Comes From:   BRK_CheckInBoard.py
 #
-#       - Exit:    BRK_CloseDoor.py
+#       - Goes To:      BRK_CloseDoor.py
 #
 #################################################################################
 
@@ -44,7 +44,7 @@ class CheckInConfirmScreen(Screen):
         self.status2 = ""
 
 #################################################################################
-#        - Pull list of Boards from Kiosk_DB
+#        - Pull all entries of current Board if any from Rework_Table
 #################################################################################
         with open("BRK_Creds.json") as f:
             config = json.load(f)
@@ -67,33 +67,33 @@ class CheckInConfirmScreen(Screen):
                                    ORDER BY time_stamp DESC
                                    """, (GlobalScreenManager.CURRENT_BID,))
                     self.rows = cursor.fetchall()
-                except Exception as e:
-                    print("Error repopulating kiosk boxes:",e)
-                finally:
-                     print("Done getting rows")
-                     print("self.rows", self.rows)
 
+                except Exception as e:
+                    print("Error pulling latest board entry from Rework_Table:",e)
+
+                finally:
+                    print("Done getting rows")
 
 #################################################################################
 #        - Handle Status logic (Check INCOMMING baord)
 #################################################################################
-        # New Board
-        print("CURRENT_BID: ", GlobalScreenManager.CURRENT_BID)
+        # print("CURRENT_BID: ", GlobalScreenManager.CURRENT_BID)
+
+        # Check if current baord has been entered before
         if not any(row[4] == GlobalScreenManager.CURRENT_BID for row in self.rows):    
             GlobalScreenManager.CURRENT_RW_STATUS = "Initial"
             self.ids.confirmBtn.disabled = False
             print("Doing the if side")
 
         # If it is in the kiosk but already has 'IN' tag, ie it's already in the dry box
-        elif self.rows[0][7] == "IN" or self.rows[0][9] == "DOUBLE":
+        elif self.rows[0][7] == "IN":
             print("ERROR: Board Checked In A second Time without Checkout")
             GlobalScreenManager.noBoardsFlag = "DOUBLE"
             MDApp.get_running_app().switchScreen("noBoardScreen")
 
         # Everything else
         else:
-            print("Doing the else side")
-            selectedBoard = self.rows[0]
+            selectedBoard = self.rows[0] # Most recent board, to access most recent status tag
             GlobalScreenManager.CURRENT_RW_STATUS = selectedBoard[9]
             self.activateStatusBtns()
 
@@ -109,7 +109,7 @@ class CheckInConfirmScreen(Screen):
                 self.status2 = "Passed QA"
             elif GlobalScreenManager.CURRENT_RW_STATUS == "Failed QA":
                 self.ids.statusBtnOne.text = "In Progress"
-                self.status1 = "Failed QA" # Keep 'Failed QA' Status
+                self.status1 = "Failed QA"
                 self.ids.statusBtnTwo.text = "Waiting For QA"
                 self.status2 = "WQA"
             elif GlobalScreenManager.CURRENT_RW_STATUS == "Passed QA":
@@ -117,10 +117,11 @@ class CheckInConfirmScreen(Screen):
                 GlobalScreenManager.noBoardsFlag = "DONE"
                 MDApp.get_running_app().switchScreen("noBoardScreen")
 
+        # print("Status: ", GlobalScreenManager.CURRENT_RW_STATUS)
 
-        print("Status: ", GlobalScreenManager.CURRENT_RW_STATUS)
-
-
+#################################################################################
+#        - Status Button functions
+#################################################################################
     def activateStatusBtns(self):
         self.ids.confirmHintTxt.opacity = 1
         self.ids.statusBtnOne.opacity = 1
@@ -172,8 +173,6 @@ class CheckInConfirmScreen(Screen):
 #        - Log data after user clicks "Confirm"
 #################################################################################
     def assignBox(self):
-        print("Status: ", GlobalScreenManager.CURRENT_RW_STATUS)
-
         # Generate hash Key
         now = datetime.now()
         GlobalScreenManager.HASH_KEY = str(GlobalScreenManager.CURRENT_MO + GlobalScreenManager.CURRENT_BID + now.strftime("%H%M%S"))
@@ -240,12 +239,9 @@ class CheckInConfirmScreen(Screen):
                         """, (GlobalScreenManager.CURRENT_BID, "WQA"))
                     self.rows = cursor.fetchone()
                     checkinUser = str(self.rows[2])
-                    print(f"IF:checkinUser: {checkinUser}")
+
                 else:
-                    checkinUser = GlobalScreenManager.CURRENT_USER
-                    print(f"ELSE:checkinUser: {checkinUser}")
-                print("AFTER THE IF THING")
-                
+                    checkinUser = GlobalScreenManager.CURRENT_USER             
 
                 # Insert into Kiosk_Table
                 cursor.execute('''

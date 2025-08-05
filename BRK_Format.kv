@@ -2,7 +2,7 @@
 #
 #       - File: BRK_Format.kv
 #       - Author: Dylan Hendrix
-#       - Discription: This file contians format instructions for every screen
+#       - Discription: This file contians format instructions for all screens
 #
 #################################################################################
 
@@ -28,6 +28,7 @@
             height: "48dp"
             pos_hint: {"center_x": 0.5, "center_y": 0.4}
             on_text_validate: root.validateUsr(self.text)
+
 
 <InOutScreen>:
     FloatLayout:
@@ -61,7 +62,7 @@
             size_hint: .3,.2
             pos_hint: {"center_x":.75, "center_y":.45}
             on_release: app.switchScreen("selectCheckout")
-        
+
         MDRaisedButton:
             id: CompletedBtn
             opacity: 0
@@ -71,6 +72,7 @@
             size_hint: .2,.1
             pos_hint: {"center_x":.5, "center_y":.2}
             on_release: root.switchToCompletedCheckout()
+
 
 <SelectCheckout>:
     MDFloatLayout:
@@ -119,7 +121,7 @@
             font_style: "H5"
             pos_hint: {"center_x":.7, "center_y":.2}
             on_release: root.swithToQACheckout()
-        
+
         MDRaisedButton:
             id: InProgressBtn
             opacity: 0
@@ -129,7 +131,7 @@
             font_style: "H5"
             pos_hint: {"center_x":.5, "center_y":.42}
             on_release: root.swithToInProgressCheckout()
-        
+
         MDLabel:
             id: errorMSG
             opacity: 0
@@ -141,8 +143,9 @@
             halign: "center"
             text_size: self.width, None
 
+
 #################################################################################
-#        - Normal Checkin Screens
+#        - Checkin Screens
 #################################################################################
 <CheckInBoard>:
     MDFloatLayout:
@@ -336,7 +339,7 @@
 
 
 #################################################################################
-#        - Normal Checkout Screens
+#        - Checkout Screens
 #################################################################################
 <CheckOutBoard>:
     MDFloatLayout:
@@ -497,7 +500,6 @@
             on_release: root.confirmCheckOut()
 
 
-
 #################################################################################
 #        - Admin Screens
 #################################################################################
@@ -513,7 +515,7 @@
             id: adminCheckoutMsg
             text: "Are you checking out for someone else?"
             font_style: "H5"
-            size_hint: .7,.7
+            size_hint: .5,.5
             pos_hint: {"center_x":.5,"center_y":.7}
 
         MDRaisedButton:

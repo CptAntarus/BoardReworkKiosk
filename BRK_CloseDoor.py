@@ -3,17 +3,15 @@
 #       - File: BRK_CloseDoor.py
 #       - Author: Dylan Hendrix
 #       - Discription: This screen prompts the user to to take the board
-#                       out or put a board into the kiosk. It returns to
+#                       out or put a board into the dry box. It returns to
 #                       main after 2mins or via the 'Done' button
 #
 ################################################################################
 #
-#       - Entries: BRK_CheckInConfirm.py
-#                  BRK_CheckoutConfirm.py
-#                  BRK_AdminConfirm.py
-#                  BRK_AdminEnterUser.py
+#       - Comes From:   BRK_CheckInConfirm.py
+#                       BRK_CheckoutConfirm.py
 #
-#       - Exit:    BRK_StartScreen.py
+#       - Goes To:      BRK_StartScreen.py
 #
 #################################################################################
 
@@ -45,7 +43,7 @@ class CloseDoor(Screen):
             self.ids.closeDoorRow.text = "Row: " + str(data[8])
             self.ids.closeDoorCol.text = "Column: " + str(data[9])
         else:
-            print("Error selecting text")
+            print("Error selecting 'closeDoor' Message")
 
         self.updateCountdown(0)
         if hasattr(self, 'countdown_event'):
